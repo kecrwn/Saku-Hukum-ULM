@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { MessageSquare, X, Send, Loader2 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Button } from "@/components/ui/button";
+
 
 type Message = {
   id: string;
@@ -23,6 +23,11 @@ export function Chatbot() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
+  // Suggestion chips for quick replies
+  const suggestionChips = isIndonesian
+    ? ["Apa saja peminatan di FH ULM?", "Bagaimana jalur menjadi jaksa?", "Kurikulum Pidana berapa SKS?"]
+    : ["What specializations does FH ULM offer?", "How do I become a prosecutor?", "How many credits for Criminal Law?"];
+
   // Set initial welcome message based on language
   useEffect(() => {
     if (messages.length === 0) {
@@ -31,21 +36,22 @@ export function Chatbot() {
           id: "welcome",
           role: "assistant",
           content: isIndonesian 
-            ? "Halo! Saya asisten virtual Saku Hukum ULM. Ada yang bisa saya bantu terkait jalur Jaksa atau kurikulum hukum?"
-            : "Hello! I'm the Saku Hukum ULM virtual assistant. How can I help you with the Prosecutor track or law curriculum today?"
+            ? "Halo! 👋 Saya asisten Saku Hukum ULM. Tanyakan tentang kurikulum, peminatan, fasilitas, atau jalur karier jaksa. Pilih pertanyaan di bawah atau ketik sendiri."
+            : "Hello! 👋 I'm the Saku Hukum ULM assistant. Ask about the curriculum, specializations, facilities, or the prosecutor career path. Pick a question below or type your own."
         }
       ]);
     }
   }, [isIndonesian, messages.length]);
 
   // Isolated send message handler - ready for API integration later
-  const handleSendMessage = async (e?: React.FormEvent) => {
+  const handleSendMessage = async (e?: React.FormEvent, chipText?: string) => {
     if (e) e.preventDefault();
-    if (!input.trim() || isTyping) return;
+    const text = chipText || input.trim();
+    if (!text || isTyping) return;
 
-    const userMsg: Message = { id: Date.now().toString(), role: "user", content: input.trim() };
+    const userMsg: Message = { id: Date.now().toString(), role: "user", content: text };
     setMessages(prev => [...prev, userMsg]);
-    setInput("");
+    if (!chipText) setInput("");
     setIsTyping(true);
     
     // Reset textarea height
@@ -69,6 +75,14 @@ export function Chatbot() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50" style={{ fontFamily: "var(--sans)" }}>
+      {/* Pulse animation keyframes */}
+      <style>{`
+        @keyframes saku-pulse {
+          0% { box-shadow: 0 8px 32px rgba(0,0,0,0.2), 0 0 0 0 rgba(178,77,57,0.4); }
+          70% { box-shadow: 0 8px 32px rgba(0,0,0,0.2), 0 0 0 12px rgba(178,77,57,0); }
+          100% { box-shadow: 0 8px 32px rgba(0,0,0,0.2), 0 0 0 0 rgba(178,77,57,0); }
+        }
+      `}</style>
       {/* Floating Button */}
       {!isOpen && (
         <button
@@ -77,7 +91,7 @@ export function Chatbot() {
           style={{ 
             backgroundColor: "color-mix(in srgb, var(--ink) 90%, transparent)", 
             color: "var(--paper)", 
-            boxShadow: "0 8px 32px rgba(0,0,0,0.2)" 
+            animation: "saku-pulse 2s infinite" 
           }}
           aria-label={isIndonesian ? "Buka Obrolan" : "Open Chat"}
         >
@@ -150,6 +164,30 @@ export function Chatbot() {
                 </div>
               </div>
             ))}
+            {/* Suggestion Chips */}
+            {messages.length <= 1 && (
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '4px' }}>
+                {suggestionChips.map((chip) => (
+                  <button
+                    key={chip}
+                    type="button"
+                    onClick={() => handleSendMessage(undefined, chip)}
+                    style={{
+                      border: '1px solid var(--line)',
+                      background: 'rgba(255,255,255,0.5)',
+                      color: 'var(--ink)',
+                      fontSize: '11px',
+                      padding: '6px 12px',
+                      borderRadius: '9999px',
+                      cursor: 'pointer',
+                      fontFamily: 'inherit',
+                    }}
+                  >
+                    {chip}
+                  </button>
+                ))}
+              </div>
+            )}
             {isTyping && (
               <div className="flex justify-start">
                 <div 

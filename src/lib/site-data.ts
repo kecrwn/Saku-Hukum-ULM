@@ -1,6 +1,6 @@
 /** River Margin design system: source-aware content is held as bilingual field notes, preserving legal terms and explicit public-data limits. */
 export const externalLinks = {
-  ulm: "https://ulm.ac.id/id/", ulmHistory: "https://ulm.ac.id/id/history/", ulmLeadership: "https://ulm.ac.id/id/10148-2/", faculty: "https://fh.ulm.ac.id/", facultyHistory: "https://fh.ulm.ac.id/sejarah-fakultas/", facultyLeadership: "https://fh.ulm.ac.id/profil/organisasi-fakultas/pimpinan/", facultyStaff: "https://fh.ulm.ac.id/profil/organisasi-fakultas/tenaga-pendidik-dosen/", pidana: "https://fh.ulm.ac.id/bagian-hukum/pidana/", curriculum: "https://fh.ulm.ac.id/formasi-mata-kuliah-kurikulum/", curriculumPdf: "https://fh.ulm.ac.id/wp-content/uploads/2023/04/SKS.pdf", facilities: "https://fh.ulm.ac.id/sarana-prasarana/", mootCourtPhoto: "https://fh.ulm.ac.id/img_8181edt/", hukumonlineCorner: "https://ulm.ac.id/id/2024/08/01/ulm-miliki-hukumonline-corner-pertama-di-kalimantan-permudah-akses-literasi-dan-referensi-hukum-terpercaya/", library: "https://lib.ulm.ac.id/id/", alumni: "https://fh.ulm.ac.id/pusat-layanan-alumni/", accreditation: "https://fh.ulm.ac.id/profil/akreditasi-dan-sertifikasi/", accreditationNews: "https://fh.ulm.ac.id/2026/06/05/prodi-s1-hukum-fh-ulm-raih-akreditasi-baik-sekali-dari-ban-pt/", instagram: "https://www.instagram.com/fh.ulm/", kejaksaan: "https://rekrutmen.kejaksaan.go.id/", kejaksaanNews: "https://rekrutmen.kejaksaan.go.id/pengumuman", pppj: "https://badiklat.kejaksaan.go.id/berita/s/jaksa-agung-lantik-503-jaksa-baru-burhanuddin-saya-butuh-jaksa-4c2d6", repository: "https://github.com/kecrwn/Saku-Hukum-ULM",
+  ulm: "https://ulm.ac.id/id/", ulmHistory: "https://ulm.ac.id/id/history/", ulmLeadership: "https://ulm.ac.id/id/10148-2/", faculty: "https://fh.ulm.ac.id/", facultyHistory: "https://fh.ulm.ac.id/sejarah-fakultas/", facultyLeadership: "https://fh.ulm.ac.id/profil/organisasi-fakultas/pimpinan/", facultyStaff: "https://fh.ulm.ac.id/profil/organisasi-fakultas/tenaga-pendidik-dosen/", pidana: "https://fh.ulm.ac.id/bagian-hukum/pidana/", curriculum: "https://fh.ulm.ac.id/formasi-mata-kuliah-kurikulum/", curriculumPdf: "https://fh.ulm.ac.id/wp-content/uploads/2023/04/SKS.pdf", facilities: "https://fh.ulm.ac.id/sarana-prasarana/", mootCourtPhoto: "https://fh.ulm.ac.id/img_8181edt/", hukumonlineCorner: "https://ulm.ac.id/id/2024/08/01/ulm-miliki-hukumonline-corner-pertama-di-kalimantan-permudah-akses-literasi-dan-referensi-hukum-terpercaya/", library: "https://lib.ulm.ac.id/id/", alumni: "https://fh.ulm.ac.id/pusat-layanan-alumni/", accreditation: "https://fh.ulm.ac.id/profil/akreditasi-dan-sertifikasi/", accreditationNews: "https://fh.ulm.ac.id/2026/06/05/prodi-s1-hukum-fh-ulm-raih-akreditasi-baik-sekali-dari-ban-pt/", instagram: "https://www.instagram.com/fh.ulm/", linkedIn: "https://www.linkedin.com/school/universitas-lambung-mangkurat/", kejaksaan: "https://rekrutmen.kejaksaan.go.id/", kejaksaanNews: "https://rekrutmen.kejaksaan.go.id/pengumuman", pppj: "https://badiklat.kejaksaan.go.id/berita/s/jaksa-agung-lantik-503-jaksa-baru-burhanuddin-saya-butuh-jaksa-4c2d6", repository: "https://github.com/kecrwn/Saku-Hukum-ULM",
 };
 export const imagery = { 
   hero: "https://fh.ulm.ac.id/wp-content/uploads/2023/03/FH-ULM-1.jpg", 
@@ -93,6 +93,38 @@ export const prosecutorCareerSteps = [
     descEn: "Official swearing-in and appointment as Ajun Jaksa with nationwide placement in public prosecution offices."
   }
 ];
+
+export const quickFacts = [
+  {
+    titleId: "Akreditasi 'Baik Sekali'",
+    titleEn: "'Excellent' Accreditation",
+    descId: "Program Studi S1 Hukum FH ULM meraih akreditasi tertinggi dari BAN-PT, berlaku Juni 2026–2031.",
+    descEn: "The S1 Law program achieved the highest BAN-PT accreditation, valid June 2026–2031.",
+    link: "accreditationNews"
+  },
+  {
+    titleId: "4 Program Kekhususan",
+    titleEn: "4 Specializations",
+    descId: "Hukum Pidana, Hukum Perdata, Hukum Tata Negara, dan Hukum Internasional tersedia sejak Kurikulum 2020.",
+    descEn: "Criminal, Civil, Constitutional, and International Law tracks available since the 2020 Curriculum.",
+    link: "curriculum"
+  },
+  {
+    titleId: "Hukumonline Corner Pertama di Kalimantan",
+    titleEn: "First Hukumonline Corner in Kalimantan",
+    descId: "ULM menjadi universitas pertama di Kalimantan yang memiliki pojok akses literasi hukum Hukumonline.",
+    descEn: "ULM became the first university in Kalimantan with a Hukumonline legal literacy access point.",
+    link: "hukumonlineCorner"
+  }
+];
+
+export const campusHighlights = [
+  { id: "Perpustakaan FH dengan koleksi hukum lengkap dan akses jurnal internasional.", en: "FH library with a comprehensive legal collection and international journal access." },
+  { id: "Ruang Peradilan Semu dan Gedung Desmond J. Mahesa untuk praktik litigasi.", en: "Mock Court Room and Desmond J. Mahesa Building for litigation practice." },
+  { id: "LKBH ULM: lembaga bantuan hukum tertua di Kalimantan Selatan.", en: "LKBH ULM: the oldest legal aid clinic in South Kalimantan." },
+  { id: "Laboratorium komputer hukum dengan akses ke basis data peraturan perundang-undangan.", en: "Legal computing lab with access to the statutory regulation database." }
+];
+
 export const translations = {
   id: { nav: [["Beranda", "/"], ["Tentang ULM", "/tentang"], ["Kurikulum", "/kurikulum"], ["Fasilitas", "/fasilitas"], ["Dosen & Staf", "/dosen"], ["Kemahasiswaan", "/kemahasiswaan"], ["Apa Kata Mereka", "/perspektif"], ["Jalur Karier", "/karier"], ["Tautan", "/tautan"]], viewSource: "Buka sumber resmi", source: "Sumber", overview: "Ikhtisar", backHome: "Kembali ke beranda", updated: "Diverifikasi 27 Agustus 2026", dataLimit: "Tidak tersedia secara publik", official: "resmi", personalNotice: "Situs pribadi untuk keperluan studi. Tidak berafiliasi secara resmi dengan Universitas Lambung Mangkurat.", footerNote: "Catatan akademik yang ditautkan kembali ke sumber primer.", openMenu: "Buka menu navigasi", closeMenu: "Tutup menu navigasi", switchLanguage: "Beralih ke bahasa Inggris" },
   en: { nav: [["Home", "/"], ["About ULM", "/tentang"], ["Curriculum", "/kurikulum"], ["Facilities", "/fasilitas"], ["Faculty & Staff", "/dosen"], ["Student Life", "/kemahasiswaan"], ["What They’re Saying", "/perspektif"], ["Career Path", "/karier"], ["Links", "/tautan"]], viewSource: "Open official source", source: "Source", overview: "Overview", backHome: "Back to home", updated: "Verified 27 August 2026", dataLimit: "Not publicly available", official: "official", personalNotice: "A personal site for study purposes. It is not officially affiliated with Universitas Lambung Mangkurat.", footerNote: "Academic notes linked back to primary sources.", openMenu: "Open navigation menu", closeMenu: "Close navigation menu", switchLanguage: "Switch to Bahasa Indonesia" },
