@@ -7,7 +7,8 @@ type LanguageContextValue = { language: Language; toggleLanguage: () => void; is
 const LanguageContext = createContext<LanguageContextValue | undefined>(undefined);
 
 export function LanguageProvider({ children }: PropsWithChildren) {
-  const [language, setLanguage] = useState<Language>(() => window.localStorage.getItem("shulm-language") === "en" ? "en" : "id");
+  const [language, setLanguage] = useState<Language>("id");
+  useEffect(() => { const stored = window.localStorage.getItem("shulm-language"); if (stored === "en") setLanguage("en"); }, []);
   useEffect(() => { window.localStorage.setItem("shulm-language", language); document.documentElement.lang = language === "id" ? "id" : "en"; }, [language]);
   const value = useMemo(() => ({ language, isIndonesian: language === "id", toggleLanguage: () => setLanguage((current) => current === "id" ? "en" : "id") }), [language]);
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
