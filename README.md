@@ -79,3 +79,12 @@ This project strictly adheres to a predefined design system. When adding new com
 
 ---
 *Maintained for ULM Faculty of Law, Prosecutor Track.*
+
+
+## Data Sources (Updated 14 Sep 2026)
+- IDN Times Kaltim (Accreditation news)
+- Jejakrekam.com (Alumni response)
+- Blogspot (Student review 2019)
+- LinkedIn (Fresh graduate testimonial)
+- ULM Official SK Rektor No. 274/UN8/HK.06/2026 (Academic Calendar)
+- Kejaksaan RI & FH ULM News (Adhyaksa Chamber)

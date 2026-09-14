@@ -11,14 +11,14 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export function SearchDialog() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const { language, isIndonesian } = useLanguage();
-  const [, setLocation] = useLocation();
+  const router = useRouter();
   const copy = translations[language];
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export function SearchDialog() {
 
   const onSelect = (href: string) => {
     setOpen(false);
-    setLocation(href);
+    router.push(href);
   };
 
   return (

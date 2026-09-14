@@ -9,6 +9,9 @@ export const imagery = {
   mootIllustration: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663032028539/XTDGHGSfuojFYNIC.jpg", 
   mark: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663032028539/GhBkxJffkVyUAzOJ.png", 
   officialMoot: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663032028539/pPVdywiJBmerfPCP.webp",
+  adhyaksaChamber: "https://files.manuscdn.com/placeholder-adhyaksa.jpg",
+  studentOrgImage: "https://files.manuscdn.com/placeholder-org.jpg",
+  mootCourtRoom: "https://files.manuscdn.com/placeholder-moot.jpg",
   ulmEmblem: "https://upload.wikimedia.org/wikipedia/en/f/f4/Lambung_Mangkurat_University_emblem.png",
   rektorat: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Gedung_Rektorat_Universitas_Lambung_Mangkurat.jpg/1024px-Gedung_Rektorat_Universitas_Lambung_Mangkurat.jpg",
   gerbang: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Gerbang_Universitas_Lambung_Mangkurat_di_Banjarbaru.jpg/1024px-Gerbang_Universitas_Lambung_Mangkurat_di_Banjarbaru.jpg"
@@ -29,7 +32,9 @@ export const admissionPathways = [
     id: "SNBP (Seleksi Nasional Berdasarkan Prestasi)",
     en: "SNBP (National Merit-Based Selection)",
     descId: "Jalur prestasi akademik rapor dan portofolio bagi siswa SMA/SMK/MA berprestasi via snpmb.id.",
+    stats: "2026 SNBT: 192 kursi terisi 100%. UKT S1 Hukum berkisar Rp500.000 - Rp3.405.000.",
     descEn: "Merit-based academic report and portfolio pathway for high school graduates via snpmb.id.",
+    stats: "2026 SNBT: 192 seats filled 100%. Law tuition ranges from Rp500,000 to Rp3,405,000 per semester.",
     url: "https://snpmb.id/"
   },
   {

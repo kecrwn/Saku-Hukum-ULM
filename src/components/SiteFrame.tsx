@@ -2,7 +2,8 @@
 /** River Margin design system: persistent shULM navigation behaves like a marked legal notebook, with a source-aware footer. */
 import { ArrowUpRight, Languages, Menu, X } from "lucide-react";
 import { type PropsWithChildren, useState } from "react";
-import Link , useLocation  from "next/link";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { externalLinks, imagery, translations } from "@/lib/site-data";
 import { SearchDialog } from "./SearchDialog";
