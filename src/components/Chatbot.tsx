@@ -47,6 +47,10 @@ export function Chatbot() {
     setMessages(prev => [...prev, userMsg]);
     setInput("");
     setIsTyping(true);
+    
+    // Reset textarea height
+    const textarea = document.getElementById('chat-input') as HTMLTextAreaElement;
+    if (textarea) textarea.style.height = 'auto';
 
     // TODO: Wire up Nemotron API here later.
     // For now, simulate network delay and respond with a placeholder.
@@ -69,8 +73,12 @@ export function Chatbot() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="p-4 rounded-full shadow-lg hover:-translate-y-1 transition-transform flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2"
-          style={{ backgroundColor: "var(--ink)", color: "var(--paper)", boxShadow: "var(--shadow)" }}
+          className="p-4 rounded-full shadow-lg hover:-translate-y-1 transition-transform flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 backdrop-blur-md"
+          style={{ 
+            backgroundColor: "color-mix(in srgb, var(--ink) 90%, transparent)", 
+            color: "var(--paper)", 
+            boxShadow: "0 8px 32px rgba(0,0,0,0.2)" 
+          }}
           aria-label={isIndonesian ? "Buka Obrolan" : "Open Chat"}
         >
           <MessageSquare size={24} />
@@ -80,13 +88,23 @@ export function Chatbot() {
       {/* Chat Interface */}
       {isOpen && (
         <div 
-          className="border rounded-lg shadow-2xl flex flex-col w-[350px] sm:w-[400px] h-[500px] max-h-[80vh] overflow-hidden animate-in zoom-in-95"
-          style={{ backgroundColor: "var(--card)", borderColor: "var(--line)", boxShadow: "var(--shadow)" }}
+          className="rounded-2xl flex flex-col w-[350px] sm:w-[400px] h-[500px] max-h-[80vh] overflow-hidden animate-in zoom-in-95 origin-bottom-right"
+          style={{ 
+            backgroundColor: "rgba(247, 242, 233, 0.8)", // glassmorphic paper background
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            border: "1px solid rgba(255, 255, 255, 0.3)", 
+            boxShadow: "0 12px 40px rgba(0, 0, 0, 0.15), inset 0 0 0 1px rgba(255, 255, 255, 0.2)" 
+          }}
         >
           {/* Header */}
           <div 
             className="flex items-center justify-between p-4 border-b"
-            style={{ backgroundColor: "var(--paper-strong)", borderColor: "var(--line)", color: "var(--ink-deep)" }}
+            style={{ 
+              backgroundColor: "rgba(255, 255, 255, 0.4)", 
+              borderColor: "rgba(0, 0, 0, 0.05)", 
+              color: "var(--ink-deep)" 
+            }}
           >
             <div className="flex items-center gap-2">
               <MessageSquare size={18} style={{ color: "var(--reed)" }} />
@@ -98,28 +116,34 @@ export function Chatbot() {
               onClick={() => setIsOpen(false)}
               className="p-1 hover:opacity-70 transition-opacity"
               aria-label={isIndonesian ? "Tutup" : "Close"}
-              style={{ color: "var(--muted)" }}
+              style={{ color: "var(--ink)" }}
             >
               <X size={18} />
             </button>
           </div>
 
           {/* Messages Area */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ backgroundColor: "var(--paper)" }}>
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-transparent">
             {messages.map((msg) => (
               <div
                 key={msg.id}
                 className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${
+                  className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm shadow-sm ${
                     msg.role === "user"
-                      ? "rounded-tr-sm"
-                      : "rounded-tl-sm border"
+                      ? "rounded-br-sm"
+                      : "rounded-bl-sm border"
                   }`}
                   style={msg.role === "user" 
-                    ? { backgroundColor: "var(--ink)", color: "var(--paper)" } 
-                    : { backgroundColor: "var(--card)", color: "var(--ink)", borderColor: "var(--line)" }
+                    ? { backgroundColor: "color-mix(in srgb, var(--ink) 95%, transparent)", color: "var(--paper)" } 
+                    : { 
+                        backgroundColor: "rgba(255, 255, 255, 0.7)", 
+                        color: "var(--ink)", 
+                        borderColor: "rgba(255, 255, 255, 0.5)",
+                        backdropFilter: "blur(4px)",
+                        WebkitBackdropFilter: "blur(4px)"
+                      }
                   }
                 >
                   {msg.content}
@@ -129,8 +153,13 @@ export function Chatbot() {
             {isTyping && (
               <div className="flex justify-start">
                 <div 
-                  className="border rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-1"
-                  style={{ backgroundColor: "var(--card)", borderColor: "var(--line)" }}
+                  className="border rounded-2xl rounded-bl-sm px-4 py-3 flex items-center gap-1 shadow-sm"
+                  style={{ 
+                    backgroundColor: "rgba(255, 255, 255, 0.7)", 
+                    borderColor: "rgba(255, 255, 255, 0.5)",
+                    backdropFilter: "blur(4px)",
+                    WebkitBackdropFilter: "blur(4px)"
+                  }}
                 >
                   <span className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ backgroundColor: "var(--muted)" }} />
                   <span className="w-1.5 h-1.5 rounded-full animate-bounce [animation-delay:0.2s]" style={{ backgroundColor: "var(--muted)" }} />
@@ -142,29 +171,42 @@ export function Chatbot() {
           </div>
 
           {/* Input Area */}
-          <div className="p-3 border-t" style={{ backgroundColor: "var(--card)", borderColor: "var(--line)" }}>
+          <div className="p-3 border-t" style={{ backgroundColor: "rgba(255, 255, 255, 0.4)", borderColor: "rgba(0, 0, 0, 0.05)" }}>
             <form
               onSubmit={handleSendMessage}
-              className="flex items-center gap-2"
+              className="flex items-end gap-2"
             >
-              <input
-                type="text"
+              <textarea
+                id="chat-input"
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e) => {
+                  setInput(e.target.value);
+                  e.target.style.height = 'auto';
+                  e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendMessage();
+                  }
+                }}
                 placeholder={isIndonesian ? "Tulis pesan..." : "Type a message..."}
-                className="flex-1 border rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-1"
+                rows={1}
+                className="flex-1 border rounded-2xl px-4 py-2.5 text-sm focus:outline-none focus:ring-1 resize-none bg-transparent"
                 style={{ 
-                  backgroundColor: "var(--paper)", 
-                  borderColor: "var(--line)", 
+                  backgroundColor: "rgba(255, 255, 255, 0.6)",
+                  borderColor: "rgba(255, 255, 255, 0.8)", 
                   color: "var(--ink)",
-                  outlineColor: "var(--clay)" 
+                  outlineColor: "var(--clay)",
+                  minHeight: "40px",
+                  maxHeight: "120px"
                 }}
                 disabled={isTyping}
               />
               <button
                 type="submit"
                 disabled={!input.trim() || isTyping}
-                className="rounded-full shrink-0 flex items-center justify-center h-9 w-9 disabled:opacity-50 transition-colors"
+                className="rounded-full shrink-0 flex items-center justify-center h-10 w-10 disabled:opacity-50 transition-colors shadow-sm mb-0.5"
                 style={{ backgroundColor: "var(--clay)", color: "var(--paper)" }}
               >
                 {isTyping ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}

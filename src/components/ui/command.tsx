@@ -48,7 +48,7 @@ function CommandDialog({
         className={cn("overflow-hidden p-0", className)}
         showCloseButton={showCloseButton}
       >
-        <DialogHeader className="sr-only">
+        <DialogHeader style={{ position: "absolute", width: "1px", height: "1px", padding: 0, margin: "-1px", overflow: "hidden", clip: "rect(0, 0, 0, 0)", whiteSpace: "nowrap", borderWidth: 0 }}>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
