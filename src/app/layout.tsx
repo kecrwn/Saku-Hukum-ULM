@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { SiteFrame } from "@/components/SiteFrame";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Chatbot } from "@/components/Chatbot";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,15 +23,17 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body className={inter.className}>
-        <LanguageProvider>
-          <TooltipProvider>
-            <Toaster />
-            <SiteFrame>
-              {children}
-            </SiteFrame>
-            <Chatbot />
-          </TooltipProvider>
-        </LanguageProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <LanguageProvider>
+            <TooltipProvider>
+              <Toaster />
+              <SiteFrame>
+                {children}
+              </SiteFrame>
+              <Chatbot />
+            </TooltipProvider>
+          </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
