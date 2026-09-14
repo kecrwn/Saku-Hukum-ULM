@@ -64,12 +64,13 @@ export function Chatbot() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-6 right-6 z-50" style={{ fontFamily: "var(--sans)" }}>
       {/* Floating Button */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-black p-4 rounded-full shadow-lg hover:scale-105 transition-transform flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900"
+          className="p-4 rounded-full shadow-lg hover:-translate-y-1 transition-transform flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2"
+          style={{ backgroundColor: "var(--ink)", color: "var(--paper)", boxShadow: "var(--shadow)" }}
           aria-label={isIndonesian ? "Buka Obrolan" : "Open Chat"}
         >
           <MessageSquare size={24} />
@@ -78,26 +79,33 @@ export function Chatbot() {
 
       {/* Chat Interface */}
       {isOpen && (
-        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-2xl flex flex-col w-[350px] sm:w-[400px] h-[500px] max-h-[80vh] overflow-hidden animate-in slide-in-from-bottom-5">
+        <div 
+          className="border rounded-lg shadow-2xl flex flex-col w-[350px] sm:w-[400px] h-[500px] max-h-[80vh] overflow-hidden animate-in zoom-in-95"
+          style={{ backgroundColor: "var(--card)", borderColor: "var(--line)", boxShadow: "var(--shadow)" }}
+        >
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950">
+          <div 
+            className="flex items-center justify-between p-4 border-b"
+            style={{ backgroundColor: "var(--paper-strong)", borderColor: "var(--line)", color: "var(--ink-deep)" }}
+          >
             <div className="flex items-center gap-2">
-              <MessageSquare size={18} className="text-zinc-500" />
-              <h3 className="font-medium text-sm">
+              <MessageSquare size={18} style={{ color: "var(--reed)" }} />
+              <h3 className="font-medium text-sm" style={{ fontFamily: "var(--serif)", fontSize: "18px", letterSpacing: "-0.02em" }}>
                 {isIndonesian ? "Asisten Saku Hukum" : "Saku Hukum Assistant"}
               </h3>
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 p-1"
+              className="p-1 hover:opacity-70 transition-opacity"
               aria-label={isIndonesian ? "Tutup" : "Close"}
+              style={{ color: "var(--muted)" }}
             >
               <X size={18} />
             </button>
           </div>
 
           {/* Messages Area */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white dark:bg-zinc-900">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ backgroundColor: "var(--paper)" }}>
             {messages.map((msg) => (
               <div
                 key={msg.id}
@@ -106,9 +114,13 @@ export function Chatbot() {
                 <div
                   className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${
                     msg.role === "user"
-                      ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-black rounded-tr-sm"
-                      : "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100 rounded-tl-sm border border-zinc-200 dark:border-zinc-700"
+                      ? "rounded-tr-sm"
+                      : "rounded-tl-sm border"
                   }`}
+                  style={msg.role === "user" 
+                    ? { backgroundColor: "var(--ink)", color: "var(--paper)" } 
+                    : { backgroundColor: "var(--card)", color: "var(--ink)", borderColor: "var(--line)" }
+                  }
                 >
                   {msg.content}
                 </div>
@@ -116,10 +128,13 @@ export function Chatbot() {
             ))}
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 bg-zinc-400 rounded-full animate-bounce" />
-                  <span className="w-1.5 h-1.5 bg-zinc-400 rounded-full animate-bounce [animation-delay:0.2s]" />
-                  <span className="w-1.5 h-1.5 bg-zinc-400 rounded-full animate-bounce [animation-delay:0.4s]" />
+                <div 
+                  className="border rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-1"
+                  style={{ backgroundColor: "var(--card)", borderColor: "var(--line)" }}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ backgroundColor: "var(--muted)" }} />
+                  <span className="w-1.5 h-1.5 rounded-full animate-bounce [animation-delay:0.2s]" style={{ backgroundColor: "var(--muted)" }} />
+                  <span className="w-1.5 h-1.5 rounded-full animate-bounce [animation-delay:0.4s]" style={{ backgroundColor: "var(--muted)" }} />
                 </div>
               </div>
             )}
@@ -127,7 +142,7 @@ export function Chatbot() {
           </div>
 
           {/* Input Area */}
-          <div className="p-3 border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+          <div className="p-3 border-t" style={{ backgroundColor: "var(--card)", borderColor: "var(--line)" }}>
             <form
               onSubmit={handleSendMessage}
               className="flex items-center gap-2"
@@ -137,17 +152,23 @@ export function Chatbot() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder={isIndonesian ? "Tulis pesan..." : "Type a message..."}
-                className="flex-1 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-zinc-400 dark:focus:ring-zinc-600"
+                className="flex-1 border rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-1"
+                style={{ 
+                  backgroundColor: "var(--paper)", 
+                  borderColor: "var(--line)", 
+                  color: "var(--ink)",
+                  outlineColor: "var(--clay)" 
+                }}
                 disabled={isTyping}
               />
-              <Button
+              <button
                 type="submit"
-                size="icon"
                 disabled={!input.trim() || isTyping}
-                className="rounded-full shrink-0"
+                className="rounded-full shrink-0 flex items-center justify-center h-9 w-9 disabled:opacity-50 transition-colors"
+                style={{ backgroundColor: "var(--clay)", color: "var(--paper)" }}
               >
                 {isTyping ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
-              </Button>
+              </button>
             </form>
           </div>
         </div>
