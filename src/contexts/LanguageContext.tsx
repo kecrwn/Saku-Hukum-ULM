@@ -1,3 +1,4 @@
+"use client";
 /** River Margin design system: the study guide defaults to Bahasa Indonesia and persists a deliberate bilingual reading mode. */
 import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
 
