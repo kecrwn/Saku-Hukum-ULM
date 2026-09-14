@@ -32,9 +32,9 @@ export const admissionPathways = [
     id: "SNBP (Seleksi Nasional Berdasarkan Prestasi)",
     en: "SNBP (National Merit-Based Selection)",
     descId: "Jalur prestasi akademik rapor dan portofolio bagi siswa SMA/SMK/MA berprestasi via snpmb.id.",
-    stats: "2026 SNBT: 192 kursi terisi 100%. UKT S1 Hukum berkisar Rp500.000 - Rp3.405.000.",
+    statsId: "2026 SNBT: 192 kursi terisi 100%. UKT S1 Hukum berkisar Rp500.000 - Rp3.405.000.",
     descEn: "Merit-based academic report and portfolio pathway for high school graduates via snpmb.id.",
-    stats: "2026 SNBT: 192 seats filled 100%. Law tuition ranges from Rp500,000 to Rp3,405,000 per semester.",
+    statsEn: "2026 SNBT: 192 seats filled 100%. Law tuition ranges from Rp500,000 to Rp3,405,000 per semester.",
     url: "https://snpmb.id/"
   },
   {
