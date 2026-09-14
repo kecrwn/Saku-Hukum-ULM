@@ -1,3 +1,4 @@
+"use client";
 /** River Margin / shULM: source-aware institutional context is shown as a short legal-notebook record, not as an official profile. */
 import { BadgeCheck, Landmark, MapPin, Milestone } from "lucide-react";
 import { PageIntro } from "@/components/PageIntro";

@@ -1,3 +1,4 @@
+"use client";
 /** River Margin / shULM: community paths are presented as qualified leads, keeping report-supported activity separate from faculty-verified channels. */
 import { CircleHelp, HeartHandshake, LibraryBig, Scale, Users } from "lucide-react";
 import { PageIntro } from "@/components/PageIntro";

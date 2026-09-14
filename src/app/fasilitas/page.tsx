@@ -1,3 +1,4 @@
+"use client";
 /** River Margin / shULM: facilities are described from named sources, keeping official photography separate from editorial illustration. */
 import { BookMarked, Building2, ExternalLink, HandHeart, Presentation } from "lucide-react";
 import { PageIntro } from "@/components/PageIntro";

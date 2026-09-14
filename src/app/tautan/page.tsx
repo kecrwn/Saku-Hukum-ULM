@@ -1,3 +1,4 @@
+"use client";
 /** River Margin design system: the links page works as a clean source desk—every destination is labelled by scope and verification basis. */
 import { ArrowUpRight, CheckCircle2, Library, Link2, ShieldQuestion } from "lucide-react";
 import { PageIntro } from "@/components/PageIntro";

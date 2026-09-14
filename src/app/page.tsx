@@ -1,3 +1,4 @@
+"use client";
 /** River Margin design system: the home page introduces Saku Hukum ULM as an asymmetrical, tactile study notebook rather than an official portal. */
 import type { LucideIcon } from "lucide-react";
 import { ArrowDownRight, ArrowUpRight, BookOpen, Compass, GraduationCap, Scale } from "lucide-react";

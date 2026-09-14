@@ -1,3 +1,4 @@
+"use client";
 /** River Margin design system: each route starts as a labeled document page, with a clear return path and marginal source status. */
 import { ChevronRight } from "lucide-react";
 import Link   from "next/link";

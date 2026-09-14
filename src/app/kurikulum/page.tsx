@@ -1,3 +1,4 @@
+"use client";
 /** River Margin / shULM: curriculum content prioritises the official 2020 PDF, with research context clearly separated from formal course rules. */
 import { BookOpenCheck, Download, Scale, ShieldCheck, BookOpen } from "lucide-react";
 import { PageIntro } from "@/components/PageIntro";

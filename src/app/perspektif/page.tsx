@@ -1,3 +1,4 @@
+"use client";
 /** River Margin design system: public perspectives appear as source-marked reading cards—paraphrased, scoped, and never treated as a ratings feed. */
 import { ArrowUpRight, Eye, FileText, MessageCircleMore, ShieldCheck } from "lucide-react";
 import { PageIntro } from "@/components/PageIntro";

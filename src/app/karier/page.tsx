@@ -1,3 +1,4 @@
+"use client";
 /** River Margin / shULM: the prosecutor path is a dated public-process map, never a personal eligibility opinion or a recruitment promise. */
 import { ArrowRight, BriefcaseBusiness, ClipboardCheck, GraduationCap, ShieldAlert, ShieldCheck } from "lucide-react";
 import { PageIntro } from "@/components/PageIntro";

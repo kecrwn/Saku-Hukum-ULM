@@ -1,3 +1,4 @@
+"use client";
 /** River Margin design system: citations are compact marginalia links that make the underlying source explicit. */
 import { ArrowUpRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";

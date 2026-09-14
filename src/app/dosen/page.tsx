@@ -1,3 +1,4 @@
+"use client";
 /** River Margin / shULM: leadership uses official listings; additional academic profiles remain visibly distinct from a formal faculty directory. */
 import { ContactRound, GraduationCap, Microscope, UsersRound } from "lucide-react";
 import { PageIntro } from "@/components/PageIntro";
