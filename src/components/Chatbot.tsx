@@ -1,54 +1,51 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Loader2 } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, Bot } from "lucide-react";
+import { useChat } from "ai/react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 type Message = { id: string; role: "user" | "assistant"; content: string };
 
 export function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
   const { isIndonesian } = useLanguage();
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, isTyping]);
+  const { messages, input, handleInputChange, handleSubmit, isLoading, append } = useChat({
+    api: "/api/chat",
+    initialMessages: [
+      {
+        id: "welcome",
+        role: "assistant",
+        content: isIndonesian
+          ? "Halo! Saya Jaksa, asisten Saku Hukum ULM. Ada yang bisa saya bantu terkait kurikulum, fasilitas, atau arah karier?"
+          : "Hello! I'm Jaksa, the Saku Hukum ULM assistant. How can I help you with the curriculum, facilities, or career paths?"
+      }
+    ]
+  });
+
+  // Keep chat scrolled to bottom
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isLoading]);
 
   const chips = isIndonesian
     ? ["Peminatan di FH ULM?", "Jalur menjadi jaksa?", "Berapa SKS Pidana?"]
     : ["FH ULM specializations?", "Path to become prosecutor?", "Criminal Law credits?"];
 
-  useEffect(() => {
-    if (messages.length === 0) {
-      setMessages([{
-        id: "welcome",
-        role: "assistant",
-        content: isIndonesian
-          ? "Halo! Saya asisten Saku Hukum ULM. Tanyakan tentang kurikulum, peminatan, fasilitas, atau jalur karier jaksa."
-          : "Hello! I'm the Saku Hukum ULM assistant. Ask about the curriculum, specializations, facilities, or the prosecutor career path."
-      }]);
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      const formEvent = new Event("submit", { bubbles: true, cancelable: true }) as unknown as React.FormEvent<HTMLFormElement>;
+      handleSubmit(formEvent);
     }
-  }, [isIndonesian, messages.length]);
+  };
 
-  const send = (text?: string) => {
-    const msg = text || input.trim();
-    if (!msg || isTyping) return;
-    setMessages(prev => [...prev, { id: Date.now().toString(), role: "user", content: msg }]);
-    if (!text) setInput("");
-    setIsTyping(true);
-    if (inputRef.current) inputRef.current.style.height = "auto";
-    setTimeout(() => {
-      setMessages(prev => [...prev, {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: isIndonesian
-          ? "Fitur ini masih dalam tahap pengembangan."
-          : "This feature is still in development."
-      }]);
-      setIsTyping(false);
-    }, 1200);
+  const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    handleInputChange(e);
+    e.target.style.height = "auto";
+    e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
   };
 
   return (
@@ -95,37 +92,39 @@ export function Chatbot() {
       {isOpen && (
         <div className="chat-panel">
           <div className="chat-head">
-            <div className="chat-head-title"><MessageCircle size={18} />{isIndonesian ? "Asisten Hukum" : "Law Assistant"}</div>
+            <div className="chat-head-title"><Bot size={19} />{isIndonesian ? "Jaksa" : "Jaksa"}</div>
             <button className="chat-close" onClick={() => setIsOpen(false)} aria-label={isIndonesian ? "Tutup" : "Close"}><X size={16} /></button>
           </div>
           <div className="chat-body">
             {messages.map(m => (
-              <div key={m.id} className={`chat-msg ${m.role === "user" ? "chat-msg-user" : "chat-msg-bot"}`}>{m.content}</div>
+              <div key={m.id} className={`chat-msg ${m.role === "user" ? "chat-msg-user" : "chat-msg-bot"}`}>
+                {m.content}
+              </div>
             ))}
             {messages.length <= 1 && (
               <div className="chat-chips">
-                {chips.map(c => <button key={c} className="chat-chip" onClick={() => send(c)}>{c}</button>)}
+                {chips.map(c => <button key={c} className="chat-chip" onClick={() => append({ role: 'user', content: c })}>{c}</button>)}
               </div>
             )}
-            {isTyping && <div className="chat-typing"><span /><span /><span /></div>}
+            {isLoading && <div className="chat-typing"><span /><span /><span /></div>}
             <div ref={endRef} />
           </div>
-          <div className="chat-input-bar">
+          <form className="chat-input-bar" onSubmit={handleSubmit}>
             <div className="chat-input-wrap">
               <textarea
                 ref={inputRef}
                 value={input}
-                onChange={e => { setInput(e.target.value); e.target.style.height = "auto"; e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px"; }}
-                onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
+                onChange={handleInput}
+                onKeyDown={handleKeyDown}
                 placeholder={isIndonesian ? "Tulis pesan..." : "Type a message..."}
                 rows={1}
-                disabled={isTyping}
+                disabled={isLoading}
               />
-              <button className="chat-send" disabled={!input.trim() || isTyping} onClick={() => send()}>
-                {isTyping ? <Loader2 size={16} className="animate-spin" /> : <Send size={14} style={{ marginLeft: '-1px' }} />}
+              <button type="submit" className="chat-send" disabled={!input.trim() || isLoading}>
+                {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Send size={14} style={{ marginLeft: '-1px' }} />}
               </button>
             </div>
-          </div>
+          </form>
         </div>
       )}
     </>
