@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SiteFrame } from "@/components/SiteFrame";
 import { LanguageProvider } from "@/contexts/LanguageContext";
-import { Chatbot } from "@/components/Chatbot";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -55,7 +55,7 @@ export default function RootLayout({
             <SiteFrame>
               {children}
             </SiteFrame>
-            <Chatbot />
+
           </TooltipProvider>
         </LanguageProvider>
       </body>

@@ -62,9 +62,9 @@ export function SearchDialog() {
 
   return (
     <>
-      <button onClick={() => setOpen(true)} className="nav-link flex items-center gap-2" aria-label={isIndonesian ? "Cari" : "Search"}>
+      <button onClick={() => setOpen(true)} className="search-trigger" aria-label={isIndonesian ? "Cari" : "Search"}>
         <Search size={15} strokeWidth={1.8} />
-        <span className="hidden md:inline">{isIndonesian ? "Cari (⌘K)" : "Search (⌘K)"}</span>
+        <span>{isIndonesian ? "Cari..." : "Search..."}</span>
       </button>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput 
