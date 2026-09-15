@@ -57,7 +57,7 @@ export async function POST(req: Request) {
                       lastMessage.includes('why') ||
                       lastMessage.includes('explain');
     
-    let model;
+    let model: any;
     if (activeProvider === 'nvidia') {
       model = nvidia(isComplex ? 'nvidia/nemotron-3-ultra-550b-a55b' : 'nvidia/nemotron-3.5-lightning-30b-a3b');
     } else if (activeProvider === 'deepseek') {
@@ -94,7 +94,7 @@ INSTRUCTIONS:
             try {
               const searchResults = await search(query);
               return searchResults.results.slice(0, 3).map(r => ({ title: r.title, description: r.description, url: r.url }));
-            } catch (e) {
+            } catch {
               return { error: 'Search failed' };
             }
           },

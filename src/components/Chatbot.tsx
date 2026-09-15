@@ -4,7 +4,7 @@ import { MessageCircle, X, Send, Loader2, Bot } from "lucide-react";
 import { useChat } from "ai/react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-type Message = { id: string; role: "user" | "assistant"; content: string };
+
 
 export function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -84,7 +84,7 @@ export function Chatbot() {
       `}</style>
 
       {!isOpen && (
-        <button className="chat-fab" onClick={() => setIsOpen(true)} aria-label={isIndonesian ? "Buka asisten" : "Open assistant"}>
+        <button type="button" className="chat-fab" onClick={() => setIsOpen(true)} aria-label={isIndonesian ? "Buka asisten" : "Open assistant"}>
           <MessageCircle size={22} />
         </button>
       )}
@@ -93,7 +93,7 @@ export function Chatbot() {
         <div className="chat-panel">
           <div className="chat-head">
             <div className="chat-head-title"><Bot size={19} />{isIndonesian ? "Jaksa" : "Jaksa"}</div>
-            <button className="chat-close" onClick={() => setIsOpen(false)} aria-label={isIndonesian ? "Tutup" : "Close"}><X size={16} /></button>
+            <button type="button" className="chat-close" onClick={() => setIsOpen(false)} aria-label={isIndonesian ? "Tutup" : "Close"}><X size={16} /></button>
           </div>
           <div className="chat-body">
             {messages.map(m => (
@@ -103,7 +103,7 @@ export function Chatbot() {
             ))}
             {messages.length <= 1 && (
               <div className="chat-chips">
-                {chips.map(c => <button key={c} className="chat-chip" onClick={() => append({ role: 'user', content: c })}>{c}</button>)}
+                {chips.map(c => <button type="button" key={c} className="chat-chip" onClick={() => append({ role: 'user', content: c })}>{c}</button>)}
               </div>
             )}
             {isLoading && <div className="chat-typing"><span /><span /><span /></div>}

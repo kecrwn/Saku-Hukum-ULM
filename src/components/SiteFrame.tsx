@@ -1,7 +1,7 @@
 "use client";
 /** River Margin design system: persistent shULM navigation behaves like a marked legal notebook, with a source-aware footer. */
 import { ArrowUpRight, Languages, Menu, X } from "lucide-react";
-import { type PropsWithChildren, useState } from "react";
+import { type PropsWithChildren, useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -18,8 +18,10 @@ export function SiteFrame({ children }: PropsWithChildren) {
   const [headerVisible, setHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
-  if (typeof window !== "undefined") {
-    window.addEventListener("scroll", () => {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    
+    const handleScroll = () => {
       const currentScrollY = window.scrollY;
       if (currentScrollY > lastScrollY && currentScrollY > 70) {
         setHeaderVisible(false);
@@ -27,8 +29,11 @@ export function SiteFrame({ children }: PropsWithChildren) {
         setHeaderVisible(true);
       }
       setLastScrollY(currentScrollY);
-    }, { passive: true });
-  }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   const copy = translations[language]; 
   const navItems = copy.nav as readonly (readonly [string, string])[];
