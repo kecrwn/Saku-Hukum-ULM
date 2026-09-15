@@ -87,7 +87,8 @@ INSTRUCTIONS:
    - Use headings (###) to separate sections for longer answers.
    - You can use HTML tags to add flavor: e.g. <span style="color: #b24d39; font-family: 'Outfit', sans-serif; font-weight: 800;">Special Term</span>.
    - You can use <div align="center"> to center text for emphasis, or <del>strikethrough</del>.
-   - Break long paragraphs into shorter ones.`;
+   - Break long paragraphs into shorter ones.
+6. ADAPTIVE PERSONALITY: The user's entire conversation history is sent with every request (stored locally on their device). Analyze their past messages to understand their communication style, tone, and specific needs. Individually adapt your responses to perfectly align with how they talk.`;
 
     const result = await streamText({
       model,

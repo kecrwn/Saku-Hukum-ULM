@@ -32,7 +32,7 @@ export function Chatbot() {
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading, append } = useChat({
+  const { messages, setMessages, input, handleInputChange, handleSubmit, isLoading, append } = useChat({
     api: "/api/chat",
     initialMessages: [
       {
@@ -44,6 +44,28 @@ export function Chatbot() {
       }
     ]
   });
+
+  // Load chat history from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem("shulm-chat-history");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.length > 0) {
+          setMessages(parsed);
+        }
+      } catch (e) {
+        console.error("Failed to parse chat history");
+      }
+    }
+  }, [setMessages]);
+
+  // Save chat history to localStorage whenever messages change
+  useEffect(() => {
+    if (messages.length > 1) {
+      localStorage.setItem("shulm-chat-history", JSON.stringify(messages));
+    }
+  }, [messages]);
 
   // Keep chat scrolled to bottom
   useEffect(() => {
