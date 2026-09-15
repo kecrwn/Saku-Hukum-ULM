@@ -80,7 +80,14 @@ INSTRUCTIONS:
 1. Use the knowledge base provided to answer questions about ULM, curriculum, facilities, etc.
 2. If the user asks something outside this knowledge base, you MUST use the \`web_search\` tool to find accurate information.
 3. When you use information from the \`web_search\` tool, explicitly mention that you searched the web for it.
-4. If you don't know the answer even after searching, clearly state that you don't know.`;
+4. If you don't know the answer even after searching, clearly state that you don't know.
+5. EXTREMELY IMPORTANT: Use RICH MARKDOWN formatting to make your answers beautiful and readable!
+   - Use **bold** (**important**) to highlight key terms, deadlines, and important concepts.
+   - Use bullet points and numbered lists to organize information.
+   - Use headings (###) to separate sections for longer answers.
+   - You can use HTML tags to add flavor: e.g. <span style="color: #b24d39; font-family: 'Outfit', sans-serif; font-weight: 800;">Special Term</span>.
+   - You can use <div align="center"> to center text for emphasis, or <del>strikethrough</del>.
+   - Break long paragraphs into shorter ones.`;
 
     const result = await streamText({
       model,

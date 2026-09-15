@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Outfit } from "next/font/google";
 import "../index.css";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,6 +8,7 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 
 
 const inter = Inter({ subsets: ["latin"] });
+const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
   title: "Saku Hukum ULM | Panduan Studi Pribadi Fakultas Hukum ULM",
@@ -48,7 +49,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id">
-      <body className={inter.className}>
+      <body className={`${inter.className} ${outfit.variable}`}>
         <LanguageProvider>
           <TooltipProvider>
             <Toaster />

@@ -4,7 +4,27 @@ import { MessageCircle, X, Send, Loader2, Bot } from "lucide-react";
 import { useChat } from "ai/react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 
+function ExpandableMessage({ content, isIndonesian }: { content: string, isIndonesian: boolean }) {
+  const [expanded, setExpanded] = useState(false);
+  const isLong = content.length > 350;
+  
+  const displayContent = isLong && !expanded ? content.slice(0, 350) + "..." : content;
+
+  return (
+    <div className="markdown-body">
+      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>{displayContent}</ReactMarkdown>
+      {isLong && (
+        <button type="button" onClick={() => setExpanded(!expanded)} className="read-more-btn">
+          {expanded ? (isIndonesian ? "Tutup" : "Show less") : (isIndonesian ? "Baca selengkapnya" : "Read more")}
+        </button>
+      )}
+    </div>
+  );
+}
 
 export function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -81,6 +101,18 @@ export function Chatbot() {
         .chat-send{position:absolute;right:8px;bottom:8px;width:34px;height:34px;border:none;border-radius:50%;background:var(--clay);color:var(--paper);display:grid;place-items:center;cursor:pointer;flex-shrink:0;transition:all 200ms cubic-bezier(.23,1,.32,1)}
         .chat-send:disabled{opacity:.4;cursor:default;background:var(--muted)}
         .chat-send:not(:disabled):hover{transform:scale(1.08);background:var(--ink-deep)}
+        .markdown-body { display: flex; flex-direction: column; gap: 8px; }
+        .markdown-body p { margin: 0; }
+        .markdown-body strong { font-weight: 800; color: inherit; }
+        .markdown-body em { font-style: italic; }
+        .markdown-body ul, .markdown-body ol { margin: 4px 0; padding-left: 20px; }
+        .markdown-body li { margin-bottom: 4px; }
+        .markdown-body a { text-decoration: underline; text-underline-offset: 2px; }
+        .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 { margin: 12px 0 6px; font-family: var(--serif); line-height: 1.2; }
+        .chat-msg-bot .markdown-body strong { color: var(--clay); }
+        .read-more-btn { align-self: flex-start; margin-top: 6px; font-size: 11px; font-weight: 800; color: var(--clay); background: transparent; border: none; cursor: pointer; padding: 0; text-transform: uppercase; letter-spacing: 0.05em; transition: opacity 150ms ease-out; }
+        .read-more-btn:hover { opacity: 0.7; }
+        .chat-msg-user .read-more-btn { color: var(--paper); opacity: 0.8; }
       `}</style>
 
       {!isOpen && (
@@ -98,7 +130,7 @@ export function Chatbot() {
           <div className="chat-body">
             {messages.map(m => (
               <div key={m.id} className={`chat-msg ${m.role === "user" ? "chat-msg-user" : "chat-msg-bot"}`}>
-                {m.content}
+                <ExpandableMessage content={m.content} isIndonesian={isIndonesian} />
               </div>
             ))}
             {messages.length <= 1 && (
