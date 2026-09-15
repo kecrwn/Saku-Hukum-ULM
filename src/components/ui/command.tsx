@@ -31,7 +31,7 @@ function Command({
 
 function CommandDialog({
   title = "Search",
-  description = "Search pages and courses",
+  description = "Search",
   children,
   className,
   showCloseButton = true,
