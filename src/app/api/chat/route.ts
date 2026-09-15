@@ -82,7 +82,7 @@ INSTRUCTIONS:
 3. When you use information from the \`web_search\` tool, explicitly mention that you searched the web for it.
 4. If you don't know the answer even after searching, clearly state that you don't know.`;
 
-    const result = streamText({
+    const result = await streamText({
       model,
       system: systemPrompt,
       messages,
