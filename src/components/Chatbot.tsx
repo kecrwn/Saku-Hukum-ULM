@@ -148,7 +148,7 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
   const models = [
     { id: "nvidia/nemotron-3-ultra-550b-a55b", name: "Ultra 550B" },
     { id: "nvidia/nemotron-3.5-lightning-30b-a3b", name: "Lightning 30B" },
-    { id: "moonshotai/kimi-k3", name: "Kimi K3" }
+    { id: "meta/llama-3.1-70b-instruct", name: "Llama 3.1 70B" }
   ];
 
   const currentModelName = models.find(m => m.id === selectedModel)?.name || "Ultra 550B";
@@ -381,12 +381,10 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
               {!fullScreen && (
                 <button
                   type="button"
-                  onClick={() => {
-                    setIsExpanding(true);
-                    setTimeout(() => router.push("/chat"), 300);
-                  }}
-                  className="chat-close flex items-center justify-center"
+                  onClick={() => router.push("/chat")}
+                  className="chat-close flex items-center justify-center hover:scale-105 active:scale-95 transition-transform"
                   aria-label={isIndonesian ? "Layar Penuh" : "Fullscreen"}
+                  title="Expand to Fullscreen"
                 >
                   <Maximize size={15} />
                 </button>
