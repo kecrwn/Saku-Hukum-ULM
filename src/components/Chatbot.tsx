@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Loader2, Bot, Maximize, Copy, Check, Trash2 } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, Bot, Maximize, Copy, Check, Trash2, Square, Clock } from "lucide-react";
 import { useChat } from "ai/react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useRouter } from "next/navigation";
@@ -139,6 +139,10 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
 
   const [selectedModel, setSelectedModel] = useState("nvidia/nemotron-3-ultra-550b-a55b");
   const [isModelMenuOpen, setIsModelMenuOpen] = useState(false);
+  const [processingTime, setProcessingTime] = useState(0);
+  const [generationTimes, setGenerationTimes] = useState<Record<string, number>>({});
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const startTimeRef = useRef<number>(0);
 
   const models = [
     { id: "nvidia/nemotron-3-ultra-550b-a55b", name: "Ultra 550B" },
@@ -148,10 +152,17 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
 
   const currentModelName = models.find(m => m.id === selectedModel)?.name || "Ultra 550B";
 
-  const { messages, setMessages, input, handleInputChange, handleSubmit, isLoading, append } = useChat({
+  const { messages, setMessages, input, handleInputChange, handleSubmit, isLoading, append, stop } = useChat({
     api: "/api/chat",
     body: { model: selectedModel },
     initialMessages: initialWelcome as any,
+    onFinish: (msg) => {
+      if (startTimeRef.current > 0) {
+        const totalTime = Date.now() - startTimeRef.current;
+        setGenerationTimes(prev => ({ ...prev, [msg.id]: totalTime }));
+        startTimeRef.current = 0;
+      }
+    },
     onError: (error) => {
       setMessages(prev => [
         ...prev,
@@ -192,6 +203,21 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
       localStorage.setItem("shulm-chat-history", JSON.stringify(messages));
     }
   }, [messages]);
+
+  useEffect(() => {
+    if (isLoading) {
+      if (startTimeRef.current === 0) startTimeRef.current = Date.now();
+      setProcessingTime(0);
+      timerRef.current = setInterval(() => {
+        setProcessingTime(Date.now() - startTimeRef.current);
+      }, 100);
+    } else {
+      if (timerRef.current) clearInterval(timerRef.current);
+    }
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [isLoading]);
 
   // Keep chat scrolled to bottom
   useEffect(() => {
@@ -264,6 +290,9 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
         .glass-model-btn.active { background: rgba(23, 62, 68, 0.08); color: var(--clay); }
         .glass-dropdown-toggle { background: rgba(23, 62, 68, 0.04); border: 1px solid rgba(23, 62, 68, 0.08); color: var(--ink-deep); font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all 200ms ease; margin-top: 4px; }
         .glass-dropdown-toggle:hover { background: rgba(23, 62, 68, 0.08); }
+        .chat-msg-time { font-size: 10px; opacity: 0.5; margin-top: 6px; text-align: right; display: flex; justify-content: flex-end; align-items: center; gap: 4px; }
+        .chat-stop-btn { background: rgba(178,77,57,0.1); color: var(--clay); border: 1px solid rgba(178,77,57,0.2); font-size: 11px; padding: 4px 10px; border-radius: 99px; cursor: pointer; display: flex; items-center: center; gap: 4px; font-weight: 600; transition: all 150ms ease; margin-left: 12px; }
+        .chat-stop-btn:hover { background: rgba(178,77,57,0.2); }
       `}</style>
 
       {!isOpen && !fullScreen && (
@@ -343,6 +372,11 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
             {messages.map(m => (
               <div key={m.id} className={`chat-msg ${m.role === "user" ? "chat-msg-user" : "chat-msg-bot"}`}>
                 <ExpandableMessage content={m.content} isIndonesian={isIndonesian} />
+                {m.role === "assistant" && generationTimes[m.id] && (
+                  <div className="chat-msg-time">
+                    <Clock size={10} /> {(generationTimes[m.id] / 1000).toFixed(1)}s
+                  </div>
+                )}
               </div>
             ))}
             {messages.length <= 1 && (
@@ -362,11 +396,18 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
               if (isAssistantStream && latestMessage.content.length > 0 && !activeTool) return null;
               
               return (
-                <div className="chat-typing">
-                  <div className="chat-typing-dots">
-                    <span /><span /><span />
+                <div className="flex items-center gap-2 mt-2 mb-2">
+                  <div className="chat-typing">
+                    <div className="chat-typing-dots">
+                      <span /><span /><span />
+                    </div>
+                    <span className="chat-typing-text">
+                      {thinkingText} <span className="opacity-60 ml-1">{(processingTime / 1000).toFixed(1)}s</span>
+                    </span>
                   </div>
-                  <span className="chat-typing-text">{thinkingText}</span>
+                  <button type="button" onClick={() => stop()} className="chat-stop-btn">
+                    <Square size={10} fill="currentColor" /> Stop
+                  </button>
                 </div>
               );
             })()}
