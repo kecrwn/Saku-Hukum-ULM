@@ -44,7 +44,7 @@ const activeProvider = process.env.ACTIVE_PROVIDER || 'nvidia';
 
 const nvidia = createOpenAI({
   baseURL: 'https://integrate.api.nvidia.com/v1',
-  apiKey: process.env.NVIDIA_API_KEY || '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',
+  apiKey: process.env.NVIDIA_API_KEY,
 });
 
 const deepseek = createOpenAI({
