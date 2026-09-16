@@ -69,6 +69,5 @@ export function SiteFrame({ children }: PropsWithChildren) {
     </div>
   </footer>
       {location !== "/chat" && <Chatbot />}
-    </div>
-  );
+    </div>;
 }
