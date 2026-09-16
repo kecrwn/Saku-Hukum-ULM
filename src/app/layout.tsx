@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { Inter, Outfit, Caveat, Fira_Code, Manrope, DM_Serif_Display } from "next/font/google";
+import { Inter, Outfit, Caveat, Fira_Code, Manrope, DM_Serif_Display, Lora } from "next/font/google";
 import "../index.css";
 
 const manrope = Manrope({ subsets: ["latin"], weight: ["400", "500", "700", "800"], variable: "--font-manrope" });
 const dmSerif = DM_Serif_Display({ subsets: ["latin"], weight: ["400"], style: ["normal", "italic"], variable: "--font-dm-serif" });
+const lora = Lora({ subsets: ["latin"], weight: ["400", "500", "600", "700"], style: ["normal", "italic"], variable: "--font-lora" });
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SiteFrame } from "@/components/SiteFrame";
@@ -54,7 +55,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id">
-      <body className={`${inter.className} ${outfit.variable} ${caveat.variable} ${firaCode.variable} ${manrope.variable} ${dmSerif.variable}`}>
+      <body className={`${inter.className} ${outfit.variable} ${caveat.variable} ${firaCode.variable} ${manrope.variable} ${dmSerif.variable} ${lora.variable}`}>
         <LanguageProvider>
           <TooltipProvider>
             <Toaster />
