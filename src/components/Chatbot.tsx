@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Send, Loader2, Bot, Maximize } from "lucide-react";
 import { useChat } from "ai/react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useRouter } from "next/navigation";
 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -30,7 +31,9 @@ function ExpandableMessage({ content, isIndonesian }: { content: string, isIndon
 
 export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
   const [isOpen, setIsOpen] = useState(fullScreen ? true : false);
+  const [isExpanding, setIsExpanding] = useState(false);
   const { isIndonesian } = useLanguage();
+  const router = useRouter();
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -102,6 +105,7 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
         .chat-fab:active{transform:scale(.94)}
         .chat-panel{position:fixed;bottom:32px;right:32px;z-index:50;width:385px;max-width:calc(100% - 64px);height:580px;max-height:calc(100dvh - 64px);border-radius:24px;display:flex;flex-direction:column;overflow:hidden;background:rgba(247,242,233,0.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(23,62,68,.12);box-shadow:0 24px 64px rgba(16,45,51,.22);animation:chat-slide-up .4s cubic-bezier(.23,1,.32,1) both}
         .chat-panel-fullscreen{position:fixed;inset:0;z-index:100;width:100vw;height:100dvh;display:flex;flex-direction:column;overflow:hidden;background:var(--paper);animation:chat-slide-up .3s ease-out}
+        .chat-panel.is-expanding { transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1) !important; width: 100vw !important; height: 100dvh !important; max-width: 100vw !important; max-height: 100dvh !important; bottom: 0 !important; right: 0 !important; border-radius: 0 !important; }
         .chat-head{display:flex;align-items:center;justify-content:space-between;padding:22px 26px;border-bottom:1px solid rgba(23,62,68,.1)}
         .chat-head-title{display:flex;align-items:center;gap:12px;font-family:var(--serif);font-size:22px;line-height:1;letter-spacing:-.03em;color:var(--ink-deep)}
         .chat-head-title svg{color:var(--clay)}
@@ -114,11 +118,6 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
         .chat-chips{display:flex;flex-wrap:wrap;gap:10px;padding-top:8px}
         .chat-chip{border:1px solid rgba(23,62,68,.15);background:rgba(255,255,255,.7);color:var(--ink-deep);font-size:12px;padding:8px 16px;border-radius:999px;cursor:pointer;font-family:var(--sans);font-weight:700;transition:all 200ms cubic-bezier(.23,1,.32,1)}
         .chat-chip:hover{background:var(--ink-deep);color:var(--paper);border-color:var(--ink-deep);transform:translateY(-2px)}
-        .chat-typing{display:flex;gap:6px;align-self:flex-start;padding:16px 20px;background:rgba(255,253,250,0.85);backdrop-filter:blur(8px);border:1px solid rgba(23,62,68,.08);border-radius:18px;border-bottom-left-radius:4px;box-shadow:0 4px 16px rgba(16,45,51,.03)}
-        .chat-typing span{width:8px;height:8px;border-radius:50%;background:var(--clay);animation:bounce .6s infinite alternate}
-        .chat-typing span:nth-child(2){animation-delay:.15s}
-        .chat-typing span:nth-child(3){animation-delay:.3s}
-        @keyframes bounce{to{transform:translateY(-6px);opacity:.3}}
         .chat-input-bar{padding:18px 26px;background:rgba(247,242,233,.8);border-top:1px solid rgba(23,62,68,.1)}
         .chat-input-wrap{position:relative;display:flex;align-items:flex-end;background:var(--card);border:1px solid rgba(23,62,68,.18);border-radius:26px;box-shadow:0 4px 16px rgba(0,0,0,.03);transition:border-color 200ms ease-out,box-shadow 200ms ease-out}
         .chat-input-wrap:focus-within{border-color:var(--clay);box-shadow:0 6px 20px rgba(178,77,57,.12)}
@@ -147,11 +146,23 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
       )}
 
       {isOpen && (
-        <div className={fullScreen ? "chat-panel-fullscreen" : "chat-panel"}>
+        <div className={fullScreen ? "chat-panel-fullscreen" : `chat-panel ${isExpanding ? 'is-expanding' : ''}`}>
           <div className="chat-head">
             <div className="chat-head-title"><Bot size={19} />{isIndonesian ? "Jaksa" : "Jaksa"}</div>
             <div className="flex gap-2 items-center">
-              {!fullScreen && <Link href="/chat" className="chat-close flex items-center justify-center" aria-label={isIndonesian ? "Layar Penuh" : "Fullscreen"}><Maximize size={15} /></Link>}
+              {!fullScreen && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsExpanding(true);
+                    setTimeout(() => router.push("/chat"), 300);
+                  }}
+                  className="chat-close flex items-center justify-center"
+                  aria-label={isIndonesian ? "Layar Penuh" : "Fullscreen"}
+                >
+                  <Maximize size={15} />
+                </button>
+              )}
               {!fullScreen && <button type="button" className="chat-close" onClick={() => setIsOpen(false)} aria-label={isIndonesian ? "Tutup" : "Close"}><X size={16} /></button>}
               {fullScreen && <Link href="/" className="chat-close flex items-center justify-center" aria-label={isIndonesian ? "Tutup" : "Close"}><X size={16} /></Link>}
             </div>
@@ -179,11 +190,11 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
               if (isAssistantStream && latestMessage.content.length > 0 && !activeTool) return null;
               
               return (
-                <div className="chat-typing" style={{ alignItems: 'center' }}>
-                  <div className="flex gap-[4px] items-center" style={{marginTop: '0px'}}>
+                <div className="chat-typing">
+                  <div className="chat-typing-dots">
                     <span /><span /><span />
                   </div>
-                  <span style={{ fontSize: '11px', color: 'var(--muted)', marginLeft: '10px', fontWeight: 700, letterSpacing: '0.02em', marginTop: '-2px' }}>{thinkingText}</span>
+                  <span className="chat-typing-text">{thinkingText}</span>
                 </div>
               );
             })()}

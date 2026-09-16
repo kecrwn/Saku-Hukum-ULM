@@ -24,7 +24,7 @@ function checkRateLimit(ip: string) {
   return true;
 }
 
-const activeProvider = process.env.ACTIVE_PROVIDER || 'openai';
+const activeProvider = process.env.ACTIVE_PROVIDER || 'nvidia';
 
 const nvidia = createOpenAI({
   baseURL: 'https://integrate.api.nvidia.com/v1',
@@ -66,7 +66,7 @@ export async function POST(req: Request) {
     if (activeProvider === 'openai') {
       model = openaiProvider(isComplex ? 'gpt-4o' : 'gpt-4o-mini');
     } else if (activeProvider === 'nvidia') {
-      model = nvidia(isComplex ? 'nvidia/nemotron-3-ultra-550b-a55b' : 'nvidia/nemotron-3.5-lightning-30b-a3b');
+      model = nvidia(isComplex ? 'meta/llama-3.1-70b-instruct' : 'meta/llama-3.1-8b-instruct');
     } else if (activeProvider === 'deepseek') {
       model = deepseek(isComplex ? 'deepseek-reasoner' : 'deepseek-chat');
     } else {
