@@ -172,10 +172,22 @@ INSTRUCTIONS:
       maxSteps: 3, // allow the model to call the tool and then respond
     });
 
-    return result.toDataStreamResponse();
+    return result.toDataStreamResponse({ sendUsage: true });
   } catch (error: any) {
     console.error('Chat API Error:', error);
-    const errorMsg = error?.message || (typeof error === 'string' ? error : 'Failed to process request.');
-    return new Response(errorMsg, { status: 500 });
+    let errorMsg = 'Failed to process request.';
+    let status = 500;
+    const rawError = (error?.message || '').toLowerCase();
+    
+    if (rawError.includes('quota') || rawError.includes('429') || rawError.includes('402') || rawError.includes('insufficient_quota')) {
+      errorMsg = 'Model API quota has been exhausted. Please wait or try another model.';
+      status = 402;
+    } else if (typeof error === 'string') {
+      errorMsg = error;
+    } else if (error?.message) {
+      errorMsg = error.message;
+    }
+    
+    return new Response(JSON.stringify({ error: errorMsg }), { status, headers: { 'Content-Type': 'application/json' } });
   }
 }

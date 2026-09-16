@@ -141,6 +141,7 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
   const [isModelMenuOpen, setIsModelMenuOpen] = useState(false);
   const [processingTime, setProcessingTime] = useState(0);
   const [generationTimes, setGenerationTimes] = useState<Record<string, number>>({});
+  const [totalTokensUsed, setTotalTokensUsed] = useState(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(0);
 
@@ -156,24 +157,44 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
     api: "/api/chat",
     body: { model: selectedModel },
     initialMessages: initialWelcome as any,
-    onFinish: (msg) => {
+    onFinish: (msg, options: any) => {
       if (startTimeRef.current > 0) {
         const totalTime = Date.now() - startTimeRef.current;
         setGenerationTimes(prev => ({ ...prev, [msg.id]: totalTime }));
         startTimeRef.current = 0;
       }
+      if (options?.usage?.totalTokens) {
+        setTotalTokensUsed(prev => prev + options.usage.totalTokens);
+      }
     },
     onError: (error) => {
+      let errorText = isIndonesian 
+        ? "Mohon maaf, terjadi kesalahan jaringan atau API. Silakan coba lagi nanti."
+        : "Sorry, a network or API error occurred. Please try again later.";
+      const errMsg = (error?.message || '').toLowerCase();
+      
+      if (errMsg.includes('quota') || errMsg.includes('429') || errMsg.includes('402') || errMsg.includes('exhausted')) {
+        errorText = isIndonesian
+          ? "⚠️ Kuota model ini telah habis (Quota Exhausted). Silakan gunakan model AI lainnya dari menu di atas."
+          : "⚠️ This model's quota has been exhausted. Please use another AI model from the menu above.";
+      } else if (errMsg) {
+        try {
+          const parsed = JSON.parse(error.message);
+          if (parsed.error) errorText = parsed.error;
+        } catch(e) {
+          errorText = error.message;
+        }
+      }
+
       setMessages(prev => [
         ...prev,
         {
-          id: `error-${Date.now()}`,
+          id: Date.now().toString(),
           role: "assistant",
-          content: isIndonesian
-            ? `**Terjadi Kesalahan!** 🚨\nMaaf, sepertinya ada masalah dengan koneksi API (misalnya kuota Nvidia habis, API key belum diatur, atau model belum diaktifkan di dashboard).\n\n*Pesan sistem:* ${error.message}`
-            : `**Error occurred!** 🚨\nSorry, there seems to be an issue with the API connection (e.g., Nvidia quota exhausted, missing API key, or model not activated in dashboard).\n\n*System message:* ${error.message}`
+          content: errorText
         }
       ]);
+      setProcessingTime(0);
     }
   });
 
@@ -319,6 +340,11 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
                   <span className="opacity-70">AI:</span> {currentModelName}
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isModelMenuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', marginLeft: '2px', opacity: 0.6 }}><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
+                {totalTokensUsed > 0 && (
+                  <div style={{ fontSize: '9px', color: 'var(--clay)', fontWeight: 800, opacity: 0.8, marginTop: '2px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    {totalTokensUsed.toLocaleString()} Tokens Used
+                  </div>
+                )}
                 {isModelMenuOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setIsModelMenuOpen(false)}></div>
