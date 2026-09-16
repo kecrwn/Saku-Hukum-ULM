@@ -430,9 +430,14 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
               if (m.role === 'assistant' && !m.content && (!m.toolInvocations || m.toolInvocations.length === 0)) {
                 return null;
               }
+              const cleanContent = m.content.replace(/<think>[\s\S]*?(<\/think>|$)/g, '').trim();
+              if (m.role === 'assistant' && !cleanContent && m.content.includes('<think>') && !m.content.includes('</think>')) {
+                return null; // Hide the bubble entirely if it's currently only streaming a think block
+              }
+              
               return (
                 <div key={m.id} className={`chat-msg ${m.role === "user" ? "chat-msg-user" : "chat-msg-bot"}`}>
-                  <ExpandableMessage content={m.content} isIndonesian={isIndonesian} />
+                  <ExpandableMessage content={m.role === 'assistant' ? cleanContent : m.content} isIndonesian={isIndonesian} />
                   {m.role === "assistant" && generationTimes[m.id] && (
                     <div className="chat-msg-time">
                       <Clock size={10} /> {(generationTimes[m.id] / 1000).toFixed(1)}s

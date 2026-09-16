@@ -64,8 +64,8 @@ function getClient(modelName: string) {
 }
 
 const TIER_TOKENS: Record<string, number> = {
-  'nvidia/nemotron-3.5-lightning-30b-a3b': 512,
-  'groq/llama-3.1-8b-instant': 512,
+  'nvidia/nemotron-3.5-lightning-30b-a3b': 250,
+  'groq/llama-3.1-8b-instant': 250,
   'nvidia/nemotron-3-super-120b-a12b': 1024,
   'moonshotai/kimi-k3': 2048,
   'deepseek-ai/deepseek-v4-flash-0731': 2048
@@ -90,13 +90,13 @@ export async function POST(req: Request) {
   }
 
   const systemPrompt = `You are Jaksa, a warm, helpful, and simple bilingual study assistant for Saku Hukum ULM (Universitas Lambung Mangkurat's unofficial Prosecutor track guide).
-You are extremely POLYGLOT. You must seamlessly reply in the EXACT language the user speaks. Keep your tone warm, simple, and jargon-free (short sentences).
+You are extremely POLYGLOT. You must seamlessly reply in the EXACT language the user speaks. Keep your tone warm, simple, and jargon-free.
 
-CRITICAL GROUNDING RULES:
-1. ALWAYS answer from the site's own knowledge file first (Quick Facts, Highlights, Links).
-2. If the answer is NOT in the knowledge base, you MUST explicitly state that you are unsure and need to check online (e.g. "I don't have that in the site's info, let me check online...") BEFORE using the web_search tool. Do not guess.
-3. If the user asks for details about specific site pages, use the readSiteContent tool.
-4. Keep answers to greetings or simple factual questions very short and direct. Only elaborate on complex topics.
+CRITICAL RULES (FOLLOW EXACTLY):
+1. NO INTERNAL MONOLOGUE. ALWAYS answer directly and immediately. DO NOT output any reasoning, debate, or narrate your thought process (e.g. do not say "Let me think" or "The rule says..."). Just provide the final answer.
+2. Check the provided Knowledge Base first.
+3. If the answer is NOT in the Knowledge Base, DO NOT state that you are checking online. Immediately try the web_search tool silently ONCE.
+4. If web_search fails or isn't available, answer briefly from your general knowledge and politely add that this specific info isn't from the site's official curated guide.
 5. Use RICH MARKDOWN formatting to make your answers beautiful and readable (bolding, lists).
 
 KNOWLEDGE BASE:
@@ -111,9 +111,16 @@ KNOWLEDGE BASE:
       parameters: z.object({ query: z.string() }),
       execute: async ({ query }) => {
         try {
-          const searchResults = await search(query);
+          console.log(`[web_search] Query executed: ${query}`);
+          const searchResults = await search(query, { safeSearch: 1 });
+          if (!searchResults || !searchResults.results || searchResults.results.length === 0) {
+            return { error: 'Search returned no results. Fallback to general knowledge immediately.' };
+          }
           return searchResults.results.slice(0, 3).map(r => ({ title: r.title, description: r.description, url: r.url }));
-        } catch { return { error: 'Search failed' }; }
+        } catch (err: any) { 
+          console.error(`[web_search] API Failed:`, err.message);
+          return { error: 'Search API is currently unavailable or rate-limited. Fallback to general knowledge immediately without stating the search failed.' }; 
+        }
       },
     }),
     readSiteContent: tool({
