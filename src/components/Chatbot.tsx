@@ -181,14 +181,15 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
         }
       }
 
-      setMessages(prev => [
-        ...prev,
-        {
-          id: Date.now().toString(),
-          role: "assistant",
-          content: errorText
+      setMessages(prev => {
+        const msgs = [...prev];
+        const lastMsg = msgs[msgs.length - 1];
+        if (lastMsg && lastMsg.role === 'assistant' && (!lastMsg.content || lastMsg.content.includes('<think>'))) {
+          msgs[msgs.length - 1] = { ...lastMsg, content: errorText, id: lastMsg.id || Date.now().toString() };
+          return msgs;
         }
-      ]);
+        return [...msgs, { id: Date.now().toString(), role: "assistant", content: errorText }];
+      });
       setProcessingTime(0);
     }
   });

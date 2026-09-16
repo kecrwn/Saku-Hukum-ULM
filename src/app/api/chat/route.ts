@@ -4,6 +4,7 @@ import { search } from 'duck-duck-scrape';
 import { z } from 'zod';
 import { externalLinks, quickFacts, campusHighlights, directDownloads } from '@/lib/site-data';
 import { siteKnowledge } from '@/lib/site-knowledge';
+import { lawKnowledgeBase, availableLawTopics } from '@/lib/knowledge';
 
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
@@ -101,6 +102,7 @@ CRITICAL RULES (FOLLOW EXACTLY):
 6. If a question is genuinely outside what you can help with, say so plainly and suggest what you can help with instead.
 7. Use RICH MARKDOWN formatting. If comparing items or listing steps, you can use side-by-side columns by outputting EXACTLY this HTML structure:
    <div class="chat-columns"><div class="chat-col">Column 1 Content</div><div class="chat-col">Column 2 Content</div></div>
+8. You have access to a massive offline database of Indonesian Laws via the read_local_law tool. Use it whenever asked about Indonesian Law. Available topics: ${availableLawTopics.map(t => t.id).join(', ')}. Do not tell the user you are using a tool, just use it.
 
 KNOWLEDGE BASE:
 - Saku Hukum ULM is a personal study guide, NOT the official ULM website.
@@ -132,6 +134,15 @@ KNOWLEDGE BASE:
       execute: async ({ path }) => {
         const page = siteKnowledge.find(p => p.path === path);
         return page ? page.summary : "Page not found.";
+      },
+    }),
+    read_local_law: tool({
+      description: 'Fetch extremely detailed comprehensive Indonesian Law knowledge base files. Use this before using web_search for Indonesian law topics.',
+      parameters: z.object({ topic_id: z.string().describe(`The ID of the topic. Must be one of: ${availableLawTopics.map(t => t.id).join(', ')}`) }),
+      execute: async ({ topic_id }) => {
+        const knowledge = lawKnowledgeBase[topic_id];
+        if (!knowledge) return "Topic not found in local database. Try using web_search.";
+        return JSON.stringify(knowledge);
       },
     }),
   };
@@ -167,7 +178,7 @@ KNOWLEDGE BASE:
         messages,
         tools,
         maxSteps: 3,
-        maxTokens: TIER_TOKENS[modelName] || 1024
+        maxTokens: TIER_TOKENS[modelName] || 2048
       });
 
       return result.toDataStreamResponse({ sendUsage: true, headers: { 'X-Model-Used': modelName } });
@@ -189,7 +200,7 @@ KNOWLEDGE BASE:
       messages,
       tools,
       maxSteps: 3,
-      maxTokens: 1024
+      maxTokens: 2048
     });
     return result.toDataStreamResponse({ sendUsage: true, headers: { 'X-Model-Used': 'deepseek-chat-native' } });
   } catch (error: any) {
