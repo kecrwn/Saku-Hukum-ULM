@@ -2,7 +2,7 @@ import { createOpenAI } from '@ai-sdk/openai';
 import { streamText, tool } from 'ai';
 import { search } from 'duck-duck-scrape';
 import { z } from 'zod';
-import { externalLinks, quickFacts, campusHighlights } from '@/lib/site-data';
+import { externalLinks, quickFacts, campusHighlights, directDownloads } from '@/lib/site-data';
 import { siteKnowledge } from '@/lib/site-knowledge';
 
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -89,15 +89,18 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify({ error: 'Invalid messages array' }), { status: 400 });
   }
 
-  const systemPrompt = `You are Jaksa, a warm, helpful, and simple bilingual study assistant for Saku Hukum ULM (Universitas Lambung Mangkurat's unofficial Prosecutor track guide).
+const systemPrompt = `You are Jaksa, a warm, helpful, and simple bilingual study assistant for Saku Hukum ULM (Universitas Lambung Mangkurat's unofficial Prosecutor track guide).
 You are extremely POLYGLOT. You must seamlessly reply in the EXACT language the user speaks. Keep your tone warm, simple, and jargon-free.
 
 CRITICAL RULES (FOLLOW EXACTLY):
 1. NO INTERNAL MONOLOGUE. ALWAYS answer directly and immediately. DO NOT output any reasoning, debate, or narrate your thought process (e.g. do not say "Let me think" or "The rule says..."). Just provide the final answer.
-2. Check the provided Knowledge Base first.
+2. Check the provided Knowledge Base first. Answer questions about contacts, curriculum, or downloads directly from it.
 3. If the answer is NOT in the Knowledge Base, DO NOT state that you are checking online. Immediately try the web_search tool silently ONCE.
-4. If web_search fails or isn't available, answer briefly from your general knowledge and politely add that this specific info isn't from the site's official curated guide.
-5. Use RICH MARKDOWN formatting to make your answers beautiful and readable (bolding, lists).
+4. If web_search fails or isn't available, answer briefly from your general knowledge and politely add that this specific info isn't from the site's official curated guide. DO NOT dump raw technical errors.
+5. ADAPTIVE LENGTH: Match your answer length to the question. A simple factual question gets a short 1-2 sentence answer. Broader questions can use structured markdown.
+6. If a question is genuinely outside what you can help with, say so plainly and suggest what you can help with instead.
+7. Use RICH MARKDOWN formatting. If comparing items or listing steps, you can use side-by-side columns by outputting EXACTLY this HTML structure:
+   <div class="chat-columns"><div class="chat-col">Column 1 Content</div><div class="chat-col">Column 2 Content</div></div>
 
 KNOWLEDGE BASE:
 - Saku Hukum ULM is a personal study guide, NOT the official ULM website.
@@ -114,12 +117,12 @@ KNOWLEDGE BASE:
           console.log(`[web_search] Query executed: ${query}`);
           const searchResults = await search(query, { safeSearch: 1 });
           if (!searchResults || !searchResults.results || searchResults.results.length === 0) {
-            return { error: 'Search returned no results. Fallback to general knowledge immediately.' };
+            return { error: 'Search returned no results. Fallback to general knowledge immediately, but politely mention live search is unavailable.' };
           }
           return searchResults.results.slice(0, 3).map(r => ({ title: r.title, description: r.description, url: r.url }));
         } catch (err: any) { 
           console.error(`[web_search] API Failed:`, err.message);
-          return { error: 'Search API is currently unavailable or rate-limited. Fallback to general knowledge immediately without stating the search failed.' }; 
+          return { error: 'Search API is currently unavailable or rate-limited. Fallback to general knowledge immediately, but politely mention live search is unavailable.' }; 
         }
       },
     }),

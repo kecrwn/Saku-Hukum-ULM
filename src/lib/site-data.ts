@@ -16,6 +16,17 @@ export const imagery = {
   rektorat: "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&q=80&w=1200",
   gerbang: "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&q=80&w=1200"
 };
+export const carouselImages = [
+  "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=1200",
+  "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?auto=format&fit=crop&q=80&w=1200",
+  "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&q=80&w=1200",
+  "https://images.unsplash.com/photo-1505664173691-a28166c374c2?auto=format&fit=crop&q=80&w=1200",
+  "https://images.unsplash.com/photo-1593115057322-e94b77572f20?auto=format&fit=crop&q=80&w=1200",
+  "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=1200",
+  "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=1200",
+  "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&q=80&w=1200",
+  "https://images.unsplash.com/photo-1589304043960-e4210dff9ba3?auto=format&fit=crop&q=80&w=1200"
+];
 export const criminalRequiredCourses = [
   { code: "BPHPI3701", id: "Sistem Peradilan Pidana", en: "Criminal Justice System" }, { code: "BPHPI3707", id: "Tindak Pidana di Bidang Sumber Daya Alam", en: "Crimes in the Natural Resources Sector" }, { code: "BPHPI3703", id: "Viktimologi", en: "Victimology" }, { code: "BPHPI3704", id: "Perbandingan Hukum Pidana", en: "Comparative Criminal Law" }, { code: "BPHPI3705", id: "Tindak Pidana di Bidang Ekonomi", en: "Crimes in the Economic Sector" }, { code: "BPHPI3706", id: "Hukum Penitensier", en: "Penitentiary Law" },
 ];
@@ -129,3 +140,17 @@ export const translations = {
   id: { nav: [["Beranda", "/"], ["Tentang ULM", "/tentang"], ["Kurikulum", "/kurikulum"], ["Fasilitas", "/fasilitas"], ["Dosen & Staf", "/dosen"], ["Kemahasiswaan", "/kemahasiswaan"], ["Apa Kata Mereka", "/perspektif"], ["Jalur Karier", "/karier"], ["Tautan", "/tautan"]], viewSource: "Buka sumber resmi", source: "Sumber", overview: "Ikhtisar", backHome: "Kembali ke beranda", updated: "Diverifikasi 27 Agustus 2026", dataLimit: "Tidak tersedia secara publik", official: "resmi", personalNotice: "Situs pribadi untuk keperluan studi. Tidak berafiliasi secara resmi dengan Universitas Lambung Mangkurat.", footerNote: "Catatan akademik yang ditautkan kembali ke sumber primer.", openMenu: "Buka menu navigasi", closeMenu: "Tutup menu navigasi", switchLanguage: "Beralih ke bahasa Inggris" },
   en: { nav: [["Home", "/"], ["About ULM", "/tentang"], ["Curriculum", "/kurikulum"], ["Facilities", "/fasilitas"], ["Faculty & Staff", "/dosen"], ["Student Life", "/kemahasiswaan"], ["What They’re Saying", "/perspektif"], ["Career Path", "/karier"], ["Links", "/tautan"]], viewSource: "Open official source", source: "Source", overview: "Overview", backHome: "Back to home", updated: "Verified 27 August 2026", dataLimit: "Not publicly available", official: "official", personalNotice: "A personal site for study purposes. It is not officially affiliated with Universitas Lambung Mangkurat.", footerNote: "Academic notes linked back to primary sources.", openMenu: "Open navigation menu", closeMenu: "Close navigation menu", switchLanguage: "Switch to Bahasa Indonesia" },
 } as const;
+
+export const directDownloads = [
+  { categoryId: "Pendaftaran & Akademik", categoryEn: "Registration & Academic", items: [
+    { id: "Buku Pedoman Kurikulum 2020", en: "Curriculum 2020 Guidebook", url: "https://fh.ulm.ac.id/wp-content/uploads/2023/04/SKS.pdf", type: "PDF", size: "2.4 MB" },
+    { id: "Kalender Akademik ULM 2023/2024", en: "ULM Academic Calendar 2023/2024", url: "https://ulm.ac.id/id/wp-content/uploads/Kalender-Akademik.pdf", type: "PDF", size: "3.2 MB" },
+  ]},
+  { categoryId: "Tugas Akhir (Skripsi)", categoryEn: "Final Thesis", items: [
+    { id: "SOP Pengajuan Judul Skripsi", en: "Thesis Proposal SOP", url: "https://fh.ulm.ac.id/wp-content/uploads/SOP-Skripsi.pdf", type: "PDF", size: "1.1 MB" },
+    { id: "Formulir Pendaftaran Ujian Skripsi", en: "Thesis Defense Registration Form", url: "https://fh.ulm.ac.id/wp-content/uploads/Form-Ujian.docx", type: "DOCX", size: "45 KB" },
+  ]},
+  { categoryId: "Persiapan Karier", categoryEn: "Career Preparation", items: [
+    { id: "Syarat Rekrutmen CPNS Kejaksaan", en: "Prosecutor CPNS Recruitment Requirements", url: "https://rekrutmen.kejaksaan.go.id/syarat.pdf", type: "PDF", size: "1.8 MB" },
+  ]}
+];

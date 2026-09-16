@@ -166,12 +166,12 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
       
       if (errMsg.includes('all models failed')) {
         errorText = isIndonesian
-          ? "⚠️ Semua jalur AI sedang penuh atau sibuk. Kami masih mengerjakannya, mohon coba beberapa saat lagi."
-          : "⚠️ All AI tiers are currently busy. We're still working on it, please try again in a moment.";
+          ? "Maaf ya, sepertinya semua jalur AI kami sedang penuh saat ini. Tunggu sebentar dan coba lagi ya."
+          : "I'm sorry, it looks like all our AI tiers are currently busy. Please wait a moment and try again.";
       } else if (errMsg.includes('quota') || errMsg.includes('429') || errMsg.includes('402') || errMsg.includes('exhausted')) {
         errorText = isIndonesian
-          ? "⚠️ Kuota model ini telah habis (Quota Exhausted). Silakan gunakan model AI lainnya dari menu di atas."
-          : "⚠️ This model's quota has been exhausted. Please use another AI model from the menu above.";
+          ? "Sepertinya kuota model AI ini sedang habis. Kamu bisa pilih model lain dari menu di atas ya!"
+          : "It seems this AI model's quota is exhausted. You can pick a different model from the menu above!";
       } else if (errMsg) {
         try {
           const parsed = JSON.parse(error.message);
