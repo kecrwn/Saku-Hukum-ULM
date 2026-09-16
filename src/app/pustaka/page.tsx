@@ -84,8 +84,12 @@ export default function PustakaPage() {
                 className="w-full text-left p-6 md:p-8 flex items-start justify-between gap-4 bg-transparent outline-none cursor-pointer"
               >
                 <div>
-                  <h2 className="text-2xl font-serif text-[var(--ink-deep)] mb-2">{topic.data.title || topic.name}</h2>
-                  <p className="text-[var(--muted)] text-[15px] max-w-3xl leading-relaxed">{topic.data.description}</p>
+                  <h2 className="text-2xl font-serif text-[var(--ink-deep)] mb-2">
+                    {language === 'id' ? (topic.data.titleId || topic.data.title || topic.name) : (topic.data.titleEn || topic.data.title || topic.name)}
+                  </h2>
+                  <p className="text-[var(--muted)] text-[15px] max-w-3xl leading-relaxed">
+                    {language === 'id' ? (topic.data.summaryId || topic.data.description) : (topic.data.summaryEn || topic.data.description)}
+                  </p>
                 </div>
                 <div className={`p-2 rounded-full bg-[var(--paper)] text-[var(--clay)] transition-transform duration-300 ${expandedTopic === topic.id ? 'rotate-180 bg-[var(--clay)] text-white' : ''}`}>
                   <ChevronDown size={20} />
@@ -103,7 +107,9 @@ export default function PustakaPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
                     {topic.data.sections.map((section: any, idx: number) => (
                       <div key={idx} className="bg-white/60 p-5 rounded-2xl border border-[rgba(23,62,68,0.05)] hover:border-[var(--clay)]/20 transition-colors">
-                        <h4 className="font-bold text-[var(--ink-deep)] mb-3 text-[16px]">{section.topic || (language === 'id' ? section.headingId : section.headingEn)}</h4>
+                        <h4 className="font-bold text-[var(--ink-deep)] mb-3 text-[16px]">
+                          {language === 'id' ? (section.headingId || section.topic) : (section.headingEn || section.topic)}
+                        </h4>
                         <p className="text-[14.5px] leading-relaxed text-[#43534e]">
                           {language === 'id' 
                             ? (section.content_id || section.contentId) 
