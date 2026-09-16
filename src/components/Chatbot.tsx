@@ -111,7 +111,6 @@ function ExpandableMessage({ content, isIndonesian }: { content: string, isIndon
 
 export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
   const [isOpen, setIsOpen] = useState(fullScreen ? true : false);
-  const [isExpanding, setIsExpanding] = useState(false);
   const { isIndonesian } = useLanguage();
   const router = useRouter();
   const endRef = useRef<HTMLDivElement>(null);
@@ -136,13 +135,14 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
   const startTimeRef = useRef<number>(0);
 
   const models = [
-    { id: "fast-tier", name: "Fast Tier (Lightning/Groq)" },
-    { id: "nvidia/nemotron-3-super-120b-a12b", name: "Super 120B" },
-    { id: "moonshotai/kimi-k3", name: "Kimi K3 (Deep)" },
-    { id: "deepseek-ai/deepseek-v4-flash-0731", name: "DeepSeek V4" }
+    { id: "fast-tier", name: "Fast Tier (Lightning/Groq)", short: "Fast Tier" },
+    { id: "nvidia/nemotron-3-super-120b-a12b", name: "Super 120B", short: "Super 120B" },
+    { id: "moonshotai/kimi-k3", name: "Kimi K3 (Deep)", short: "Kimi K3" },
+    { id: "deepseek-ai/deepseek-v4-flash-0731", name: "DeepSeek V4", short: "DeepSeek" }
   ];
 
-  const currentModelName = models.find(m => m.id === selectedModel)?.name || "Fast Tier (Lightning/Groq)";
+  const currentModel = models.find(m => m.id === selectedModel) || models[0];
+  const currentModelName = fullScreen ? currentModel.name : currentModel.short;
 
   const { messages, setMessages, input, handleInputChange, handleSubmit, isLoading, append, stop } = useChat({
     api: "/api/chat",
@@ -297,8 +297,18 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
         .chat-head{display:flex;align-items:center;justify-content:space-between;padding:22px 26px;border-bottom:1px solid rgba(23,62,68,.1)}
         .chat-head-title{display:flex;align-items:center;gap:12px;font-family:var(--serif);font-size:22px;line-height:1;letter-spacing:-.03em;color:var(--ink-deep)}
         .chat-head-title svg{color:var(--clay)}
-        .chat-close{width:36px;height:36px;border:1px solid rgba(23,62,68,.15);background:transparent;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--muted);transition:all 200ms ease-out}
-        .chat-close:hover{background:var(--ink-deep);color:var(--paper);border-color:var(--ink-deep);transform:rotate(90deg)}
+        .chat-close{width:36px;height:36px;border:1px solid rgba(23,62,68,.15);background:transparent;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--muted);transition:all 300ms cubic-bezier(0.34, 1.56, 0.64, 1)}
+        .chat-close:hover{background:var(--ink-deep);color:var(--paper);border-color:var(--ink-deep);transform:rotate(90deg) scale(1.1);box-shadow:0 6px 16px rgba(16,45,51,0.15)}
+        .chat-close:active{transform:rotate(90deg) scale(0.95)}
+        
+        .chat-action-btn{width:36px;height:36px;border:1px solid rgba(23,62,68,.15);background:transparent;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--muted);transition:all 300ms cubic-bezier(0.34, 1.56, 0.64, 1)}
+        .chat-action-btn:hover{background:var(--ink-deep);color:var(--paper);border-color:var(--ink-deep);transform:scale(1.1) translateY(-2px);box-shadow:0 6px 16px rgba(16,45,51,0.15)}
+        .chat-action-btn:active{transform:scale(0.95)}
+        
+        .chat-delete-btn{width:36px;height:36px;border:1px solid rgba(23,62,68,.15);background:transparent;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--muted);transition:all 300ms cubic-bezier(0.34, 1.56, 0.64, 1)}
+        .chat-delete-btn:hover{background:#d93838;color:white;border-color:#d93838;transform:scale(1.1) rotate(15deg);box-shadow:0 6px 16px rgba(217,56,56,0.25)}
+        .chat-delete-btn:active{transform:scale(0.95)}
+        
         .chat-body{flex:1;overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:18px}
         .chat-msg{max-width:85%;padding:14px 18px;font-size:14px;line-height:1.55;border-radius:18px;box-shadow:0 4px 16px rgba(16,45,51,.03)}
         .chat-msg-user{align-self:flex-end;background:var(--ink-deep);color:var(--paper);border-bottom-right-radius:4px}
@@ -310,9 +320,10 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
         .chat-input-wrap{position:relative;display:flex;align-items:flex-end;background:var(--card);border:1px solid rgba(23,62,68,.18);border-radius:26px;box-shadow:0 4px 16px rgba(0,0,0,.03);transition:border-color 200ms ease-out,box-shadow 200ms ease-out}
         .chat-input-wrap:focus-within{border-color:var(--clay);box-shadow:0 6px 20px rgba(178,77,57,.12)}
         .chat-input-wrap textarea{flex:1;border:none;background:transparent;padding:14px 16px 14px 20px;font-size:14px;font-family:var(--sans);color:var(--ink-deep);resize:none;min-height:50px;max-height:120px;outline:none}
-        .chat-send{position:absolute;right:8px;bottom:8px;width:34px;height:34px;border:none;border-radius:50%;background:var(--clay);color:var(--paper);display:grid;place-items:center;cursor:pointer;flex-shrink:0;transition:all 200ms cubic-bezier(.23,1,.32,1)}
-        .chat-send:disabled{opacity:.4;cursor:default;background:var(--muted)}
-        .chat-send:not(:disabled):hover{transform:scale(1.08);background:var(--ink-deep)}
+        .chat-send{position:absolute;right:8px;bottom:8px;width:34px;height:34px;border:none;border-radius:50%;background:var(--clay);color:var(--paper);display:grid;place-items:center;cursor:pointer;flex-shrink:0;transition:all 300ms cubic-bezier(0.34, 1.56, 0.64, 1)}
+        .chat-send:disabled{opacity:.4;cursor:default;background:var(--muted);transform:scale(0.95)}
+        .chat-send:not(:disabled):hover{transform:scale(1.12) translateY(-2px);background:var(--ink-deep);box-shadow:0 6px 16px rgba(16,45,51,0.2)}
+        .chat-send:not(:disabled):active{transform:scale(0.9)}
         .markdown-body { display: flex; flex-direction: column; gap: 8px; }
         .markdown-body p { margin: 0; }
         .markdown-body strong { font-weight: 800; color: inherit; }
@@ -325,7 +336,7 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
         .read-more-btn { align-self: flex-start; margin-top: 6px; font-size: 11px; font-weight: 800; color: var(--clay); background: transparent; border: none; cursor: pointer; padding: 0; text-transform: uppercase; letter-spacing: 0.05em; transition: opacity 150ms ease-out; }
         .read-more-btn:hover { opacity: 0.7; }
         .chat-msg-user .read-more-btn { color: var(--paper); opacity: 0.8; }
-        .glass-model-menu { position: absolute; top: calc(100% + 4px); left: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(23, 62, 68, 0.1); border-radius: 10px; padding: 4px; box-shadow: 0 12px 32px rgba(16, 45, 51, 0.12); display: flex; flex-direction: column; min-width: 150px; z-index: 100; animation: chat-slide-up 0.2s cubic-bezier(0.23, 1, 0.32, 1); }
+        .glass-model-menu { position: absolute; top: calc(100% + 4px); left: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(23, 62, 68, 0.1); border-radius: 12px; padding: 6px; box-shadow: 0 16px 40px rgba(16, 45, 51, 0.15); display: flex; flex-direction: column; min-width: 130px; max-width: 180px; z-index: 100; animation: chat-slide-up 0.25s cubic-bezier(0.23, 1, 0.32, 1); }
         .glass-model-btn { display: flex; align-items: center; justify-content: space-between; width: 100%; text-align: left; padding: 8px 10px; border-radius: 6px; border: none; background: transparent; font-size: 11px; font-weight: 600; color: var(--ink-deep); cursor: pointer; transition: all 150ms ease; }
         .glass-model-btn:hover { background: rgba(23, 62, 68, 0.05); }
         .glass-model-btn.active { background: rgba(23, 62, 68, 0.08); color: var(--clay); }
@@ -344,7 +355,7 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
       )}
 
       {isOpen && (
-        <div className={fullScreen ? "chat-panel-fullscreen" : `chat-panel ${isExpanding ? 'is-expanding' : ''}`}>
+        <div className={fullScreen ? "chat-panel-fullscreen" : "chat-panel"}>
           <div className="chat-head items-start">
             <div className="flex flex-col">
               <div className="chat-head-title">
@@ -379,7 +390,7 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
                             setIsModelMenuOpen(false);
                           }}
                         >
-                          {m.name}
+                          {fullScreen ? m.name : m.short}
                           {selectedModel === m.id && <Check size={14} />}
                         </button>
                       ))}
@@ -393,8 +404,9 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
               <button
                 type="button"
                 onClick={handleClearChat}
-                className="chat-close flex items-center justify-center mr-1"
+                className="chat-delete-btn mr-1"
                 aria-label={isIndonesian ? "Hapus percakapan" : "Clear chat"}
+                title="Clear Chat"
               >
                 <Trash2 size={15} />
               </button>
@@ -402,7 +414,7 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
                 <button
                   type="button"
                   onClick={() => router.push("/chat")}
-                  className="chat-close flex items-center justify-center hover:scale-105 active:scale-95 transition-transform"
+                  className="chat-action-btn"
                   aria-label={isIndonesian ? "Layar Penuh" : "Fullscreen"}
                   title="Expand to Fullscreen"
                 >
