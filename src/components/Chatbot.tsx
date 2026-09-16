@@ -146,13 +146,13 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
   const startTimeRef = useRef<number>(0);
 
   const models = [
-    { id: "nvidia/nemotron-3.5-lightning-30b-a3b", name: "Lightning 30B" },
+    { id: "fast-tier", name: "Fast Tier (Lightning/Groq)" },
     { id: "nvidia/nemotron-3-super-120b-a12b", name: "Super 120B" },
-    { id: "moonshotai/kimi-k3", name: "Kimi K3" },
+    { id: "moonshotai/kimi-k3", name: "Kimi K3 (Deep)" },
     { id: "deepseek-ai/deepseek-v4-flash-0731", name: "DeepSeek V4" }
   ];
 
-  const currentModelName = models.find(m => m.id === selectedModel)?.name || "Lightning 30B";
+  const currentModelName = models.find(m => m.id === selectedModel)?.name || "Fast Tier (Lightning/Groq)";
 
   const { messages, setMessages, input, handleInputChange, handleSubmit, isLoading, append, stop } = useChat({
     api: "/api/chat",
@@ -170,11 +170,15 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
     },
     onError: (error) => {
       let errorText = isIndonesian 
-        ? "Mohon maaf, terjadi kesalahan jaringan atau API. Silakan coba lagi nanti."
-        : "Sorry, a network or API error occurred. Please try again later.";
+        ? "Mohon maaf, sistem sedang sangat sibuk. Silakan coba beberapa saat lagi."
+        : "Sorry, the system is quite busy right now. Please try again in a moment.";
       const errMsg = (error?.message || '').toLowerCase();
       
-      if (errMsg.includes('quota') || errMsg.includes('429') || errMsg.includes('402') || errMsg.includes('exhausted')) {
+      if (errMsg.includes('all models failed')) {
+        errorText = isIndonesian
+          ? "⚠️ Semua jalur AI sedang penuh atau sibuk. Kami masih mengerjakannya, mohon coba beberapa saat lagi."
+          : "⚠️ All AI tiers are currently busy. We're still working on it, please try again in a moment.";
+      } else if (errMsg.includes('quota') || errMsg.includes('429') || errMsg.includes('402') || errMsg.includes('exhausted')) {
         errorText = isIndonesian
           ? "⚠️ Kuota model ini telah habis (Quota Exhausted). Silakan gunakan model AI lainnya dari menu di atas."
           : "⚠️ This model's quota has been exhausted. Please use another AI model from the menu above.";
@@ -412,14 +416,15 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
             )}
             {isLoading && (() => {
               const latestMessage = messages[messages.length - 1];
-              let thinkingText = isIndonesian ? "Berpikir..." : "Thinking...";
+              let thinkingText = isIndonesian ? "Sedang memproses..." : "Working on it...";
               if (selectedModel === 'moonshotai/kimi-k3' || selectedModel === 'deepseek-ai/deepseek-v4-flash-0731') {
-                thinkingText = isIndonesian ? "Berpikir mendalam, ini butuh waktu lebih lama..." : "Thinking deeply, this may take a bit longer...";
+                thinkingText = isIndonesian ? "Berpikir mendalam (ini mungkin butuh waktu)..." : "Thinking deeply, this may take a bit longer...";
               }
               const activeTool = latestMessage?.toolInvocations?.[0];
               if (activeTool && activeTool.state !== 'result') {
                 if (activeTool.toolName === "web_search") thinkingText = isIndonesian ? "Mencari di internet..." : "Searching the web...";
-                else if (activeTool.toolName === "readSiteContent") thinkingText = isIndonesian ? "Membaca panduan situs..." : "Reading site content...";
+                else if (activeTool.toolName === "readSiteContent") thinkingText = isIndonesian ? "Mengecek halaman kurikulum..." : "Checking the curriculum page...";
+                else thinkingText = isIndonesian ? "Melakukan kroscek sumber..." : "Cross-checking sources...";
               }
               const isAssistantStream = latestMessage?.role === 'assistant';
               if (isAssistantStream && latestMessage.content.length > 0 && !activeTool) return null;

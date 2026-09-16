@@ -1,11 +1,10 @@
 import { createOpenAI } from '@ai-sdk/openai';
-import { streamText, tool, appendResponseCookies } from 'ai';
+import { streamText, tool } from 'ai';
 import { search } from 'duck-duck-scrape';
 import { z } from 'zod';
 import { externalLinks, quickFacts, campusHighlights } from '@/lib/site-data';
 import { siteKnowledge } from '@/lib/site-knowledge';
 
-// Basic in-memory rate limiting for serverless invocation
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
 let lastSweep = Date.now();
@@ -39,30 +38,38 @@ function checkRateLimit(ip: string) {
 }
 
 const API_KEYS = {
-  'nvidia/nemotron-3.5-lightning-30b-a3b': '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',
-  'nvidia/nemotron-3-super-120b-a12b': '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',
-  'moonshotai/kimi-k3': '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',
-  'deepseek-ai/deepseek-v4-flash-0731': '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'
+  'nvidia/nemotron-3.5-lightning-30b-a3b': process.env.NVIDIA_LIGHTNING_KEY || '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',
+  'groq/llama-3.1-8b-instant': process.env.GROQ_API_KEY || '',
+  'nvidia/nemotron-3-super-120b-a12b': process.env.NVIDIA_SUPER_KEY || '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',
+  'moonshotai/kimi-k3': process.env.NVIDIA_KIMI_KEY || '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',
+  'deepseek-ai/deepseek-v4-flash-0731': process.env.NVIDIA_DEEPSEEK_KEY || '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'
 };
 
-const FALLBACK_CHAIN = [
-  'nvidia/nemotron-3.5-lightning-30b-a3b',
-  'nvidia/nemotron-3-super-120b-a12b',
-  'moonshotai/kimi-k3',
-  'deepseek-ai/deepseek-v4-flash-0731'
-];
-
-function getNvidiaClient(apiKey: string) {
-  return createOpenAI({
-    baseURL: 'https://integrate.api.nvidia.com/v1',
-    apiKey: apiKey,
-  });
-}
+const groqProvider = createOpenAI({
+  baseURL: 'https://api.groq.com/openai/v1',
+  apiKey: API_KEYS['groq/llama-3.1-8b-instant'],
+});
 
 const deepseekProvider = createOpenAI({
   baseURL: 'https://api.deepseek.com',
   apiKey: process.env.DEEPSEEK_API_KEY,
 });
+
+function getClient(modelName: string) {
+  if (modelName.startsWith('groq/')) return groqProvider(modelName.replace('groq/', ''));
+  return createOpenAI({
+    baseURL: 'https://integrate.api.nvidia.com/v1',
+    apiKey: API_KEYS[modelName as keyof typeof API_KEYS],
+  })(modelName);
+}
+
+const TIER_TOKENS: Record<string, number> = {
+  'nvidia/nemotron-3.5-lightning-30b-a3b': 512,
+  'groq/llama-3.1-8b-instant': 512,
+  'nvidia/nemotron-3-super-120b-a12b': 1024,
+  'moonshotai/kimi-k3': 2048,
+  'deepseek-ai/deepseek-v4-flash-0731': 2048
+};
 
 export async function POST(req: Request) {
   const ip = req.headers.get('x-forwarded-for') || 'anonymous';
@@ -82,21 +89,21 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify({ error: 'Invalid messages array' }), { status: 400 });
   }
 
-  const systemPrompt = `You are Jaksa, a helpful, light-hearted bilingual assistant for Saku Hukum ULM (Universitas Lambung Mangkurat's unofficial study companion for the Prosecutor track).
-You are extremely POLYGLOT. You must seamlessly understand and reply in the EXACT language the user speaks in (Indonesian, English, Spanish, Arabic, Japanese, or ANY other language). Keep your tone simple, clear, and direct.
+  const systemPrompt = `You are Jaksa, a warm, helpful, and simple bilingual study assistant for Saku Hukum ULM (Universitas Lambung Mangkurat's unofficial Prosecutor track guide).
+You are extremely POLYGLOT. You must seamlessly reply in the EXACT language the user speaks. Keep your tone warm, simple, and jargon-free (short sentences).
+
+CRITICAL GROUNDING RULES:
+1. ALWAYS answer from the site's own knowledge file first (Quick Facts, Highlights, Links).
+2. If the answer is NOT in the knowledge base, you MUST explicitly state that you are unsure and need to check online (e.g. "I don't have that in the site's info, let me check online...") BEFORE using the web_search tool. Do not guess.
+3. If the user asks for details about specific site pages, use the readSiteContent tool.
+4. Keep answers to greetings or simple factual questions very short and direct. Only elaborate on complex topics.
+5. Use RICH MARKDOWN formatting to make your answers beautiful and readable (bolding, lists).
 
 KNOWLEDGE BASE:
 - Saku Hukum ULM is a personal study guide, NOT the official ULM website.
 - Quick Facts: ${JSON.stringify(quickFacts)}
 - Campus Highlights: ${JSON.stringify(campusHighlights)}
-- External Links: ${JSON.stringify(externalLinks)}
-
-INSTRUCTIONS:
-1. Use the knowledge base provided to answer questions about ULM.
-2. If the user asks something outside this knowledge base, you HAVE FULL PERMISSION and are EXPECTED to use the web_search tool.
-3. If the user asks for details about specific site pages, use the readSiteContent tool.
-4. Keep answers to greetings or simple factual questions very short and direct. Only elaborate on complex topics.
-5. Use RICH MARKDOWN formatting to make your answers beautiful and readable (bolding, lists).`;
+- External Links: ${JSON.stringify(externalLinks)}`;
 
   const tools = {
     web_search: tool({
@@ -119,39 +126,52 @@ INSTRUCTIONS:
     }),
   };
 
-  const startIndex = FALLBACK_CHAIN.indexOf(requestedModel) >= 0 ? FALLBACK_CHAIN.indexOf(requestedModel) : 0;
-  const modelsToTry = FALLBACK_CHAIN.slice(startIndex).concat(FALLBACK_CHAIN.slice(0, startIndex));
+  // Determine fast tier load balancing
+  const fastTierModels = ['nvidia/nemotron-3.5-lightning-30b-a3b', 'groq/llama-3.1-8b-instant'];
+  const initialFastModel = fastTierModels[Math.floor(Math.random() * fastTierModels.length)];
+  const fallbackFastModel = fastTierModels.find(m => m !== initialFastModel) as string;
 
-  let lastError = null;
+  let FALLBACK_CHAIN = [
+    initialFastModel,
+    fallbackFastModel,
+    'nvidia/nemotron-3-super-120b-a12b',
+    'moonshotai/kimi-k3',
+    'deepseek-ai/deepseek-v4-flash-0731'
+  ];
 
-  for (const modelName of modelsToTry) {
+  // If a user explicitly requested a higher tier model, start the chain from there
+  if (requestedModel === 'nvidia/nemotron-3-super-120b-a12b') {
+    FALLBACK_CHAIN = ['nvidia/nemotron-3-super-120b-a12b', 'moonshotai/kimi-k3', 'deepseek-ai/deepseek-v4-flash-0731', initialFastModel];
+  } else if (requestedModel === 'moonshotai/kimi-k3') {
+    FALLBACK_CHAIN = ['moonshotai/kimi-k3', 'deepseek-ai/deepseek-v4-flash-0731', 'nvidia/nemotron-3-super-120b-a12b', initialFastModel];
+  } else if (requestedModel === 'deepseek-ai/deepseek-v4-flash-0731') {
+    FALLBACK_CHAIN = ['deepseek-ai/deepseek-v4-flash-0731', 'moonshotai/kimi-k3', 'nvidia/nemotron-3-super-120b-a12b', initialFastModel];
+  }
+
+  for (const modelName of FALLBACK_CHAIN) {
     try {
-      const apiKey = API_KEYS[modelName as keyof typeof API_KEYS];
-      const provider = getNvidiaClient(apiKey);
-      const model = provider(modelName);
-
+      const model = getClient(modelName);
       const result = await streamText({
         model,
         system: systemPrompt,
         messages,
         tools,
         maxSteps: 3,
+        maxTokens: TIER_TOKENS[modelName] || 1024
       });
 
       return result.toDataStreamResponse({ sendUsage: true, headers: { 'X-Model-Used': modelName } });
     } catch (error: any) {
       console.error(`Error with model ${modelName}:`, error.message);
-      lastError = error;
       const rawError = (error?.message || '').toLowerCase();
-      if (rawError.includes('quota') || rawError.includes('429') || rawError.includes('402')) {
-        continue; // Try next model in chain
-      } else {
-        break; // If it's a 400 bad request, don't retry blindly
+      // Retry if it's a rate limit or quota issue
+      if (rawError.includes('quota') || rawError.includes('429') || rawError.includes('402') || rawError.includes('too many requests')) {
+        continue;
       }
     }
   }
 
-  // Final fallback to DeepSeek Native API
+  // Final fallback to DeepSeek Native API if everything else fails
   try {
     const result = await streamText({
       model: deepseekProvider('deepseek-chat'),
@@ -159,6 +179,7 @@ INSTRUCTIONS:
       messages,
       tools,
       maxSteps: 3,
+      maxTokens: 1024
     });
     return result.toDataStreamResponse({ sendUsage: true, headers: { 'X-Model-Used': 'deepseek-chat-native' } });
   } catch (error: any) {
