@@ -138,6 +138,15 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
   ];
 
   const [selectedModel, setSelectedModel] = useState("nvidia/nemotron-3-ultra-550b-a55b");
+  const [isModelMenuOpen, setIsModelMenuOpen] = useState(false);
+
+  const models = [
+    { id: "nvidia/nemotron-3-ultra-550b-a55b", name: "Nemotron Ultra 550B" },
+    { id: "nvidia/nemotron-3.5-lightning-30b-a3b", name: "Lightning 30B" },
+    { id: "moonshotai/kimi-k3", name: "Kimi K3" }
+  ];
+
+  const currentModelName = models.find(m => m.id === selectedModel)?.name || "Nemotron Ultra 550B";
 
   const { messages, setMessages, input, handleInputChange, handleSubmit, isLoading, append } = useChat({
     api: "/api/chat",
@@ -249,6 +258,12 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
         .read-more-btn { align-self: flex-start; margin-top: 6px; font-size: 11px; font-weight: 800; color: var(--clay); background: transparent; border: none; cursor: pointer; padding: 0; text-transform: uppercase; letter-spacing: 0.05em; transition: opacity 150ms ease-out; }
         .read-more-btn:hover { opacity: 0.7; }
         .chat-msg-user .read-more-btn { color: var(--paper); opacity: 0.8; }
+        .glass-model-menu { position: absolute; top: calc(100% + 8px); right: 0; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 14px; padding: 6px; box-shadow: 0 10px 30px rgba(16, 45, 51, 0.15); display: flex; flex-direction: column; gap: 4px; min-width: 170px; z-index: 100; animation: chat-slide-up 0.2s cubic-bezier(0.23, 1, 0.32, 1); }
+        .glass-model-btn { display: flex; align-items: center; justify-content: space-between; width: 100%; text-align: left; padding: 8px 12px; border-radius: 8px; border: none; background: transparent; font-size: 12px; font-weight: 600; color: var(--ink-deep); cursor: pointer; transition: all 150ms ease; }
+        .glass-model-btn:hover { background: rgba(255, 255, 255, 0.6); transform: scale(1.02); }
+        .glass-model-btn.active { background: rgba(23, 62, 68, 0.08); color: var(--clay); }
+        .glass-dropdown-toggle { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.3); color: var(--ink-deep); font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 99px; cursor: pointer; display: flex; items-center: center; gap: 6px; transition: all 200ms ease; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .glass-dropdown-toggle:hover { background: rgba(255, 255, 255, 0.7); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
       `}</style>
 
       {!isOpen && !fullScreen && (
@@ -266,16 +281,37 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
             </div>
             
             <div className="flex gap-2 items-center">
-              <select 
-                value={selectedModel}
-                onChange={(e) => setSelectedModel(e.target.value)}
-                className="bg-[rgba(23,62,68,.05)] border border-[rgba(23,62,68,.1)] text-[var(--ink-deep)] text-xs rounded-md px-2 py-1 outline-none mr-2 max-w-[120px] truncate"
-                title="Pilih Model AI"
-              >
-                <option value="nvidia/nemotron-3-ultra-550b-a55b">Nemotron Ultra 550B</option>
-                <option value="nvidia/nemotron-3.5-lightning-30b-a3b">Nemotron Lightning 30B</option>
-                <option value="moonshotai/kimi-k3">Kimi K3</option>
-              </select>
+              <div className="relative">
+                <button 
+                  type="button" 
+                  onClick={() => setIsModelMenuOpen(!isModelMenuOpen)}
+                  className="glass-dropdown-toggle mr-2"
+                >
+                  {currentModelName}
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isModelMenuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                {isModelMenuOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setIsModelMenuOpen(false)}></div>
+                    <div className="glass-model-menu z-50">
+                      {models.map(m => (
+                        <button
+                          key={m.id}
+                          type="button"
+                          className={`glass-model-btn ${selectedModel === m.id ? 'active' : ''}`}
+                          onClick={() => {
+                            setSelectedModel(m.id);
+                            setIsModelMenuOpen(false);
+                          }}
+                        >
+                          {m.name}
+                          {selectedModel === m.id && <Check size={14} />}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
 
               <button
                 type="button"
