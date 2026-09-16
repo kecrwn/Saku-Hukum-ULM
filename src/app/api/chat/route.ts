@@ -3,6 +3,7 @@ import { streamText, tool } from 'ai';
 import { search } from 'duck-duck-scrape';
 import { z } from 'zod';
 import { externalLinks, quickFacts, campusHighlights } from '@/lib/site-data';
+import { siteKnowledge } from '@/lib/site-knowledge';
 
 // Basic in-memory rate limiting for serverless invocation
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -23,7 +24,7 @@ function checkRateLimit(ip: string) {
   return true;
 }
 
-const activeProvider = process.env.ACTIVE_PROVIDER || 'nvidia';
+const activeProvider = process.env.ACTIVE_PROVIDER || 'openai';
 
 const nvidia = createOpenAI({
   baseURL: 'https://integrate.api.nvidia.com/v1',
@@ -33,6 +34,10 @@ const nvidia = createOpenAI({
 const deepseek = createOpenAI({
   baseURL: 'https://api.deepseek.com',
   apiKey: process.env.DEEPSEEK_API_KEY,
+});
+
+const openaiProvider = createOpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 export async function POST(req: Request) {
@@ -58,12 +63,14 @@ export async function POST(req: Request) {
                       lastMessage.includes('explain');
     
     let model: any;
-    if (activeProvider === 'nvidia') {
+    if (activeProvider === 'openai') {
+      model = openaiProvider(isComplex ? 'gpt-4o' : 'gpt-4o-mini');
+    } else if (activeProvider === 'nvidia') {
       model = nvidia(isComplex ? 'nvidia/nemotron-3-ultra-550b-a55b' : 'nvidia/nemotron-3.5-lightning-30b-a3b');
     } else if (activeProvider === 'deepseek') {
       model = deepseek(isComplex ? 'deepseek-reasoner' : 'deepseek-chat');
     } else {
-      model = nvidia('nvidia/nemotron-3.5-lightning-30b-a3b');
+      model = openaiProvider('gpt-4o-mini');
     }
 
     // Build knowledge context dynamically from site data
@@ -78,10 +85,12 @@ KNOWLEDGE BASE:
 
 INSTRUCTIONS:
 1. Use the knowledge base provided to answer questions about ULM, curriculum, facilities, etc.
-2. If the user asks something outside this knowledge base, you MUST use the \`web_search\` tool to find accurate information.
-3. When you use information from the \`web_search\` tool, explicitly mention that you searched the web for it.
-4. If you don't know the answer even after searching, clearly state that you don't know.
-5. EXTREMELY IMPORTANT: Use RICH MARKDOWN formatting to make your answers beautiful and readable!
+2. If the user asks something outside this knowledge base, you HAVE FULL PERMISSION and are EXPECTED to use the \`web_search\` tool to find accurate information.
+3. If the user asks for details about specific site pages, use the \`readSiteContent\` tool to get detailed summaries.
+4. When you use information from tools, explicitly mention that you searched the web or read the site content.
+5. If you don't know the answer even after searching, clearly state that you don't know.
+6. Keep answers to greetings or simple factual questions very short and direct. Only elaborate on complex topics.
+7. EXTREMELY IMPORTANT: Use RICH MARKDOWN formatting to make your answers beautiful and readable!
    - Use **bold** (**important**) to highlight key terms, deadlines, and important concepts. It will automatically render as bold.
    - Use *italics* for emphasis.
    - Use bullet points and numbered lists to organize information.
@@ -109,6 +118,14 @@ INSTRUCTIONS:
             } catch {
               return { error: 'Search failed' };
             }
+          },
+        }),
+        readSiteContent: tool({
+          description: 'Read the detailed summary of a specific site page.',
+          parameters: z.object({ path: z.string().describe('The path of the page (e.g. /, /kurikulum)') }),
+          execute: async ({ path }) => {
+            const page = siteKnowledge.find(p => p.path === path);
+            return page ? page.summary : "Page not found.";
           },
         }),
       },

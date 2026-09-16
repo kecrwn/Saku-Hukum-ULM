@@ -1,12 +1,14 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Loader2, Bot } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, Bot, Maximize } from "lucide-react";
 import { useChat } from "ai/react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
+
+import Link from "next/link";
 
 function ExpandableMessage({ content, isIndonesian }: { content: string, isIndonesian: boolean }) {
   const [expanded, setExpanded] = useState(false);
@@ -26,8 +28,8 @@ function ExpandableMessage({ content, isIndonesian }: { content: string, isIndon
   );
 }
 
-export function Chatbot() {
-  const [isOpen, setIsOpen] = useState(false);
+export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
+  const [isOpen, setIsOpen] = useState(fullScreen ? true : false);
   const { isIndonesian } = useLanguage();
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -99,6 +101,7 @@ export function Chatbot() {
         .chat-fab:hover{transform:scale(1.05) translateY(-2px);background:rgba(16,45,51,0.95);color:var(--paper);box-shadow:0 16px 40px rgba(16,45,51,0.35)}
         .chat-fab:active{transform:scale(.94)}
         .chat-panel{position:fixed;bottom:32px;right:32px;z-index:50;width:385px;max-width:calc(100% - 64px);height:580px;max-height:calc(100dvh - 64px);border-radius:24px;display:flex;flex-direction:column;overflow:hidden;background:rgba(247,242,233,0.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(23,62,68,.12);box-shadow:0 24px 64px rgba(16,45,51,.22);animation:chat-slide-up .4s cubic-bezier(.23,1,.32,1) both}
+        .chat-panel-fullscreen{position:fixed;inset:0;z-index:100;width:100vw;height:100dvh;display:flex;flex-direction:column;overflow:hidden;background:var(--paper);animation:chat-slide-up .3s ease-out}
         .chat-head{display:flex;align-items:center;justify-content:space-between;padding:22px 26px;border-bottom:1px solid rgba(23,62,68,.1)}
         .chat-head-title{display:flex;align-items:center;gap:12px;font-family:var(--serif);font-size:22px;line-height:1;letter-spacing:-.03em;color:var(--ink-deep)}
         .chat-head-title svg{color:var(--clay)}
@@ -137,17 +140,21 @@ export function Chatbot() {
         .chat-msg-user .read-more-btn { color: var(--paper); opacity: 0.8; }
       `}</style>
 
-      {!isOpen && (
+      {!isOpen && !fullScreen && (
         <button type="button" className="chat-fab" onClick={() => setIsOpen(true)} aria-label={isIndonesian ? "Buka asisten" : "Open assistant"}>
           <MessageCircle size={22} />
         </button>
       )}
 
       {isOpen && (
-        <div className="chat-panel">
+        <div className={fullScreen ? "chat-panel-fullscreen" : "chat-panel"}>
           <div className="chat-head">
             <div className="chat-head-title"><Bot size={19} />{isIndonesian ? "Jaksa" : "Jaksa"}</div>
-            <button type="button" className="chat-close" onClick={() => setIsOpen(false)} aria-label={isIndonesian ? "Tutup" : "Close"}><X size={16} /></button>
+            <div className="flex gap-2 items-center">
+              {!fullScreen && <Link href="/chat" className="chat-close flex items-center justify-center" aria-label={isIndonesian ? "Layar Penuh" : "Fullscreen"}><Maximize size={15} /></Link>}
+              {!fullScreen && <button type="button" className="chat-close" onClick={() => setIsOpen(false)} aria-label={isIndonesian ? "Tutup" : "Close"}><X size={16} /></button>}
+              {fullScreen && <Link href="/" className="chat-close flex items-center justify-center" aria-label={isIndonesian ? "Tutup" : "Close"}><X size={16} /></Link>}
+            </div>
           </div>
           <div className="chat-body">
             {messages.map(m => (
@@ -160,7 +167,26 @@ export function Chatbot() {
                 {chips.map(c => <button type="button" key={c} className="chat-chip" onClick={() => append({ role: 'user', content: c })}>{c}</button>)}
               </div>
             )}
-            {isLoading && <div className="chat-typing"><span /><span /><span /></div>}
+            {isLoading && (() => {
+              const latestMessage = messages[messages.length - 1];
+              const activeTool = latestMessage?.toolInvocations?.[0];
+              let thinkingText = isIndonesian ? "Berpikir..." : "Thinking...";
+              if (activeTool) {
+                if (activeTool.toolName === "web_search") thinkingText = isIndonesian ? "Mencari di internet..." : "Searching the web...";
+                else if (activeTool.toolName === "readSiteContent") thinkingText = isIndonesian ? "Membaca panduan situs..." : "Reading site content...";
+              }
+              const isAssistantStream = latestMessage?.role === 'assistant';
+              if (isAssistantStream && latestMessage.content.length > 0 && !activeTool) return null;
+              
+              return (
+                <div className="chat-typing" style={{ alignItems: 'center' }}>
+                  <div className="flex gap-[4px] items-center" style={{marginTop: '0px'}}>
+                    <span /><span /><span />
+                  </div>
+                  <span style={{ fontSize: '11px', color: 'var(--muted)', marginLeft: '10px', fontWeight: 700, letterSpacing: '0.02em', marginTop: '-2px' }}>{thinkingText}</span>
+                </div>
+              );
+            })()}
             <div ref={endRef} />
           </div>
           <form className="chat-input-bar" onSubmit={handleSubmit}>
