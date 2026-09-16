@@ -141,12 +141,12 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
   const [isModelMenuOpen, setIsModelMenuOpen] = useState(false);
 
   const models = [
-    { id: "nvidia/nemotron-3-ultra-550b-a55b", name: "Nemotron Ultra 550B" },
+    { id: "nvidia/nemotron-3-ultra-550b-a55b", name: "Ultra 550B" },
     { id: "nvidia/nemotron-3.5-lightning-30b-a3b", name: "Lightning 30B" },
     { id: "moonshotai/kimi-k3", name: "Kimi K3" }
   ];
 
-  const currentModelName = models.find(m => m.id === selectedModel)?.name || "Nemotron Ultra 550B";
+  const currentModelName = models.find(m => m.id === selectedModel)?.name || "Ultra 550B";
 
   const { messages, setMessages, input, handleInputChange, handleSubmit, isLoading, append } = useChat({
     api: "/api/chat",
@@ -258,12 +258,12 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
         .read-more-btn { align-self: flex-start; margin-top: 6px; font-size: 11px; font-weight: 800; color: var(--clay); background: transparent; border: none; cursor: pointer; padding: 0; text-transform: uppercase; letter-spacing: 0.05em; transition: opacity 150ms ease-out; }
         .read-more-btn:hover { opacity: 0.7; }
         .chat-msg-user .read-more-btn { color: var(--paper); opacity: 0.8; }
-        .glass-model-menu { position: absolute; top: calc(100% + 8px); right: 0; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 14px; padding: 6px; box-shadow: 0 10px 30px rgba(16, 45, 51, 0.15); display: flex; flex-direction: column; gap: 4px; min-width: 170px; z-index: 100; animation: chat-slide-up 0.2s cubic-bezier(0.23, 1, 0.32, 1); }
-        .glass-model-btn { display: flex; align-items: center; justify-content: space-between; width: 100%; text-align: left; padding: 8px 12px; border-radius: 8px; border: none; background: transparent; font-size: 12px; font-weight: 600; color: var(--ink-deep); cursor: pointer; transition: all 150ms ease; }
-        .glass-model-btn:hover { background: rgba(255, 255, 255, 0.6); transform: scale(1.02); }
+        .glass-model-menu { position: absolute; top: calc(100% + 4px); left: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(23, 62, 68, 0.1); border-radius: 10px; padding: 4px; box-shadow: 0 12px 32px rgba(16, 45, 51, 0.12); display: flex; flex-direction: column; min-width: 150px; z-index: 100; animation: chat-slide-up 0.2s cubic-bezier(0.23, 1, 0.32, 1); }
+        .glass-model-btn { display: flex; align-items: center; justify-content: space-between; width: 100%; text-align: left; padding: 8px 10px; border-radius: 6px; border: none; background: transparent; font-size: 11px; font-weight: 600; color: var(--ink-deep); cursor: pointer; transition: all 150ms ease; }
+        .glass-model-btn:hover { background: rgba(23, 62, 68, 0.05); }
         .glass-model-btn.active { background: rgba(23, 62, 68, 0.08); color: var(--clay); }
-        .glass-dropdown-toggle { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.3); color: var(--ink-deep); font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 99px; cursor: pointer; display: flex; items-center: center; gap: 6px; transition: all 200ms ease; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .glass-dropdown-toggle:hover { background: rgba(255, 255, 255, 0.7); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .glass-dropdown-toggle { background: rgba(23, 62, 68, 0.04); border: 1px solid rgba(23, 62, 68, 0.08); color: var(--ink-deep); font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all 200ms ease; margin-top: 4px; }
+        .glass-dropdown-toggle:hover { background: rgba(23, 62, 68, 0.08); }
       `}</style>
 
       {!isOpen && !fullScreen && (
@@ -274,21 +274,20 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
 
       {isOpen && (
         <div className={fullScreen ? "chat-panel-fullscreen" : `chat-panel ${isExpanding ? 'is-expanding' : ''}`}>
-          <div className="chat-head">
-            <div className="chat-head-title">
-              <Bot size={19} />
-              {isIndonesian ? "Jaksa" : "Jaksa"}
-            </div>
-            
-            <div className="flex gap-2 items-center">
+          <div className="chat-head items-start">
+            <div className="flex flex-col">
+              <div className="chat-head-title">
+                <Bot size={19} />
+                {isIndonesian ? "Jaksa" : "Jaksa"}
+              </div>
               <div className="relative">
                 <button 
                   type="button" 
                   onClick={() => setIsModelMenuOpen(!isModelMenuOpen)}
-                  className="glass-dropdown-toggle mr-2"
+                  className="glass-dropdown-toggle"
                 >
-                  {currentModelName}
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isModelMenuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  <span className="opacity-70">AI:</span> {currentModelName}
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isModelMenuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', marginLeft: '2px', opacity: 0.6 }}><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
                 {isModelMenuOpen && (
                   <>
@@ -312,7 +311,9 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
                   </>
                 )}
               </div>
-
+            </div>
+            
+            <div className="flex gap-2 items-center mt-1">
               <button
                 type="button"
                 onClick={handleClearChat}
