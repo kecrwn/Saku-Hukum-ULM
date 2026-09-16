@@ -556,31 +556,29 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
       )}
 
       {expandedMessage && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/40 backdrop-blur-sm" onClick={() => setExpandedMessage(null)}>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-md" onClick={() => setExpandedMessage(null)}>
           <div 
-            className="w-full max-w-3xl max-h-[90dvh] bg-[var(--paper)] rounded-2xl shadow-2xl overflow-hidden border border-[rgba(23,62,68,0.1)] flex flex-col"
+            className="w-[98vw] max-w-6xl h-[96vh] max-h-[96vh] bg-[var(--paper)] rounded-2xl shadow-2xl overflow-hidden border border-[rgba(23,62,68,0.2)] flex flex-col"
             onClick={(e) => e.stopPropagation()}
+            style={{ animation: 'chat-slide-up 0.4s cubic-bezier(0.23, 1, 0.32, 1)' }}
           >
-            <div className="flex items-center justify-between px-6 py-4 border-b border-[rgba(23,62,68,0.08)] bg-[rgba(255,255,255,0.4)]">
-              <div className="flex items-center gap-2">
-                <div className="chat-bot-avatar" style={{width:24,height:24}}><Bot size={14} /></div>
-                <h3 className="font-serif text-lg m-0 leading-none">Jaksa</h3>
+            <div className="flex items-center justify-between px-6 md:px-10 py-5 border-b border-[rgba(23,62,68,0.08)] bg-[rgba(247,242,233,0.9)]">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-[var(--ink-deep)] text-[var(--paper)] flex items-center justify-center shadow-lg">
+                  <Bot size={24} />
+                </div>
+                <div>
+                  <h3 className="font-serif text-xl md:text-2xl m-0 leading-none text-[var(--ink-deep)] font-bold">Jaksa</h3>
+                  <span className="text-xs text-[var(--clay)] font-bold tracking-wider uppercase mt-1.5 block">Expanded Reading Mode</span>
+                </div>
               </div>
-              <button onClick={() => setExpandedMessage(null)} className="chat-action-btn w-8 h-8 rounded-full flex items-center justify-center hover:bg-[var(--ink-deep)] hover:text-white transition-colors">
-                <X size={16} />
+              <button onClick={() => setExpandedMessage(null)} className="chat-action-btn w-12 h-12 rounded-full flex items-center justify-center hover:bg-[#d93838] hover:border-[#d93838] hover:text-white transition-colors shadow-sm" aria-label="Close Expanded View">
+                <X size={20} />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto p-6 md:p-8 text-[15px] leading-relaxed">
-              <div className="markdown-body">
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  rehypePlugins={[rehypeRaw]}
-                  components={{
-                    code: CodeBlock as any,
-                  }}
-                >
-                  {expandedMessage}
-                </ReactMarkdown>
+            <div className="flex-1 overflow-y-auto p-6 md:p-12 lg:p-16 bg-white text-[15px] md:text-[17px] leading-[1.8] text-[var(--ink-deep)]">
+              <div className="max-w-4xl mx-auto pb-10">
+                <ExpandableMessage content={expandedMessage} isIndonesian={isIndonesian} />
               </div>
             </div>
           </div>
