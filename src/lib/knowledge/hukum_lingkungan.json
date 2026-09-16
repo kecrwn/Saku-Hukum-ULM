@@ -1,0 +1,21 @@
+{
+  "title": "Hukum Lingkungan (Environmental Law)",
+  "description": "Laws and regulations concerning environmental protection in Indonesia / Peraturan perundang-undangan mengenai perlindungan lingkungan hidup di Indonesia.",
+  "sections": [
+    {
+      "topic": "UU Perlindungan dan Pengelolaan Lingkungan Hidup (UUPPLH)",
+      "content_id": "Undang-Undang Nomor 32 Tahun 2009 adalah pilar utama hukum lingkungan di Indonesia. UU ini mengatur perencanaan, pemanfaatan, pengendalian, pemeliharaan, pengawasan, dan penegakan hukum.",
+      "content_en": "Law Number 32 of 2009 is the main pillar of environmental law in Indonesia. It regulates the planning, utilization, control, maintenance, supervision, and law enforcement of the environment."
+    },
+    {
+      "topic": "Prinsip Tanggung Jawab Mutlak (Strict Liability)",
+      "content_id": "Pasal 88 UUPPLH mengatur bahwa setiap orang yang tindakannya menggunakan B3 (Bahan Berbahaya dan Beracun) atau menimbulkan ancaman serius terhadap lingkungan, bertanggung jawab mutlak atas kerugian yang terjadi tanpa perlu pembuktian unsur kesalahan.",
+      "content_en": "Article 88 of the Environmental Law stipulates that anyone whose actions involve hazardous and toxic materials (B3) or pose a serious threat to the environment is strictly liable for the losses incurred without the need to prove fault."
+    },
+    {
+      "topic": "AMDAL",
+      "content_id": "Analisis Mengenai Dampak Lingkungan (AMDAL) adalah kajian mengenai dampak penting suatu usaha dan/atau kegiatan yang direncanakan pada lingkungan hidup yang diperlukan bagi proses pengambilan keputusan.",
+      "content_en": "Environmental Impact Assessment (AMDAL) is a study of the significant impact of a planned business and/or activity on the environment, which is required for the decision-making process."
+    }
+  ]
+}

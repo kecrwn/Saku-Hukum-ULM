@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Loader2, Bot, Maximize, Copy, Check, Trash2, Square, Clock, Share2, RefreshCcw, CheckCheck } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, Bot, Maximize, Copy, Check, Trash2, Square, Clock, Share2, RefreshCcw, CheckCheck, Expand } from "lucide-react";
 import { useChat } from "ai/react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useRouter } from "next/navigation";
@@ -132,6 +132,7 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
   const [generationTimes, setGenerationTimes] = useState<Record<string, number>>({});
   const [totalTokensUsed, setTotalTokensUsed] = useState(0);
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
+  const [expandedMessage, setExpandedMessage] = useState<string | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(0);
 
@@ -308,7 +309,11 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
         .chat-fab{position:fixed;bottom:32px;right:32px;z-index:50;width:60px;height:60px;border:1px solid rgba(255,255,255,0.15);border-radius:50%;background:rgba(16,45,51,0.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:#f1cba5;display:grid;place-items:center;cursor:pointer;animation:chat-fab-pulse 3.5s ease-in-out infinite;transition:transform 250ms cubic-bezier(.23,1,.32,1),background 250ms ease-out,box-shadow 250ms ease-out;box-shadow:0 12px 32px rgba(16,45,51,0.25)}
         .chat-fab:hover{transform:scale(1.05) translateY(-2px);background:rgba(16,45,51,0.95);color:var(--paper);box-shadow:0 16px 40px rgba(16,45,51,0.35)}
         .chat-fab:active{transform:scale(.94)}
-        .chat-panel{position:fixed;bottom:32px;right:32px;z-index:50;width:385px;max-width:calc(100% - 64px);height:580px;max-height:calc(100dvh - 64px);border-radius:24px;display:flex;flex-direction:column;overflow:hidden;background:rgba(247,242,233,0.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(23,62,68,.12);box-shadow:0 24px 64px rgba(16,45,51,.22);animation:chat-slide-up .4s cubic-bezier(.23,1,.32,1) both}
+        .chat-panel{position:fixed;bottom:32px;right:32px;z-index:50;width:385px;max-width:calc(100vw - 64px);height:580px;max-height:calc(100dvh - 64px);border-radius:24px;display:flex;flex-direction:column;overflow:hidden;background:rgba(247,242,233,0.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(23,62,68,.12);box-shadow:0 24px 64px rgba(16,45,51,.22);animation:chat-slide-up .4s cubic-bezier(.23,1,.32,1) both}
+        @media (max-width: 640px) {
+          .chat-fab{bottom:20px;right:20px;width:56px;height:56px}
+          .chat-panel{bottom:20px;right:20px;width:calc(100vw - 40px);max-width:calc(100vw - 40px);height:calc(100dvh - 100px);max-height:calc(100dvh - 100px);border-radius:20px}
+        }
         .chat-panel-fullscreen{position:fixed;inset:0;z-index:100;width:100vw;height:100dvh;display:flex;flex-direction:column;overflow:hidden;background:var(--paper);animation:chat-slide-up .3s ease-out}
         .chat-panel.is-expanding { transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1) !important; width: 100vw !important; height: 100dvh !important; max-width: 100vw !important; max-height: 100dvh !important; bottom: 0 !important; right: 0 !important; border-radius: 0 !important; }
         .chat-head{display:flex;align-items:center;justify-content:space-between;padding:22px 26px;border-bottom:1px solid rgba(23,62,68,.1)}
@@ -464,6 +469,9 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
                       <button onClick={() => handleShareMessage(cleanContent)} className="chat-msg-action-btn" title="Share" aria-label="Share message">
                         <Share2 size={14} />
                       </button>
+                      <button onClick={() => setExpandedMessage(cleanContent)} className="chat-msg-action-btn" title="Expand" aria-label="Expand message">
+                        <Expand size={14} />
+                      </button>
                       {messages[messages.length - 1]?.id === m.id && (
                         <button onClick={() => reload()} className="chat-msg-action-btn" title="Retry" aria-label="Retry message">
                           <RefreshCcw size={14} />
@@ -544,6 +552,38 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
               )}
             </div>
           </form>
+        </div>
+      )}
+
+      {expandedMessage && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/40 backdrop-blur-sm" onClick={() => setExpandedMessage(null)}>
+          <div 
+            className="w-full max-w-3xl max-h-[90dvh] bg-[var(--paper)] rounded-2xl shadow-2xl overflow-hidden border border-[rgba(23,62,68,0.1)] flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-6 py-4 border-b border-[rgba(23,62,68,0.08)] bg-[rgba(255,255,255,0.4)]">
+              <div className="flex items-center gap-2">
+                <div className="chat-bot-avatar" style={{width:24,height:24}}><Bot size={14} /></div>
+                <h3 className="font-serif text-lg m-0 leading-none">Jaksa</h3>
+              </div>
+              <button onClick={() => setExpandedMessage(null)} className="chat-action-btn w-8 h-8 rounded-full flex items-center justify-center hover:bg-[var(--ink-deep)] hover:text-white transition-colors">
+                <X size={16} />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6 md:p-8 text-[15px] leading-relaxed">
+              <div className="markdown-body">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  rehypePlugins={[rehypeRaw]}
+                  components={{
+                    code: CodeBlock as any,
+                  }}
+                >
+                  {expandedMessage}
+                </ReactMarkdown>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </>

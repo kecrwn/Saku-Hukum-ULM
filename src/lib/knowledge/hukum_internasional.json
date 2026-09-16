@@ -1,0 +1,21 @@
+{
+  "title": "Hukum Internasional (International Law)",
+  "description": "Information regarding Public and Private International Law / Informasi mengenai Hukum Internasional Publik dan Privat.",
+  "sections": [
+    {
+      "topic": "Hukum Internasional Publik",
+      "content_id": "Hukum yang mengatur hubungan antar negara dan subjek hukum internasional lainnya. Sumber utamanya termasuk perjanjian internasional (treaties), kebiasaan internasional, dan prinsip-prinsip hukum umum.",
+      "content_en": "Law governing relations between nations and other subjects of international law. Primary sources include international treaties, customary international law, and general principles of law."
+    },
+    {
+      "topic": "Hukum Perdata Internasional",
+      "content_id": "Mengatur hubungan hukum keperdataan yang melewati batas negara (lintas batas). Fokus utama pada yurisdiksi, pilihan hukum (choice of law), dan pengakuan putusan asing.",
+      "content_en": "Governs private law relationships that cross national borders. Primary focus on jurisdiction, choice of law, and recognition of foreign judgments."
+    },
+    {
+      "topic": "Perjanjian Internasional",
+      "content_id": "Di Indonesia, pengesahan perjanjian internasional diatur dalam UU No. 24 Tahun 2000. Beberapa perjanjian memerlukan persetujuan DPR, sementara yang lain cukup dengan Peraturan Presiden.",
+      "content_en": "In Indonesia, ratification of international treaties is governed by Law No. 24 of 2000. Some treaties require parliamentary approval, while others only need a Presidential Regulation."
+    }
+  ]
+}

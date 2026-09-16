@@ -8,6 +8,11 @@ import pancasila from './pancasila.json';
 import sistem_peradilan from './sistem_peradilan.json';
 import tata_negara from './tata_negara.json';
 import uud_1945 from './uud_1945.json';
+import hukum_internasional from './hukum_internasional.json';
+import hukum_lingkungan from './hukum_lingkungan.json';
+import hukum_pajak from './hukum_pajak.json';
+import hukum_keluarga from './hukum_keluarga.json';
+import hukum_perburuhan from './hukum_perburuhan.json';
 
 export const lawKnowledgeBase: Record<string, any> = {
   hukum_administrasi,
@@ -19,7 +24,12 @@ export const lawKnowledgeBase: Record<string, any> = {
   pancasila,
   sistem_peradilan,
   tata_negara,
-  uud_1945
+  uud_1945,
+  hukum_internasional,
+  hukum_lingkungan,
+  hukum_pajak,
+  hukum_keluarga,
+  hukum_perburuhan
 };
 
 export const availableLawTopics = [
@@ -33,4 +43,9 @@ export const availableLawTopics = [
   { id: 'sistem_peradilan', name: 'Sistem Peradilan' },
   { id: 'hukum_korporasi', name: 'Hukum Korporasi' },
   { id: 'hukum_agraria', name: 'Hukum Agraria' },
+  { id: 'hukum_internasional', name: 'Hukum Internasional' },
+  { id: 'hukum_lingkungan', name: 'Hukum Lingkungan' },
+  { id: 'hukum_pajak', name: 'Hukum Pajak' },
+  { id: 'hukum_keluarga', name: 'Hukum Keluarga' },
+  { id: 'hukum_perburuhan', name: 'Hukum Perburuhan' },
 ];

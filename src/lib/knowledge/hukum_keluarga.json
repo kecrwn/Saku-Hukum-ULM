@@ -1,0 +1,21 @@
+{
+  "title": "Hukum Keluarga (Family Law)",
+  "description": "Family law and marriage regulations in Indonesia / Hukum keluarga dan peraturan perkawinan di Indonesia.",
+  "sections": [
+    {
+      "topic": "Undang-Undang Perkawinan",
+      "content_id": "UU No. 1 Tahun 1974 tentang Perkawinan, yang telah diubah dengan UU No. 16 Tahun 2019, adalah dasar hukum perkawinan di Indonesia. Perkawinan dianggap sah jika dilakukan menurut hukum masing-masing agamanya dan kepercayaannya.",
+      "content_en": "Law No. 1 of 1974 on Marriage, amended by Law No. 16 of 2019, is the legal basis for marriage in Indonesia. A marriage is considered valid if it is conducted according to the laws of each respective religion and belief."
+    },
+    {
+      "topic": "Batas Usia Perkawinan",
+      "content_id": "Berdasarkan UU No. 16 Tahun 2019, batas usia minimal untuk melakukan perkawinan adalah 19 tahun, baik untuk laki-laki maupun perempuan, demi melindungi kesehatan reproduksi dan kematangan psikologis.",
+      "content_en": "Under Law No. 16 of 2019, the minimum age for marriage is 19 years for both men and women, aiming to protect reproductive health and psychological maturity."
+    },
+    {
+      "topic": "Harta Bersama (Gono-Gini)",
+      "content_id": "Harta benda yang diperoleh selama perkawinan menjadi harta bersama. Harta bawaan dari masing-masing pihak sebelum perkawinan, serta harta perolehan dari hadiah atau warisan, tetap berada di bawah penguasaan masing-masing pihak kecuali ditentukan lain.",
+      "content_en": "Property acquired during marriage becomes joint property (gono-gini). Property brought in by each party before the marriage, as well as property acquired as gifts or inheritance, remains under the control of the respective parties unless determined otherwise."
+    }
+  ]
+}

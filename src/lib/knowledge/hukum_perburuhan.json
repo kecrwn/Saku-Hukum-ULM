@@ -1,0 +1,21 @@
+{
+  "title": "Hukum Perburuhan dan Ketenagakerjaan (Labor Law)",
+  "description": "Labor and employment law in Indonesia / Hukum perburuhan dan ketenagakerjaan di Indonesia.",
+  "sections": [
+    {
+      "topic": "Undang-Undang Ketenagakerjaan",
+      "content_id": "UU No. 13 Tahun 2003 tentang Ketenagakerjaan, yang kemudian diubah sebagian besar ketentuannya oleh UU Cipta Kerja (Omnibus Law). Mengatur hak, kewajiban, waktu kerja, pengupahan, dan pemutusan hubungan kerja.",
+      "content_en": "Law No. 13 of 2003 on Manpower, with many provisions subsequently amended by the Job Creation Law (Omnibus Law). It regulates rights, obligations, working hours, wages, and termination of employment."
+    },
+    {
+      "topic": "Perjanjian Kerja",
+      "content_id": "Terdapat dua jenis perjanjian kerja utama: PKWT (Perjanjian Kerja Waktu Tertentu / Kontrak) dan PKWTT (Perjanjian Kerja Waktu Tidak Tertentu / Tetap). PKWT dibatasi jangka waktunya sesuai peraturan perundang-undangan.",
+      "content_en": "There are two main types of employment agreements: PKWT (Fixed-Term Employment Agreement / Contract) and PKWTT (Permanent Employment Agreement). The duration of PKWT is limited according to regulations."
+    },
+    {
+      "topic": "Pemutusan Hubungan Kerja (PHK) dan Pesangon",
+      "content_id": "Pengusaha, pekerja, dan serikat pekerja harus mengupayakan agar tidak terjadi PHK. Jika PHK tidak dapat dihindari, pekerja berhak atas uang pesangon, uang penghargaan masa kerja, dan/atau uang penggantian hak sesuai dengan alasan PHK.",
+      "content_en": "Employers, workers, and labor unions must strive to prevent termination of employment (PHK). If termination is unavoidable, the worker is entitled to severance pay, a period-of-service reward, and/or compensation for rights, depending on the reason for termination."
+    }
+  ]
+}

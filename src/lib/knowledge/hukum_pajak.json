@@ -1,0 +1,21 @@
+{
+  "title": "Hukum Pajak (Tax Law)",
+  "description": "Indonesian Tax Law system and regulations / Sistem dan regulasi Hukum Pajak Indonesia.",
+  "sections": [
+    {
+      "topic": "Ketentuan Umum dan Tata Cara Perpajakan (KUP)",
+      "content_id": "Diatur dalam UU No. 6 Tahun 1983 yang telah beberapa kali diubah, terakhir dengan UU HPP (Harmonisasi Peraturan Perpajakan) No. 7 Tahun 2021. Mengatur hak dan kewajiban Wajib Pajak serta wewenang fiskus.",
+      "content_en": "Regulated in Law No. 6 of 1983 which has been amended several times, most recently by the Tax Regulations Harmonization Law (UU HPP) No. 7 of 2021. It regulates the rights and obligations of Taxpayers and the authority of the tax authorities."
+    },
+    {
+      "topic": "Pajak Penghasilan (PPh) dan Pajak Pertambahan Nilai (PPN)",
+      "content_id": "PPh dikenakan atas penghasilan yang diterima atau diperoleh wajib pajak. PPN dikenakan atas konsumsi barang dan jasa di dalam daerah pabean. Berdasarkan UU HPP, tarif PPN naik secara bertahap menjadi 11% (2022) dan 12% (maksimal 2025).",
+      "content_en": "Income Tax (PPh) is levied on income received or earned by taxpayers. Value Added Tax (VAT/PPN) is levied on the consumption of goods and services within the customs area. Under the HPP Law, the VAT rate gradually increases to 11% (2022) and 12% (by 2025)."
+    },
+    {
+      "topic": "Sengketa Pajak",
+      "content_id": "Penyelesaian sengketa pajak dilakukan melalui Pengadilan Pajak. Proses dimulai dari keberatan ke Direktorat Jenderal Pajak, dilanjutkan dengan banding atau gugatan ke Pengadilan Pajak.",
+      "content_en": "Tax dispute resolution is carried out through the Tax Court. The process starts with an objection to the Directorate General of Taxes, followed by an appeal or lawsuit to the Tax Court."
+    }
+  ]
+}
