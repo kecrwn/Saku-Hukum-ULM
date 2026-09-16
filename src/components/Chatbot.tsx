@@ -291,8 +291,9 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
         .glass-dropdown-toggle { background: rgba(23, 62, 68, 0.04); border: 1px solid rgba(23, 62, 68, 0.08); color: var(--ink-deep); font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all 200ms ease; margin-top: 4px; }
         .glass-dropdown-toggle:hover { background: rgba(23, 62, 68, 0.08); }
         .chat-msg-time { font-size: 10px; opacity: 0.5; margin-top: 6px; text-align: right; display: flex; justify-content: flex-end; align-items: center; gap: 4px; }
-        .chat-stop-btn { background: rgba(178,77,57,0.1); color: var(--clay); border: 1px solid rgba(178,77,57,0.2); font-size: 11px; padding: 4px 10px; border-radius: 99px; cursor: pointer; display: flex; items-center: center; gap: 4px; font-weight: 600; transition: all 150ms ease; margin-left: 12px; }
-        .chat-stop-btn:hover { background: rgba(178,77,57,0.2); }
+        .chat-stop-active { background: var(--ink-deep) !important; opacity: 1 !important; cursor: pointer !important; }
+        .chat-stop-spinner { position: absolute; inset: 2px; border: 2px solid rgba(255,255,255,0.15); border-top-color: rgba(255,255,255,0.9); border-radius: 50%; animation: chat-spin 1s linear infinite; pointer-events: none; }
+        @keyframes chat-spin { to { transform: rotate(360deg); } }
       `}</style>
 
       {!isOpen && !fullScreen && (
@@ -405,9 +406,6 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
                       {thinkingText} <span className="opacity-60 ml-1">{(processingTime / 1000).toFixed(1)}s</span>
                     </span>
                   </div>
-                  <button type="button" onClick={() => stop()} className="chat-stop-btn">
-                    <Square size={10} fill="currentColor" /> Stop
-                  </button>
                 </div>
               );
             })()}
@@ -424,9 +422,21 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
                 rows={1}
                 disabled={isLoading}
               />
-              <button type="submit" className="chat-send" disabled={!input.trim() || isLoading}>
-                {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Send size={14} style={{ marginLeft: '-1px' }} />}
-              </button>
+              {isLoading ? (
+                <button 
+                  type="button" 
+                  onClick={() => stop()} 
+                  className="chat-send chat-stop-active" 
+                  title="Stop generating"
+                >
+                  <Square size={10} fill="currentColor" className="relative z-10" />
+                  <div className="chat-stop-spinner"></div>
+                </button>
+              ) : (
+                <button type="submit" className="chat-send" disabled={!input.trim()}>
+                  <Send size={14} style={{ marginLeft: '-1px' }} />
+                </button>
+              )}
             </div>
           </form>
         </div>
