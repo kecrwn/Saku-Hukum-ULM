@@ -90,7 +90,7 @@ export async function POST(req: Request) {
     if (activeProvider === 'openai') {
       model = openaiProvider(isComplex ? 'gpt-4o' : 'gpt-4o-mini');
     } else if (activeProvider === 'nvidia') {
-      model = nvidia('meta/llama-3.1-70b-instruct');
+      model = nvidia('nvidia/llama-3.1-nemotron-70b-instruct');
     } else if (activeProvider === 'deepseek') {
       model = deepseek(isComplex ? 'deepseek-reasoner' : 'deepseek-chat');
     } else {

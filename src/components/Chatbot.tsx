@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Loader2, Bot, Maximize, Copy, Check } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, Bot, Maximize, Copy, Check, Trash2 } from "lucide-react";
 import { useChat } from "ai/react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useRouter } from "next/navigation";
@@ -127,18 +127,25 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  const initialWelcome = [
+    {
+      id: "welcome",
+      role: "assistant",
+      content: isIndonesian
+        ? "Halo! Saya Jaksa, asisten Saku Hukum ULM. Ada yang bisa saya bantu terkait kurikulum, fasilitas, atau arah karier?"
+        : "Hello! I'm Jaksa, the Saku Hukum ULM assistant. How can I help you with the curriculum, facilities, or career paths?"
+    }
+  ];
+
   const { messages, setMessages, input, handleInputChange, handleSubmit, isLoading, append } = useChat({
     api: "/api/chat",
-    initialMessages: [
-      {
-        id: "welcome",
-        role: "assistant",
-        content: isIndonesian
-          ? "Halo! Saya Jaksa, asisten Saku Hukum ULM. Ada yang bisa saya bantu terkait kurikulum, fasilitas, atau arah karier?"
-          : "Hello! I'm Jaksa, the Saku Hukum ULM assistant. How can I help you with the curriculum, facilities, or career paths?"
-      }
-    ]
+    initialMessages: initialWelcome as any
   });
+
+  const handleClearChat = () => {
+    localStorage.removeItem("shulm-chat-history");
+    setMessages(initialWelcome as any);
+  };
 
   // Load chat history from localStorage on mount
   useEffect(() => {
@@ -240,6 +247,14 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
           <div className="chat-head">
             <div className="chat-head-title"><Bot size={19} />{isIndonesian ? "Jaksa" : "Jaksa"}</div>
             <div className="flex gap-2 items-center">
+              <button
+                type="button"
+                onClick={handleClearChat}
+                className="chat-close flex items-center justify-center mr-1"
+                aria-label={isIndonesian ? "Hapus percakapan" : "Clear chat"}
+              >
+                <Trash2 size={15} />
+              </button>
               {!fullScreen && (
                 <button
                   type="button"
