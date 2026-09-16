@@ -161,8 +161,9 @@ INSTRUCTIONS:
     });
 
     return result.toDataStreamResponse();
-  } catch (error) {
+  } catch (error: any) {
     console.error('Chat API Error:', error);
-    return new Response(JSON.stringify({ error: 'Failed to process request.' }), { status: 500 });
+    const errorMsg = error?.message || (typeof error === 'string' ? error : 'Failed to process request.');
+    return new Response(errorMsg, { status: 500 });
   }
 }

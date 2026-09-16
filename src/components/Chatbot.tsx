@@ -139,7 +139,19 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
 
   const { messages, setMessages, input, handleInputChange, handleSubmit, isLoading, append } = useChat({
     api: "/api/chat",
-    initialMessages: initialWelcome as any
+    initialMessages: initialWelcome as any,
+    onError: (error) => {
+      setMessages(prev => [
+        ...prev,
+        {
+          id: `error-${Date.now()}`,
+          role: "assistant",
+          content: isIndonesian
+            ? `**Terjadi Kesalahan!** 🚨\nMaaf, sepertinya ada masalah dengan koneksi API (misalnya kuota Nvidia habis, API key belum diatur, atau model belum diaktifkan di dashboard).\n\n*Pesan sistem:* ${error.message}`
+            : `**Error occurred!** 🚨\nSorry, there seems to be an issue with the API connection (e.g., Nvidia quota exhausted, missing API key, or model not activated in dashboard).\n\n*System message:* ${error.message}`
+        }
+      ]);
+    }
   });
 
   const handleClearChat = () => {
