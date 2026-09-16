@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Loader2, Bot, Maximize, Copy, Check, Trash2, Square, Clock } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, Bot, Maximize, Copy, Check, Trash2, Square, Clock, Share2, RefreshCcw, CheckCheck } from "lucide-react";
 import { useChat } from "ai/react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useRouter } from "next/navigation";
@@ -131,8 +131,24 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
   const [processingTime, setProcessingTime] = useState(0);
   const [generationTimes, setGenerationTimes] = useState<Record<string, number>>({});
   const [totalTokensUsed, setTotalTokensUsed] = useState(0);
+  const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(0);
+
+  const handleCopyMessage = (id: string, text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedMessageId(id);
+    setTimeout(() => setCopiedMessageId(null), 2000);
+  };
+
+  const handleShareMessage = (text: string) => {
+    if (navigator.share) {
+      navigator.share({ title: 'Saku Hukum ULM', text }).catch(console.error);
+    } else {
+      navigator.clipboard.writeText(text);
+      alert(isIndonesian ? "Teks disalin ke papan klip!" : "Text copied to clipboard!");
+    }
+  };
 
   const models = [
     { id: "fast-tier", name: "Fast Tier (Lightning/Groq)", short: "Fast Tier" },
@@ -144,7 +160,7 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
   const currentModel = models.find(m => m.id === selectedModel) || models[0];
   const currentModelName = fullScreen ? currentModel.name : currentModel.short;
 
-  const { messages, setMessages, input, handleInputChange, handleSubmit, isLoading, append, stop } = useChat({
+  const { messages, setMessages, input, handleInputChange, handleSubmit, isLoading, append, stop, reload } = useChat({
     api: "/api/chat",
     body: { model: selectedModel },
     initialMessages: initialWelcome as any,
@@ -439,6 +455,23 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
               return (
                 <div key={m.id} className={`chat-msg ${m.role === "user" ? "chat-msg-user" : "chat-msg-bot"}`}>
                   <ExpandableMessage content={m.role === 'assistant' ? cleanContent : m.content} isIndonesian={isIndonesian} />
+                  
+                  {m.role === "assistant" && (
+                    <div className="chat-msg-actions">
+                      <button onClick={() => handleCopyMessage(m.id, cleanContent)} className="chat-msg-action-btn" title="Copy" aria-label="Copy message">
+                        {copiedMessageId === m.id ? <CheckCheck size={14} className="text-green-500" /> : <Copy size={14} />}
+                      </button>
+                      <button onClick={() => handleShareMessage(cleanContent)} className="chat-msg-action-btn" title="Share" aria-label="Share message">
+                        <Share2 size={14} />
+                      </button>
+                      {messages[messages.length - 1].id === m.id && (
+                        <button onClick={() => reload()} className="chat-msg-action-btn" title="Retry" aria-label="Retry message">
+                          <RefreshCcw size={14} />
+                        </button>
+                      )}
+                    </div>
+                  )}
+
                   {m.role === "assistant" && generationTimes[m.id] && (
                     <div className="chat-msg-time">
                       <Clock size={10} /> {(generationTimes[m.id] / 1000).toFixed(1)}s
