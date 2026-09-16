@@ -318,13 +318,13 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
         .chat-close:hover{background:var(--ink-deep);color:var(--paper);border-color:var(--ink-deep);transform:rotate(90deg) scale(1.1);box-shadow:0 6px 16px rgba(16,45,51,0.15)}
         .chat-close:active{transform:rotate(90deg) scale(0.95)}
         
-        .chat-action-btn{width:36px;height:36px;border:1px solid rgba(23,62,68,.15);background:transparent;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--muted);transition:all 300ms cubic-bezier(0.34, 1.56, 0.64, 1)}
-        .chat-action-btn:hover{background:var(--ink-deep);color:var(--paper);border-color:var(--ink-deep);transform:scale(1.1) translateY(-2px);box-shadow:0 6px 16px rgba(16,45,51,0.15)}
-        .chat-action-btn:active{transform:scale(0.95)}
+        .chat-action-btn{width:36px;height:36px;border:1px solid rgba(23,62,68,.12);background:rgba(255, 255, 255, 0.4);border-radius:12px;display:grid;place-items:center;cursor:pointer;color:var(--muted);transition:all 250ms cubic-bezier(0.23, 1, 0.32, 1);backdrop-filter:blur(4px)}
+        .chat-action-btn:hover{background:var(--ink-deep);color:var(--paper);border-color:var(--ink-deep);transform:translateY(-2px);box-shadow:0 6px 16px rgba(16,45,51,0.15)}
+        .chat-action-btn:active{transform:translateY(0) scale(0.96)}
         
-        .chat-delete-btn{width:36px;height:36px;border:1px solid rgba(23,62,68,.15);background:transparent;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--muted);transition:all 300ms cubic-bezier(0.34, 1.56, 0.64, 1)}
-        .chat-delete-btn:hover{background:#d93838;color:white;border-color:#d93838;transform:scale(1.1) rotate(15deg);box-shadow:0 6px 16px rgba(217,56,56,0.25)}
-        .chat-delete-btn:active{transform:scale(0.95)}
+        .chat-delete-btn{width:36px;height:36px;border:1px solid rgba(23,62,68,.12);background:rgba(255, 255, 255, 0.4);border-radius:12px;display:grid;place-items:center;cursor:pointer;color:var(--muted);transition:all 250ms cubic-bezier(0.23, 1, 0.32, 1);backdrop-filter:blur(4px)}
+        .chat-delete-btn:hover{background:#d93838;color:white;border-color:#d93838;transform:translateY(-2px);box-shadow:0 6px 16px rgba(217,56,56,0.25)}
+        .chat-delete-btn:active{transform:translateY(0) scale(0.96)}
         
         .chat-body{flex:1;overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:18px}
         .chat-msg{max-width:85%;padding:14px 18px;font-size:14px;line-height:1.55;border-radius:18px;box-shadow:0 4px 16px rgba(16,45,51,.03)}
@@ -353,8 +353,8 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
         .read-more-btn { align-self: flex-start; margin-top: 6px; font-size: 11px; font-weight: 800; color: var(--clay); background: transparent; border: none; cursor: pointer; padding: 0; text-transform: uppercase; letter-spacing: 0.05em; transition: opacity 150ms ease-out; }
         .read-more-btn:hover { opacity: 0.7; }
         .chat-msg-user .read-more-btn { color: var(--paper); opacity: 0.8; }
-        .glass-model-menu { position: absolute; top: calc(100% + 4px); left: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(23, 62, 68, 0.1); border-radius: 12px; padding: 6px; box-shadow: 0 16px 40px rgba(16, 45, 51, 0.15); display: flex; flex-direction: column; min-width: 130px; max-width: 180px; z-index: 100; animation: chat-slide-up 0.25s cubic-bezier(0.23, 1, 0.32, 1); }
-        .glass-model-btn { display: flex; align-items: center; justify-content: space-between; width: 100%; text-align: left; padding: 8px 10px; border-radius: 6px; border: none; background: transparent; font-size: 11px; font-weight: 600; color: var(--ink-deep); cursor: pointer; transition: all 150ms ease; }
+        .glass-model-menu { position: absolute; bottom: calc(100% + 8px); left: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(23, 62, 68, 0.1); border-radius: 12px; padding: 6px; box-shadow: 0 16px 40px rgba(16, 45, 51, 0.15); display: flex; flex-direction: column; min-width: 160px; max-width: 220px; max-height: 250px; overflow-y: auto; z-index: 100; animation: chat-slide-up 0.25s cubic-bezier(0.23, 1, 0.32, 1); transform-origin: bottom left; }
+        .glass-model-btn { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 700; color: #43534e; border-radius: 8px; transition: all 150ms ease; border: none; background: transparent; cursor: pointer; line-height: 1.3; }
         .glass-model-btn:hover { background: rgba(23, 62, 68, 0.05); }
         .glass-model-btn.active { background: rgba(23, 62, 68, 0.08); color: var(--clay); }
         .glass-dropdown-toggle { background: rgba(23, 62, 68, 0.04); border: 1px solid rgba(23, 62, 68, 0.08); color: var(--ink-deep); font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all 200ms ease; margin-top: 4px; }
@@ -464,7 +464,7 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
                       <button onClick={() => handleShareMessage(cleanContent)} className="chat-msg-action-btn" title="Share" aria-label="Share message">
                         <Share2 size={14} />
                       </button>
-                      {messages[messages.length - 1].id === m.id && (
+                      {messages[messages.length - 1]?.id === m.id && (
                         <button onClick={() => reload()} className="chat-msg-action-btn" title="Retry" aria-label="Retry message">
                           <RefreshCcw size={14} />
                         </button>
@@ -498,7 +498,8 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
                 else thinkingText = isIndonesian ? "Melakukan kroscek sumber..." : "Cross-checking sources...";
               }
               const isAssistantStream = latestMessage?.role === 'assistant';
-              if (isAssistantStream && latestMessage.content.length > 0 && !activeTool) return null;
+              const latestCleanContent = latestMessage?.content?.replace(/<think>[\s\S]*?(<\/think>|$)/g, '').trim() || '';
+              if (isAssistantStream && latestCleanContent.length > 0 && !activeTool) return null;
               
               return (
                 <div className="flex items-center gap-2 mt-2 mb-2">
