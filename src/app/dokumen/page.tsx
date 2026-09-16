@@ -1,13 +1,8 @@
+"use client";
 import { FileText, Download, ArrowUpRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { directDownloads } from "@/lib/site-data";
 import { SourceLink } from "@/components/SourceLink";
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Unduhan & Dokumen - Saku Hukum ULM",
-  description: "Arsip berkas akademik, pedoman, dan borang untuk mahasiswa Fakultas Hukum ULM.",
-};
 
 export default function DokumenPage() {
   const { isIndonesian } = useLanguage();
