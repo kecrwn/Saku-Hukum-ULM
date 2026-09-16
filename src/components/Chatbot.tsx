@@ -146,12 +146,13 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
   const startTimeRef = useRef<number>(0);
 
   const models = [
-    { id: "nvidia/nemotron-3-ultra-550b-a55b", name: "Ultra 550B" },
     { id: "nvidia/nemotron-3.5-lightning-30b-a3b", name: "Lightning 30B" },
-    { id: "meta/llama-3.1-70b-instruct", name: "Llama 3.1 70B" }
+    { id: "nvidia/nemotron-3-super-120b-a12b", name: "Super 120B" },
+    { id: "moonshotai/kimi-k3", name: "Kimi K3" },
+    { id: "deepseek-ai/deepseek-v4-flash-0731", name: "DeepSeek V4" }
   ];
 
-  const currentModelName = models.find(m => m.id === selectedModel)?.name || "Ultra 550B";
+  const currentModelName = models.find(m => m.id === selectedModel)?.name || "Lightning 30B";
 
   const { messages, setMessages, input, handleInputChange, handleSubmit, isLoading, append, stop } = useChat({
     api: "/api/chat",
@@ -411,9 +412,12 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
             )}
             {isLoading && (() => {
               const latestMessage = messages[messages.length - 1];
-              const activeTool = latestMessage?.toolInvocations?.[0];
               let thinkingText = isIndonesian ? "Berpikir..." : "Thinking...";
-              if (activeTool) {
+              if (selectedModel === 'moonshotai/kimi-k3' || selectedModel === 'deepseek-ai/deepseek-v4-flash-0731') {
+                thinkingText = isIndonesian ? "Berpikir mendalam, ini butuh waktu lebih lama..." : "Thinking deeply, this may take a bit longer...";
+              }
+              const activeTool = latestMessage?.toolInvocations?.[0];
+              if (activeTool && activeTool.state !== 'result') {
                 if (activeTool.toolName === "web_search") thinkingText = isIndonesian ? "Mencari di internet..." : "Searching the web...";
                 else if (activeTool.toolName === "readSiteContent") thinkingText = isIndonesian ? "Membaca panduan situs..." : "Reading site content...";
               }
