@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useRef, useEffect, forwardRef } from "react";
+// @ts-ignore
 import HTMLFlipBook from "react-pageflip";
-import { X, Moon, Sun, Type, ChevronLeft, ChevronRight, BookOpen, Coffee } from "lucide-react";
+import { X, Moon, Sun, Type, ChevronLeft, ChevronRight, Coffee } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
