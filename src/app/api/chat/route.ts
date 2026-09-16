@@ -44,7 +44,7 @@ const activeProvider = process.env.ACTIVE_PROVIDER || 'nvidia';
 
 const nvidia = createOpenAI({
   baseURL: 'https://integrate.api.nvidia.com/v1',
-  apiKey: process.env.NVIDIA_API_KEY,
+  apiKey: process.env.NVIDIA_API_KEY || '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',
 });
 
 const deepseek = createOpenAI({
@@ -90,7 +90,7 @@ export async function POST(req: Request) {
     if (activeProvider === 'openai') {
       model = openaiProvider(isComplex ? 'gpt-4o' : 'gpt-4o-mini');
     } else if (activeProvider === 'nvidia') {
-      model = nvidia(isComplex ? 'meta/llama-3.1-70b-instruct' : 'meta/llama-3.1-8b-instruct');
+      model = nvidia('meta/llama-3.1-70b-instruct');
     } else if (activeProvider === 'deepseek') {
       model = deepseek(isComplex ? 'deepseek-reasoner' : 'deepseek-chat');
     } else {
@@ -148,8 +148,12 @@ INSTRUCTIONS:
           description: 'Read the detailed summary of a specific site page.',
           parameters: z.object({ path: z.string().describe('The path of the page (e.g. /, /kurikulum)') }),
           execute: async ({ path }) => {
-            const page = siteKnowledge.find(p => p.path === path);
-            return page ? page.summary : "Page not found.";
+            try {
+              const page = siteKnowledge.find(p => p.path === path);
+              return page ? page.summary : "Page not found.";
+            } catch (error) {
+              return { error: 'Failed to read site content' };
+            }
           },
         }),
       },
