@@ -4,10 +4,10 @@ export const externalLinks = {
 };
 export const imagery = { 
   hero: "https://upload.wikimedia.org/wikipedia/commons/6/69/Gedung_Rektorat_Universitas_Lambung_Mangkurat.jpg", 
-  materials: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663032028539/MvEAZzYSBSpKaLrk.jpg", 
-  riverCampus: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663032028539/HVpVWvKUBUSKNJyu.jpg", 
-  mootIllustration: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663032028539/XTDGHGSfuojFYNIC.jpg", 
-  mark: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663032028539/GhBkxJffkVyUAzOJ.png", 
+  materials: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Books_at_library_of_the_faculty_of_law_at_the_university_of_Oslo.jpg", 
+  riverCampus: "https://upload.wikimedia.org/wikipedia/commons/1/1b/Sungai_Martapura.jpg", 
+  mootIllustration: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Pengadilan_Negeri_Banjarmasin.jpg", 
+  mark: "https://upload.wikimedia.org/wikipedia/en/f/f4/Lambung_Mangkurat_University_emblem.png", 
   officialMoot: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Pengadilan_Negeri_Banjarmasin.jpg",
   adhyaksaChamber: "https://upload.wikimedia.org/wikipedia/commons/e/e5/Gerbang_Universitas_Lambung_Mangkurat_di_Banjarbaru.jpg",
   studentOrgImage: "https://upload.wikimedia.org/wikipedia/commons/6/69/Gedung_Rektorat_Universitas_Lambung_Mangkurat.jpg",
