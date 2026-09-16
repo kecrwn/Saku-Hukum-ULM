@@ -3,18 +3,18 @@ export const externalLinks = {
   ulm: "https://ulm.ac.id/id/", ulmHistory: "https://ulm.ac.id/id/history/", ulmLeadership: "https://ulm.ac.id/id/10148-2/", faculty: "https://fh.ulm.ac.id/", facultyHistory: "https://fh.ulm.ac.id/sejarah-fakultas/", facultyLeadership: "https://fh.ulm.ac.id/profil/organisasi-fakultas/pimpinan/", facultyStaff: "https://fh.ulm.ac.id/profil/organisasi-fakultas/tenaga-pendidik-dosen/", pidana: "https://fh.ulm.ac.id/bagian-hukum/pidana/", curriculum: "https://fh.ulm.ac.id/formasi-mata-kuliah-kurikulum/", curriculumPdf: "https://fh.ulm.ac.id/wp-content/uploads/2023/04/SKS.pdf", facilities: "https://fh.ulm.ac.id/sarana-prasarana/", mootCourtPhoto: "https://fh.ulm.ac.id/img_8181edt/", hukumonlineCorner: "https://ulm.ac.id/id/2024/08/01/ulm-miliki-hukumonline-corner-pertama-di-kalimantan-permudah-akses-literasi-dan-referensi-hukum-terpercaya/", library: "https://lib.ulm.ac.id/id/", alumni: "https://fh.ulm.ac.id/pusat-layanan-alumni/", accreditation: "https://fh.ulm.ac.id/profil/akreditasi-dan-sertifikasi/", accreditationNews: "https://fh.ulm.ac.id/2026/06/05/prodi-s1-hukum-fh-ulm-raih-akreditasi-baik-sekali-dari-ban-pt/", instagram: "https://www.instagram.com/fh.ulm/", linkedIn: "https://www.linkedin.com/school/universitas-lambung-mangkurat/", kejaksaan: "https://rekrutmen.kejaksaan.go.id/", kejaksaanNews: "https://rekrutmen.kejaksaan.go.id/pengumuman", pppj: "https://badiklat.kejaksaan.go.id/berita/s/jaksa-agung-lantik-503-jaksa-baru-burhanuddin-saya-butuh-jaksa-4c2d6", repository: "https://github.com/kecrwn/Saku-Hukum-ULM",
 };
 export const imagery = { 
-  hero: "https://upload.wikimedia.org/wikipedia/commons/6/69/Gedung_Rektorat_Universitas_Lambung_Mangkurat.jpg", 
-  materials: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Books_at_library_of_the_faculty_of_law_at_the_university_of_Oslo.jpg", 
-  riverCampus: "https://upload.wikimedia.org/wikipedia/commons/1/1b/Sungai_Martapura.jpg", 
-  mootIllustration: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Pengadilan_Negeri_Banjarmasin.jpg", 
+  hero: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=1200", 
+  materials: "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?auto=format&fit=crop&q=80&w=1200", 
+  riverCampus: "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&q=80&w=1200", 
+  mootIllustration: "https://images.unsplash.com/photo-1505664173691-a28166c374c2?auto=format&fit=crop&q=80&w=1200", 
   mark: "https://upload.wikimedia.org/wikipedia/en/f/f4/Lambung_Mangkurat_University_emblem.png", 
-  officialMoot: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Pengadilan_Negeri_Banjarmasin.jpg",
-  adhyaksaChamber: "https://upload.wikimedia.org/wikipedia/commons/e/e5/Gerbang_Universitas_Lambung_Mangkurat_di_Banjarbaru.jpg",
-  studentOrgImage: "https://upload.wikimedia.org/wikipedia/commons/6/69/Gedung_Rektorat_Universitas_Lambung_Mangkurat.jpg",
-  mootCourtRoom: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Pengadilan_Negeri_Banjarmasin.jpg",
+  officialMoot: "https://images.unsplash.com/photo-1593115057322-e94b77572f20?auto=format&fit=crop&q=80&w=1200",
+  adhyaksaChamber: "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=1200",
+  studentOrgImage: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=1200",
+  mootCourtRoom: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=1200",
   ulmEmblem: "https://upload.wikimedia.org/wikipedia/en/f/f4/Lambung_Mangkurat_University_emblem.png",
-  rektorat: "https://upload.wikimedia.org/wikipedia/commons/6/69/Gedung_Rektorat_Universitas_Lambung_Mangkurat.jpg",
-  gerbang: "https://upload.wikimedia.org/wikipedia/commons/e/e5/Gerbang_Universitas_Lambung_Mangkurat_di_Banjarbaru.jpg"
+  rektorat: "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&q=80&w=1200",
+  gerbang: "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&q=80&w=1200"
 };
 export const criminalRequiredCourses = [
   { code: "BPHPI3701", id: "Sistem Peradilan Pidana", en: "Criminal Justice System" }, { code: "BPHPI3707", id: "Tindak Pidana di Bidang Sumber Daya Alam", en: "Crimes in the Natural Resources Sector" }, { code: "BPHPI3703", id: "Viktimologi", en: "Victimology" }, { code: "BPHPI3704", id: "Perbandingan Hukum Pidana", en: "Comparative Criminal Law" }, { code: "BPHPI3705", id: "Tindak Pidana di Bidang Ekonomi", en: "Crimes in the Economic Sector" }, { code: "BPHPI3706", id: "Hukum Penitensier", en: "Penitentiary Law" },

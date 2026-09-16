@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Loader2, Bot, Maximize } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, Bot, Maximize, Copy, Check } from "lucide-react";
 import { useChat } from "ai/react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useRouter } from "next/navigation";
@@ -8,8 +8,78 @@ import { useRouter } from "next/navigation";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import Link from "next/link";
+
+const CodeBlock = ({ inline, className, children, ...props }: any) => {
+  const [copied, setCopied] = useState(false);
+  const match = /language-(\w+)/.exec(className || '');
+  const lang = match ? match[1] : '';
+  const content = String(children).replace(/\n$/, '');
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(content);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  if (!inline && match) {
+    return (
+      <div className="code-block-wrapper relative group my-4 rounded-lg overflow-hidden border border-[rgba(23,62,68,.15)] shadow-sm max-w-full">
+        <div className="flex items-center justify-between px-4 py-2 bg-[#102d33] border-b border-[rgba(247,242,233,.1)]">
+          <span className="text-xs font-mono text-[#f1cba5]">{lang}</span>
+          <button
+            type="button"
+            onClick={copyToClipboard}
+            className="text-[rgba(247,242,233,.6)] hover:text-white transition-colors flex items-center justify-center w-6 h-6"
+            title="Copy code"
+            aria-label="Copy code to clipboard"
+          >
+            {copied ? <Check size={14} /> : <Copy size={14} />}
+          </button>
+        </div>
+        <SyntaxHighlighter
+          style={vscDarkPlus as any}
+          language={lang}
+          PreTag="div"
+          className="!m-0 !bg-[#0b1e22] !p-4 !overflow-x-auto text-sm"
+          {...props}
+        >
+          {content}
+        </SyntaxHighlighter>
+      </div>
+    );
+  }
+  return (
+    <code className={`${className} bg-[rgba(23,62,68,.06)] text-[var(--ink-deep)] rounded px-1.5 py-0.5 text-[0.9em] font-mono whitespace-pre-wrap break-words`} {...props}>
+      {children}
+    </code>
+  );
+};
+
+const CustomLink = ({ href, children, ...props }: any) => {
+  const isUrl = href && (href.startsWith('http') || href.startsWith('/'));
+  
+  if (isUrl) {
+    return (
+      <a
+        href={href}
+        target={href.startsWith('http') ? "_blank" : undefined}
+        rel={href.startsWith('http') ? "noopener noreferrer" : undefined}
+        className="citation-chip inline-flex items-center gap-1.5 px-3 py-1.5 mt-1.5 mb-1.5 bg-white border border-[rgba(23,62,68,.15)] hover:border-[var(--clay)] text-[var(--ink-deep)] hover:text-[var(--clay)] rounded-full text-xs font-bold transition-all shadow-sm max-w-full no-underline"
+        {...props}
+      >
+        <span className="truncate max-w-[220px]">{children}</span>
+        {href.startsWith('http') && (
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+        )}
+      </a>
+    );
+  }
+  return <a href={href} className="text-[var(--clay)] hover:underline break-all" {...props}>{children}</a>;
+};
 
 function ExpandableMessage({ content, isIndonesian }: { content: string, isIndonesian: boolean }) {
   const [expanded, setExpanded] = useState(false);
@@ -19,7 +89,27 @@ function ExpandableMessage({ content, isIndonesian }: { content: string, isIndon
 
   return (
     <div className="markdown-body">
-      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>{displayContent}</ReactMarkdown>
+      <ReactMarkdown 
+        remarkPlugins={[remarkGfm]} 
+        rehypePlugins={[rehypeRaw]}
+        components={{
+          code: CodeBlock,
+          a: CustomLink,
+          table: ({ children }) => (
+            <div className="overflow-x-auto my-3 w-full border border-[var(--line)] rounded-lg">
+              <table className="w-full text-sm text-left border-collapse min-w-[400px]">
+                {children}
+              </table>
+            </div>
+          ),
+          th: ({ children }) => <th className="px-4 py-2 bg-[var(--paper-strong)] border-b border-[var(--line)] font-bold text-[var(--ink-deep)]">{children}</th>,
+          td: ({ children }) => <td className="px-4 py-2 border-b border-[var(--line)] last:border-0">{children}</td>,
+          blockquote: ({ children }) => <blockquote className="border-l-4 border-[var(--clay)] pl-4 italic my-2 text-[#66736f] bg-[rgba(247,242,233,.5)] py-1">{children}</blockquote>,
+          hr: () => <hr className="my-4 border-t border-[var(--line)]" />
+        }}
+      >
+        {displayContent}
+      </ReactMarkdown>
       {isLong && (
         <button type="button" onClick={() => setExpanded(!expanded)} className="read-more-btn">
           {expanded ? (isIndonesian ? "Tutup" : "Show less") : (isIndonesian ? "Baca selengkapnya" : "Read more")}

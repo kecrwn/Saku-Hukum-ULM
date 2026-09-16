@@ -102,3 +102,7 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
 }
+.markdown-body { word-wrap: break-word; overflow-wrap: break-word; max-width: 100%; }
+.markdown-body p { word-wrap: break-word; overflow-wrap: break-word; }
+.markdown-body pre { max-width: 100%; overflow-x: auto; }
+

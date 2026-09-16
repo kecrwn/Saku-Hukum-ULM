@@ -7,7 +7,23 @@ import { siteKnowledge } from '@/lib/site-knowledge';
 
 // Basic in-memory rate limiting for serverless invocation
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+
+// Expiration sweep every 5 minutes to prevent memory leak
+let lastSweep = Date.now();
+function sweepRateLimitMap() {
+  const now = Date.now();
+  if (now - lastSweep > 5 * 60 * 1000) {
+    for (const [ip, record] of rateLimitMap.entries()) {
+      if (now > record.resetTime) {
+        rateLimitMap.delete(ip);
+      }
+    }
+    lastSweep = now;
+  }
+}
+
 function checkRateLimit(ip: string) {
+  sweepRateLimitMap();
   const now = Date.now();
   const windowMs = 60 * 1000; // 1 minute
   const maxRequests = 15;
@@ -46,11 +62,19 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify({ error: 'Rate limit exceeded. Please wait a moment.' }), { status: 429 });
   }
 
+  let body;
   try {
-    const { messages } = await req.json();
+    body = await req.json();
+  } catch (e) {
+    return new Response(JSON.stringify({ error: 'Invalid JSON body' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+  }
+
+  try {
+    const { messages } = body;
     if (!messages || !Array.isArray(messages)) {
-      return new Response('Invalid request', { status: 400 });
+      return new Response(JSON.stringify({ error: 'Invalid request: messages must be an array' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
     }
+
     
     const lastMessage = messages[messages.length - 1]?.content || '';
     

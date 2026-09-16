@@ -61,3 +61,8 @@ Sections are separated by a 1px solid line using `var(--line)`. Often, decorativ
 2. **Typography**: Stick to the Serif/Sans dichotomy.
 3. **No Dark Mode**: The warm paper aesthetic is the canonical design. Do not force inverted colors.
 4. **Text Contrast**: Any text overlaying a photo must have sufficient contrast, utilizing a subtle dark gradient/scrim (`linear-gradient(transparent, rgba(0,0,0,0.76))`) behind the text if necessary.
+
+## Image Optimization
+1. **Next.js Image Component**: All imagery must be implemented using Next.js `next/image` (`<Image />`) instead of native `<img>` tags. This ensures automatic generation of modern, efficient formats like WebP/AVIF, responsive `srcset` scaling, and lazy loading.
+2. **Stable Remote Sources**: When using external imagery, prioritize robust CDNs or stable verified URLs (like `images.unsplash.com` with static IDs or stable `upload.wikimedia.org` links). Avoid deprecated or redirecting endpoints like `source.unsplash.com`.
+3. **Dimensions & Loading**: For externally sourced layout imagery where sizes are fluid in CSS, utilize the `width` and `height` properties in `<Image />` matched with `className="object-cover w-full h-full"` and rely on CSS grids/flexbox for sizing. Ensure `priority` is set on above-the-fold hero images.
