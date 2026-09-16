@@ -13,6 +13,10 @@ import hukum_lingkungan from './hukum_lingkungan.json';
 import hukum_pajak from './hukum_pajak.json';
 import hukum_keluarga from './hukum_keluarga.json';
 import hukum_perburuhan from './hukum_perburuhan.json';
+import hukum_pidana_khusus from './hukum_pidana_khusus.json';
+import hukum_dagang from './hukum_dagang.json';
+import hukum_hki from './hukum_hki.json';
+import hukum_siber from './hukum_siber.json';
 
 export const lawKnowledgeBase: Record<string, any> = {
   hukum_administrasi,
@@ -29,7 +33,11 @@ export const lawKnowledgeBase: Record<string, any> = {
   hukum_lingkungan,
   hukum_pajak,
   hukum_keluarga,
-  hukum_perburuhan
+  hukum_perburuhan,
+  hukum_pidana_khusus,
+  hukum_dagang,
+  hukum_hki,
+  hukum_siber
 };
 
 export const availableLawTopics = [
@@ -48,4 +56,8 @@ export const availableLawTopics = [
   { id: 'hukum_pajak', name: 'Hukum Pajak' },
   { id: 'hukum_keluarga', name: 'Hukum Keluarga' },
   { id: 'hukum_perburuhan', name: 'Hukum Perburuhan' },
+  { id: 'hukum_pidana_khusus', name: 'Hukum Pidana Khusus' },
+  { id: 'hukum_dagang', name: 'Hukum Dagang & Bisnis' },
+  { id: 'hukum_hki', name: 'Hak Kekayaan Intelektual' },
+  { id: 'hukum_siber', name: 'Hukum Siber & ITE' }
 ];
