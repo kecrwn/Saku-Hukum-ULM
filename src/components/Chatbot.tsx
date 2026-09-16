@@ -137,8 +137,11 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
     }
   ];
 
+  const [selectedModel, setSelectedModel] = useState("nvidia/nemotron-3-ultra-550b-a55b");
+
   const { messages, setMessages, input, handleInputChange, handleSubmit, isLoading, append } = useChat({
     api: "/api/chat",
+    body: { model: selectedModel },
     initialMessages: initialWelcome as any,
     onError: (error) => {
       setMessages(prev => [
@@ -257,8 +260,23 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
       {isOpen && (
         <div className={fullScreen ? "chat-panel-fullscreen" : `chat-panel ${isExpanding ? 'is-expanding' : ''}`}>
           <div className="chat-head">
-            <div className="chat-head-title"><Bot size={19} />{isIndonesian ? "Jaksa" : "Jaksa"}</div>
+            <div className="chat-head-title">
+              <Bot size={19} />
+              {isIndonesian ? "Jaksa" : "Jaksa"}
+            </div>
+            
             <div className="flex gap-2 items-center">
+              <select 
+                value={selectedModel}
+                onChange={(e) => setSelectedModel(e.target.value)}
+                className="bg-[rgba(23,62,68,.05)] border border-[rgba(23,62,68,.1)] text-[var(--ink-deep)] text-xs rounded-md px-2 py-1 outline-none mr-2 max-w-[120px] truncate"
+                title="Pilih Model AI"
+              >
+                <option value="nvidia/nemotron-3-ultra-550b-a55b">Nemotron Ultra 550B</option>
+                <option value="nvidia/nemotron-3.5-lightning-30b-a3b">Nemotron Lightning 30B</option>
+                <option value="moonshotai/kimi-k3">Kimi K3</option>
+              </select>
+
               <button
                 type="button"
                 onClick={handleClearChat}

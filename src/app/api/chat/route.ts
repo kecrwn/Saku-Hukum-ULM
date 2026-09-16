@@ -40,12 +40,22 @@ function checkRateLimit(ip: string) {
   return true;
 }
 
-const activeProvider = process.env.ACTIVE_PROVIDER || 'nvidia';
+const originalNvidiaKey = process.env.NVIDIA_API_KEY || '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';
+const ultraKey = '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';
+const lightningKey = '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';
 
-const nvidia = createOpenAI({
-  baseURL: 'https://integrate.api.nvidia.com/v1',
-  apiKey: process.env.NVIDIA_API_KEY || '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',
-});
+function getNvidiaClient(modelName: string) {
+  let apiKey = originalNvidiaKey;
+  if (modelName === 'nvidia/nemotron-3-ultra-550b-a55b') apiKey = ultraKey;
+  if (modelName === 'nvidia/nemotron-3.5-lightning-30b-a3b') apiKey = lightningKey;
+  
+  return createOpenAI({
+    baseURL: 'https://integrate.api.nvidia.com/v1',
+    apiKey: apiKey,
+  });
+}
+
+const activeProvider = process.env.ACTIVE_PROVIDER || 'nvidia';
 
 const deepseek = createOpenAI({
   baseURL: 'https://api.deepseek.com',
@@ -70,7 +80,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { messages } = body;
+    const { messages, model: requestedModel } = body;
     if (!messages || !Array.isArray(messages)) {
       return new Response(JSON.stringify({ error: 'Invalid request: messages must be an array' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
     }
@@ -90,7 +100,9 @@ export async function POST(req: Request) {
     if (activeProvider === 'openai') {
       model = openaiProvider(isComplex ? 'gpt-4o' : 'gpt-4o-mini');
     } else if (activeProvider === 'nvidia') {
-      model = nvidia('nvidia/llama-3.1-nemotron-70b-instruct');
+      const selectedModelName = requestedModel || 'nvidia/nemotron-3-ultra-550b-a55b';
+      const nvidiaClient = getNvidiaClient(selectedModelName);
+      model = nvidiaClient(selectedModelName);
     } else if (activeProvider === 'deepseek') {
       model = deepseek(isComplex ? 'deepseek-reasoner' : 'deepseek-chat');
     } else {
