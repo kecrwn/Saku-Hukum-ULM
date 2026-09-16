@@ -82,11 +82,6 @@ const CustomLink = ({ href, children, ...props }: any) => {
 };
 
 function ExpandableMessage({ content, isIndonesian }: { content: string, isIndonesian: boolean }) {
-  const [expanded, setExpanded] = useState(false);
-  const isLong = content.length > 350;
-  
-  const displayContent = isLong && !expanded ? content.slice(0, 350) + "..." : content;
-
   return (
     <div className="markdown-body">
       <ReactMarkdown 
@@ -108,13 +103,8 @@ function ExpandableMessage({ content, isIndonesian }: { content: string, isIndon
           hr: () => <hr className="my-4 border-t border-[var(--line)]" />
         }}
       >
-        {displayContent}
+        {content}
       </ReactMarkdown>
-      {isLong && (
-        <button type="button" onClick={() => setExpanded(!expanded)} className="read-more-btn">
-          {expanded ? (isIndonesian ? "Tutup" : "Show less") : (isIndonesian ? "Baca selengkapnya" : "Read more")}
-        </button>
-      )}
     </div>
   );
 }
@@ -202,6 +192,31 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
       setProcessingTime(0);
     }
   });
+
+  const onFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+    
+    const lowerInput = input.trim().toLowerCase();
+    const isGreeting = ['hi', 'hello', 'halo', 'hey', 'hai', 'pagi', 'siang', 'sore', 'malam'].includes(lowerInput);
+    const isWhoAreYou = lowerInput.includes('who are you') || lowerInput.includes('siapa kamu') || lowerInput.includes('apa itu jaksa') || lowerInput.includes('what are you') || lowerInput.includes('what can you do');
+    
+    if (isGreeting || isWhoAreYou) {
+      setMessages(prev => [...prev, { id: Date.now().toString(), role: 'user', content: input.trim() }]);
+      handleInputChange({ target: { value: '' } } as any);
+      
+      const reply = isWhoAreYou 
+        ? (isIndonesian ? "Saya Jaksa, asisten virtual Anda untuk Saku Hukum ULM! Saya bisa membantu menjawab pertanyaan seputar kurikulum, jadwal, atau informasi fakultas." : "I am Jaksa, your virtual assistant for Saku Hukum ULM! I can help you with questions about the curriculum, schedules, or faculty information.")
+        : (isIndonesian ? "Halo! Ada yang bisa saya bantu hari ini?" : "Hello! How can I help you today?");
+        
+      setTimeout(() => {
+        setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), role: 'assistant', content: reply }]);
+      }, 300);
+      return;
+    }
+    
+    handleSubmit(e);
+  };
 
   const handleClearChat = () => {
     localStorage.removeItem("shulm-chat-history");
@@ -399,16 +414,21 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
             </div>
           </div>
           <div className="chat-body">
-            {messages.map(m => (
-              <div key={m.id} className={`chat-msg ${m.role === "user" ? "chat-msg-user" : "chat-msg-bot"}`}>
-                <ExpandableMessage content={m.content} isIndonesian={isIndonesian} />
-                {m.role === "assistant" && generationTimes[m.id] && (
-                  <div className="chat-msg-time">
-                    <Clock size={10} /> {(generationTimes[m.id] / 1000).toFixed(1)}s
-                  </div>
-                )}
-              </div>
-            ))}
+            {messages.map(m => {
+              if (m.role === 'assistant' && !m.content && (!m.toolInvocations || m.toolInvocations.length === 0)) {
+                return null;
+              }
+              return (
+                <div key={m.id} className={`chat-msg ${m.role === "user" ? "chat-msg-user" : "chat-msg-bot"}`}>
+                  <ExpandableMessage content={m.content} isIndonesian={isIndonesian} />
+                  {m.role === "assistant" && generationTimes[m.id] && (
+                    <div className="chat-msg-time">
+                      <Clock size={10} /> {(generationTimes[m.id] / 1000).toFixed(1)}s
+                    </div>
+                  )}
+                </div>
+              );
+            })}
             {messages.length <= 1 && (
               <div className="chat-chips">
                 {chips.map(c => <button type="button" key={c} className="chat-chip" onClick={() => append({ role: 'user', content: c })}>{c}</button>)}
@@ -444,7 +464,7 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
             })()}
             <div ref={endRef} />
           </div>
-          <form className="chat-input-bar" onSubmit={handleSubmit}>
+          <form className="chat-input-bar" onSubmit={onFormSubmit}>
             <div className="chat-input-wrap">
               <textarea
                 ref={inputRef}
