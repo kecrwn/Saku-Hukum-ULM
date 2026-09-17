@@ -46,7 +46,7 @@ function CommandDialog({
     <Dialog {...props}>
       <DialogContent
         className={cn(
-          "overflow-hidden p-0 w-[92vw] max-w-[425px] sm:max-w-lg top-[8%] sm:top-[50%] translate-y-0 sm:translate-y-[-50%]", 
+          "overflow-hidden p-0 sm:p-0 gap-0 sm:gap-0 w-[92vw] max-w-[580px] sm:max-w-[640px] max-h-[min(88dvh,640px)] flex flex-col rounded-2xl border border-[var(--line)] bg-[var(--paper)] text-[var(--ink-deep)] shadow-2xl z-[200]", 
           className
         )}
         showCloseButton={showCloseButton}
@@ -55,7 +55,7 @@ function CommandDialog({
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <Command className="[&_[cmdk-group-heading]]:text-muted-foreground **:data-[slot=command-input-wrapper]:h-14 sm:**:data-[slot=command-input-wrapper]:h-12 [&_[cmdk-group-heading]]:px-3 sm:[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group]]:px-2 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:h-6 sm:[&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-6 sm:[&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-14 sm:[&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-3 sm:[&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-4 sm:[&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
+        <Command className="flex flex-col h-full w-full overflow-hidden bg-transparent">
           {children}
         </Command>
       </DialogContent>
@@ -70,13 +70,13 @@ function CommandInput({
   return (
     <div
       data-slot="command-input-wrapper"
-      className="flex h-14 sm:h-12 items-center gap-3 sm:gap-2 border-b px-4 sm:px-3"
+      className="flex h-14 items-center gap-3 border-b border-[var(--line)] px-4 pr-12 bg-[var(--paper)] shrink-0"
     >
-      <SearchIcon className="size-5 sm:size-4 shrink-0 opacity-50" />
+      <SearchIcon className="size-5 shrink-0 text-[var(--clay)] opacity-85" />
       <CommandPrimitive.Input
         data-slot="command-input"
         className={cn(
-          "placeholder:text-muted-foreground flex h-12 w-full rounded-md bg-transparent py-3 text-base sm:text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
+          "placeholder:text-[var(--muted)] flex h-12 w-full bg-transparent py-3 text-base sm:text-sm outline-hidden text-[var(--ink-deep)] font-medium disabled:cursor-not-allowed disabled:opacity-50",
           className
         )}
         {...props}
@@ -93,7 +93,7 @@ function CommandList({
     <CommandPrimitive.List
       data-slot="command-list"
       className={cn(
-        "max-h-[60vh] sm:max-h-[300px] scroll-py-1 overflow-x-hidden overflow-y-auto",
+        "max-h-[min(65vh,440px)] scroll-py-2 overflow-x-hidden overflow-y-auto p-2 sm:p-3",
         className
       )}
       {...props}
@@ -107,7 +107,7 @@ function CommandEmpty({
   return (
     <CommandPrimitive.Empty
       data-slot="command-empty"
-      className="py-6 text-center text-base sm:text-sm"
+      className="py-8 text-center text-base sm:text-sm"
       {...props}
     />
   );
@@ -121,7 +121,7 @@ function CommandGroup({
     <CommandPrimitive.Group
       data-slot="command-group"
       className={cn(
-        "text-foreground [&_[cmdk-group-heading]]:text-muted-foreground overflow-hidden p-1 sm:p-2 [&_[cmdk-group-heading]]:px-3 sm:[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-2 sm:[&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-sm sm:[&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium",
+        "text-foreground overflow-hidden p-1 sm:p-1.5 [&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:py-2 [&_[cmdk-group-heading]]:text-[11px] [&_[cmdk-group-heading]]:font-bold [&_[cmdk-group-heading]]:tracking-wider [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:text-[var(--clay)]",
         className
       )}
       {...props}
@@ -136,7 +136,7 @@ function CommandSeparator({
   return (
     <CommandPrimitive.Separator
       data-slot="command-separator"
-      className={cn("bg-border -mx-1 h-px", className)}
+      className={cn("bg-[var(--line)] -mx-1 h-px my-1", className)}
       {...props}
     />
   );
@@ -150,7 +150,7 @@ function CommandItem({
     <CommandPrimitive.Item
       data-slot="command-item"
       className={cn(
-        "data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-3 sm:gap-2 rounded-md sm:rounded-sm px-3 sm:px-2 py-3 sm:py-1.5 text-base sm:text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-5 sm:[&_svg:not([class*='size-'])]:size-4",
+        "relative flex cursor-pointer select-none items-center rounded-xl px-2.5 py-2 text-sm outline-none transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-[rgba(178,77,57,0.08)] data-[selected=true]:text-[var(--ink-deep)]",
         className
       )}
       {...props}

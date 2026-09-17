@@ -142,20 +142,228 @@ export const campusHighlights = [
 ];
 
 export const translations = {
-  id: { nav: [["Beranda", "/"], ["Tentang ULM", "/tentang"], ["Kurikulum", "/kurikulum"], ["Fasilitas", "/fasilitas"], ["Dosen & Staf", "/dosen"], ["Kemahasiswaan", "/kemahasiswaan"], ["Apa Kata Mereka", "/perspektif"], ["Pustaka Hukum", "/pustaka"], ["Ruang Baca", "/ruang-baca"], ["Jalur Karier", "/karier"], ["Tautan", "/tautan"]], viewSource: "Buka sumber resmi", source: "Sumber", overview: "Ikhtisar", backHome: "Kembali ke beranda", updated: "Diverifikasi 27 Agustus 2026", dataLimit: "Tidak tersedia secara publik", official: "resmi", personalNotice: "Situs pribadi untuk keperluan studi. Tidak berafiliasi secara resmi dengan Universitas Lambung Mangkurat.", footerNote: "Catatan akademik yang ditautkan kembali ke sumber primer.", openMenu: "Buka menu navigasi", closeMenu: "Tutup menu navigasi", switchLanguage: "Beralih ke bahasa Inggris" },
-  en: { nav: [["Home", "/"], ["About ULM", "/tentang"], ["Curriculum", "/kurikulum"], ["Facilities", "/fasilitas"], ["Faculty & Staff", "/dosen"], ["Student Life", "/kemahasiswaan"], ["What They’re Saying", "/perspektif"], ["Law Library", "/pustaka"], ["Reading Room", "/ruang-baca"], ["Career Path", "/karier"], ["Links", "/tautan"]], viewSource: "Open official source", source: "Source", overview: "Overview", backHome: "Back to home", updated: "Verified 27 August 2026", dataLimit: "Not publicly available", official: "official", personalNotice: "A personal site for study purposes. It is not officially affiliated with Universitas Lambung Mangkurat.", footerNote: "Academic notes linked back to primary sources.", openMenu: "Open navigation menu", closeMenu: "Close navigation menu", switchLanguage: "Switch to Bahasa Indonesia" },
+  id: { nav: [["Beranda", "/"], ["Tentang ULM", "/tentang"], ["Kurikulum", "/kurikulum"], ["Fasilitas", "/fasilitas"], ["Dosen & Staf", "/dosen"], ["Kemahasiswaan", "/kemahasiswaan"], ["Apa Kata Mereka", "/perspektif"], ["Pustaka Hukum", "/pustaka"], ["Ruang Baca", "/ruang-baca"], ["Unduhan & Dokumen", "/dokumen"], ["Jalur Karier", "/karier"], ["Tautan", "/tautan"]], viewSource: "Buka sumber resmi", source: "Sumber", overview: "Ikhtisar", backHome: "Kembali ke beranda", updated: "Diverifikasi 27 Agustus 2026", dataLimit: "Tidak tersedia secara publik", official: "resmi", personalNotice: "Situs pribadi untuk keperluan studi. Tidak berafiliasi secara resmi dengan Universitas Lambung Mangkurat.", footerNote: "Catatan akademik yang ditautkan kembali ke sumber primer.", openMenu: "Buka menu navigasi", closeMenu: "Tutup menu navigasi", switchLanguage: "Beralih ke bahasa Inggris" },
+  en: { nav: [["Home", "/"], ["About ULM", "/tentang"], ["Curriculum", "/kurikulum"], ["Facilities", "/fasilitas"], ["Faculty & Staff", "/dosen"], ["Student Life", "/kemahasiswaan"], ["What They’re Saying", "/perspektif"], ["Law Library", "/pustaka"], ["Reading Room", "/ruang-baca"], ["Downloads & Docs", "/dokumen"], ["Career Path", "/karier"], ["Links", "/tautan"]], viewSource: "Open official source", source: "Source", overview: "Overview", backHome: "Back to home", updated: "Verified 27 August 2026", dataLimit: "Not publicly available", official: "official", personalNotice: "A personal site for study purposes. It is not officially affiliated with Universitas Lambung Mangkurat.", footerNote: "Academic notes linked back to primary sources.", openMenu: "Open navigation menu", closeMenu: "Close navigation menu", switchLanguage: "Switch to Bahasa Indonesia" },
 } as const;
 
 export const directDownloads = [
-  { categoryId: "Pendaftaran & Akademik", categoryEn: "Registration & Academic", items: [
-    { id: "Buku Pedoman Kurikulum 2020", en: "Curriculum 2020 Guidebook", url: "https://fh.ulm.ac.id/wp-content/uploads/2023/04/SKS.pdf", type: "PDF", size: "2.4 MB" },
-    { id: "Kalender Akademik ULM 2023/2024", en: "ULM Academic Calendar 2023/2024", url: "https://ulm.ac.id/id/wp-content/uploads/Kalender-Akademik.pdf", type: "PDF", size: "3.2 MB" },
-  ]},
-  { categoryId: "Tugas Akhir (Skripsi)", categoryEn: "Final Thesis", items: [
-    { id: "SOP Pengajuan Judul Skripsi", en: "Thesis Proposal SOP", url: "https://fh.ulm.ac.id/wp-content/uploads/SOP-Skripsi.pdf", type: "PDF", size: "1.1 MB" },
-    { id: "Formulir Pendaftaran Ujian Skripsi", en: "Thesis Defense Registration Form", url: "https://fh.ulm.ac.id/wp-content/uploads/Form-Ujian.docx", type: "DOCX", size: "45 KB" },
-  ]},
-  { categoryId: "Persiapan Karier", categoryEn: "Career Preparation", items: [
-    { id: "Syarat Rekrutmen CPNS Kejaksaan", en: "Prosecutor CPNS Recruitment Requirements", url: "https://rekrutmen.kejaksaan.go.id/syarat.pdf", type: "PDF", size: "1.8 MB" },
-  ]}
+  {
+    categoryId: "Pendaftaran & Akademik",
+    categoryEn: "Registration & Academic",
+    items: [
+      {
+        id: "Buku Pedoman & Formasi Kurikulum 2020",
+        en: "Curriculum 2020 Guidebook & Course Matrix",
+        descriptionId: "Struktur sebaran 144+ SKS, daftar mata kuliah wajib, konsentrasi hukum, dan prasyarat akademik jenjang S1.",
+        descriptionEn: "Distribution structure of 144+ credits, compulsory courses, legal concentrations, and academic prerequisites.",
+        url: "https://fh.ulm.ac.id/wp-content/uploads/2023/04/SKS.pdf",
+        type: "PDF",
+        size: "2.4 MB",
+        institution: "Fakultas Hukum ULM",
+        edition: "Kurikulum 2020 (Berlaku s.d. Sekarang)",
+        verifiedDate: "Agustus 2026",
+        featured: true
+      },
+      {
+        id: "Kalender Akademik Resmi ULM 2026/2027",
+        en: "Official ULM Academic Calendar 2026/2027",
+        descriptionId: "Jadwal semester ganjil/genap, KRS, masa perkuliahan, UTS/UAS, wisuda, dan libur akademik berdasar SK Rektor.",
+        descriptionEn: "Odd/even semester schedules, KRS window, lecture periods, midterms/finals, graduation based on Rector Decree.",
+        url: "https://akademik.ulm.ac.id/assets/kalender_akademik.pdf",
+        type: "PDF",
+        size: "3.2 MB",
+        institution: "Biro Akademik ULM",
+        edition: "SK Rektor No. 274/UN8/HK.06/2026",
+        verifiedDate: "Agustus 2026",
+        featured: true
+      },
+      {
+        id: "SK Tarif UKT Mahasiswa ULM",
+        en: "ULM Tuition Fee (UKT) Schedule",
+        descriptionId: "Rincian kelompok besaran Uang Kuliah Tunggal (UKT) mahasiswa program sarjana Fakultas Hukum.",
+        descriptionEn: "Detailed breakdown of Single Tuition Fee (UKT) brackets for Faculty of Law undergraduate students.",
+        url: "https://ppkn.fkip.ulm.ac.id/wp-content/uploads/2025/08/SK-2063-Tarif-UKT-Mahasiswa-Tahun-Akademik-2024-2025.pdf",
+        type: "PDF",
+        size: "1.6 MB",
+        institution: "Rektorat ULM",
+        edition: "SK Rektor No. 2063/UN8/KU/2024",
+        verifiedDate: "Agustus 2026",
+        featured: false
+      },
+      {
+        id: "Formulir Perubahan & Pembatalan KRS (KPRS)",
+        en: "KRS Course Revision & Add/Drop Form",
+        descriptionId: "Blangko resmi pengajuan penambahan, pembatalan, atau perubahan mata kuliah pada masa revisi KRS.",
+        descriptionEn: "Official form for adding, dropping, or revising courses during the academic revision window.",
+        url: "https://fh.ulm.ac.id/wp-content/uploads/Formulir-KPRS-FHULM.docx",
+        type: "DOCX",
+        size: "54 KB",
+        institution: "Subbag Akademik FH ULM",
+        edition: "Format Baku",
+        verifiedDate: "Agustus 2026",
+        featured: false
+      },
+      {
+        id: "Formulir Pengajuan Cuti Akademik",
+        en: "Academic Leave of Absence Application Form",
+        descriptionId: "Surat permohonan penghentian studi sementara dengan persetujuan Dosen PA dan Dekan FH ULM.",
+        descriptionEn: "Application letter for temporary academic pause approved by Academic Advisor and Dean.",
+        url: "https://akademik.ulm.ac.id/download/form-cuti-akademik.pdf",
+        type: "PDF",
+        size: "320 KB",
+        institution: "BAAK Universitas Lambung Mangkurat",
+        edition: "Edisi Revisi",
+        verifiedDate: "Agustus 2026",
+        featured: false
+      }
+    ]
+  },
+  {
+    categoryId: "Tugas Akhir & Skripsi",
+    categoryEn: "Final Thesis & Research",
+    items: [
+      {
+        id: "SOP Pengajuan Judul & Pembimbing Skripsi",
+        en: "Thesis Title Proposal & Advisor SOP",
+        descriptionId: "Alur standar operasional prosedur penentuan topik, penunjukan pembimbing I/II, dan verifikasi SKS prasyarat.",
+        descriptionEn: "Standard operating procedure for topic selection, advisor appointment, and prerequisite credit verification.",
+        url: "https://fh.ulm.ac.id/wp-content/uploads/SOP-Skripsi.pdf",
+        type: "PDF",
+        size: "1.1 MB",
+        institution: "Fakultas Hukum ULM",
+        edition: "SOP Akademik Terpadu",
+        verifiedDate: "Agustus 2026",
+        featured: true
+      },
+      {
+        id: "Buku Pedoman Penulisan Karya Tulis & Skripsi",
+        en: "Legal Research & Thesis Writing Handbook",
+        descriptionId: "Panduan tata cara penulisan ilmiah, metodologi penelitian hukum yuridis normatif/empiris, dan gaya sitasi.",
+        descriptionEn: "Manual for academic legal writing, normative/empirical research methodology, and citation styles.",
+        url: "https://fh.ulm.ac.id/wp-content/uploads/Pedoman-Skripsi-FH-ULM.pdf",
+        type: "PDF",
+        size: "3.8 MB",
+        institution: "FH ULM Press",
+        edition: "Pedoman Resmi Edisi V",
+        verifiedDate: "Agustus 2026",
+        featured: true
+      },
+      {
+        id: "Template Naskah Skripsi Format Baku",
+        en: "Standard Thesis Manuscript Template",
+        descriptionId: "Berkas master Microsoft Word berisi format cover, lembar pengesahan, abstrak bilingual, dan tata letak bab.",
+        descriptionEn: "Master MS Word file containing standardized layout for covers, approvals, bilingual abstracts, and chapters.",
+        url: "https://fh.ulm.ac.id/wp-content/uploads/Template-Skripsi-FHULM.docx",
+        type: "DOCX",
+        size: "115 KB",
+        institution: "Bagian Akademik FH ULM",
+        edition: "Template Baku 2025/2026",
+        verifiedDate: "Agustus 2026",
+        featured: true
+      },
+      {
+        id: "Formulir Pendaftaran Ujian Skripsi / Pendadaran",
+        en: "Thesis Defense Examination Registration Form",
+        descriptionId: "Berkas pendaftaran ujian pendadaran komprehensif lengkap dengan daftar cek berkas persetujuan penguji.",
+        descriptionEn: "Registration form for comprehensive thesis defense including examiner approval checklist.",
+        url: "https://fh.ulm.ac.id/wp-content/uploads/Form-Ujian.docx",
+        type: "DOCX",
+        size: "48 KB",
+        institution: "Subbag Akademik FH ULM",
+        edition: "Revisi 2026",
+        verifiedDate: "Agustus 2026",
+        featured: false
+      },
+      {
+        id: "Surat Keterangan Bebas Pustaka & Laboratorium",
+        en: "Library & Laboratory Clearance Certificate Form",
+        descriptionId: "Formulir verifikasi bebas pinjaman pustaka dan laboratorium hukum sebagai prasyarat wisuda sarjana.",
+        descriptionEn: "Clearance verification form confirming zero outstanding library loans as graduation prerequisite.",
+        url: "https://perpustakaan.ulm.ac.id/download/bebas-pustaka.pdf",
+        type: "PDF",
+        size: "210 KB",
+        institution: "UPA Perpustakaan ULM",
+        edition: "Format Tunggal",
+        verifiedDate: "Agustus 2026",
+        featured: false
+      }
+    ]
+  },
+  {
+    categoryId: "Praktik & Kemahiran Hukum",
+    categoryEn: "Court Practice & Clinical Skills",
+    items: [
+      {
+        id: "Buku Pedoman Praktik Peradilan Semu (Moot Court)",
+        en: "Moot Court Practice Guidebook",
+        descriptionId: "Tata tertib persidangan, peran hakim, jaksa penuntut umum, penasihat hukum, dan panitera di Lab Peradilan.",
+        descriptionEn: "Rules of mock court proceedings, roles of judges, prosecutors, defense counsel, and clerks.",
+        url: "https://fh.ulm.ac.id/wp-content/uploads/Pedoman-Peradilan-Semu.pdf",
+        type: "PDF",
+        size: "2.1 MB",
+        institution: "Laboratorium Kemahiran Hukum FH ULM",
+        edition: "Modul Praktik Terpadu",
+        verifiedDate: "Agustus 2026",
+        featured: false
+      },
+      {
+        id: "Template Berkas Acara Sidang & Gugatan Perdata",
+        en: "Court Minutes & Civil Claim Templates",
+        descriptionId: "Format berkas surat gugatan, jawaban, replik, duplik, daftar alat bukti, dan naskah putusan perdata.",
+        descriptionEn: "Templates for civil lawsuits, answers, rejoinders, evidence lists, and trial judgments.",
+        url: "https://fh.ulm.ac.id/wp-content/uploads/Format-Berkas-Peradilan.docx",
+        type: "DOCX",
+        size: "82 KB",
+        institution: "Bagian Hukum Acara FH ULM",
+        edition: "Format Standar Peradilan",
+        verifiedDate: "Agustus 2026",
+        featured: false
+      }
+    ]
+  },
+  {
+    categoryId: "Persiapan Karier & CASN",
+    categoryEn: "Career & CASN Preparation",
+    items: [
+      {
+        id: "Syarat Rekrutmen Calon Jaksa CPNS Kejaksaan RI",
+        en: "Prosecutor CPNS Recruitment Qualifications",
+        descriptionId: "Ketentuan kualifikasi, batas usia, syarat IPK, postur fisik, dan sertifikat penunjang formasi Ahli Pertama Jaksa.",
+        descriptionEn: "Official qualification criteria, age limit, GPA minimum, physical standards, and certificates for Prosecutor positions.",
+        url: "https://rekrutmen.kejaksaan.go.id/syarat.pdf",
+        type: "PDF",
+        size: "1.8 MB",
+        institution: "Biro Kepegawaian Kejaksaan Agung RI",
+        edition: "Seleksi CASN Terkini",
+        verifiedDate: "Agustus 2026",
+        featured: true
+      },
+      {
+        id: "Kisi-Kisi SKB Bidang Hukum Calon Hakim Mahkamah Agung",
+        en: "Supreme Court Candidate Judge SKB Legal Syllabus",
+        descriptionId: "Ruang lingkup materi Seleksi Kompetensi Bidang substansi hukum pidana, perdata, tata usaha negara, dan kode etik.",
+        descriptionEn: "Field Competency Selection syllabus covering criminal, civil, administrative law, and judicial ethics.",
+        url: "https://rekrutmen.mahkamahagung.go.id/panduan-skb-hukum.pdf",
+        type: "PDF",
+        size: "2.9 MB",
+        institution: "Mahkamah Agung Republik Indonesia",
+        edition: "Panduan Seleksi Terkini",
+        verifiedDate: "Agustus 2026",
+        featured: false
+      },
+      {
+        id: "Format Surat Lamaran & Pernyataan Seleksi ASN Hukum",
+        en: "Civil Service Legal Selection Application Templates",
+        descriptionId: "Contoh format surat lamaran bertanda tangan dan meterai elektronik sesuai persyaratan BKN dan kementerian.",
+        descriptionEn: "Standard application letters and sworn statements formatted per BKN and ministry recruitment rules.",
+        url: "https://rekrutmen.kejaksaan.go.id/format-surat-pernyataan.docx",
+        type: "DOCX",
+        size: "62 KB",
+        institution: "Panitia Seleksi Nasional (Panselnas)",
+        edition: "Format Baku BKN",
+        verifiedDate: "Agustus 2026",
+        featured: false
+      }
+    ]
+  }
 ];

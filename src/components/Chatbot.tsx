@@ -342,6 +342,10 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
         .chat-input-wrap{position:relative;display:flex;align-items:flex-end;background:var(--card);border:1px solid rgba(23,62,68,.18);border-radius:26px;box-shadow:0 4px 16px rgba(0,0,0,.03);transition:border-color 200ms ease-out,box-shadow 200ms ease-out}
         .chat-input-wrap:focus-within{border-color:var(--clay);box-shadow:0 6px 20px rgba(178,77,57,.12)}
         .chat-input-wrap textarea{flex:1;border:none;background:transparent;padding:14px 16px 14px 20px;font-size:14px;font-family:var(--sans);color:var(--ink-deep);resize:none;min-height:50px;max-height:120px;outline:none}
+        .chat-input-wrap textarea::-webkit-scrollbar { width: 5px; }
+        .chat-input-wrap textarea::-webkit-scrollbar-track { background: transparent; }
+        .chat-input-wrap textarea::-webkit-scrollbar-thumb { background-color: rgba(23,62,68,0.2); border-radius: 10px; }
+        .chat-input-wrap textarea::-webkit-scrollbar-thumb:hover { background-color: rgba(23,62,68,0.4); }
         .chat-send{position:absolute;right:8px;bottom:8px;width:34px;height:34px;border:none;border-radius:50%;background:var(--clay);color:var(--paper);display:grid;place-items:center;cursor:pointer;flex-shrink:0;transition:all 300ms cubic-bezier(0.34, 1.56, 0.64, 1)}
         .chat-send:disabled{opacity:.4;cursor:default;background:var(--muted);transform:scale(0.95)}
         .chat-send:not(:disabled):hover{transform:scale(1.12) translateY(-2px);background:var(--ink-deep);box-shadow:0 6px 16px rgba(16,45,51,0.2)}
@@ -383,22 +387,22 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
 
       {isOpen && (
         <div className={fullScreen ? "chat-panel-fullscreen" : "chat-panel"}>
-          <div className="chat-head items-center">
-            <div className="flex items-center gap-3">
+          <div className="chat-head items-start">
+            <div className="flex flex-col items-start gap-1.5">
               <div className="chat-head-title">
                 <Bot size={20} />
                 {isIndonesian ? "Jaksa" : "Jaksa"}
               </div>
               
-              {/* Task 2: Reposition the model-tier selector alongside the title */}
               <div className="relative">
                 <button 
                   type="button" 
                   onClick={() => setIsModelMenuOpen(!isModelMenuOpen)}
                   className="glass-dropdown-toggle"
                 >
-                  <span className="opacity-70 font-normal">AI:</span> {currentModelName}
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isModelMenuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', marginLeft: '2px', opacity: 0.6 }}><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  <span className="opacity-70 font-normal shrink-0">AI:</span>
+                  <span className="inline-block truncate max-w-[140px] text-ellipsis">{currentModelName}</span>
+                  <svg className="shrink-0" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isModelMenuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', marginLeft: '2px', opacity: 0.6 }}><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
                 {isModelMenuOpen && (
                   <>
@@ -424,7 +428,7 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
               </div>
             </div>
             
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-2 items-center mt-1">
               <button
                 type="button"
                 onClick={handleClearChat}
@@ -484,10 +488,10 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
                     )}
                   </div>
 
-                  {/* Task 3: Move the response-time indicator outside the bubble */}
+                  {/* Task 2: Move the response-time indicator outside the bubble */}
                   {m.role === "assistant" && generationTimes[m.id] && (
-                    <div className="flex items-center gap-1.5 text-[9px] font-sans font-semibold uppercase tracking-widest text-[#66736f] opacity-70 mt-1.5 ml-3 self-start">
-                      <Clock size={10} /> {(generationTimes[m.id] / 1000).toFixed(1)}s
+                    <div className="flex items-center gap-1 text-[10px] font-sans font-medium text-[#66736f] opacity-80 mt-1 ml-2 self-start">
+                      <Clock size={12} /> {(generationTimes[m.id] / 1000).toFixed(1)}s
                     </div>
                   )}
                 </div>

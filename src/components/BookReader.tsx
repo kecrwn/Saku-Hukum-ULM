@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
+import Link from "next/link";
 
 type Theme = "light" | "sepia" | "night";
 
@@ -18,10 +19,9 @@ interface BookReaderProps {
     coverColor: string;
     chapters: { title: string; content: string; titleEn?: string; contentEn?: string }[];
   };
-  onClose: () => void;
 }
 
-export default function BookReader({ book, onClose }: BookReaderProps) {
+export default function BookReader({ book }: BookReaderProps) {
   const { isIndonesian } = useLanguage();
   const [theme, setTheme] = useState<Theme>("sepia");
   const [fontSize, setFontSize] = useState<"small" | "medium" | "large">("medium");
@@ -68,7 +68,7 @@ export default function BookReader({ book, onClose }: BookReaderProps) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 100 }}
       transition={{ type: "spring", damping: 25, stiffness: 200 }}
-      className={`fixed inset-0 z-[9999] flex flex-col font-dm-serif theme-${theme}`}
+      className={`relative flex flex-col font-dm-serif theme-${theme} min-h-[calc(100vh-74px)]`}
       style={{
         backgroundColor: theme === 'light' ? '#fcfcfc' : theme === 'sepia' ? '#fdf6e3' : '#121212',
         color: theme === 'light' ? '#1a1a1a' : theme === 'sepia' ? '#4a3c2c' : '#e0e0e0',
@@ -154,9 +154,9 @@ export default function BookReader({ book, onClose }: BookReaderProps) {
       {/* Top Navbar */}
       <div className="reader-controls flex justify-between items-center px-4 md:px-8 py-4 shrink-0 relative z-20">
         <div className="flex items-center gap-4">
-          <button onClick={onClose} className="control-btn" aria-label={isIndonesian ? "Tutup" : "Close"}>
-            <X size={18} strokeWidth={2.5} /> <span className="hidden sm:inline">{isIndonesian ? "Tutup" : "Close"}</span>
-          </button>
+          <Link href="/ruang-baca" className="control-btn" aria-label={isIndonesian ? "Kembali ke Pustaka" : "Back to Library"}>
+            <ChevronLeft size={18} strokeWidth={2.5} /> <span className="hidden sm:inline">{isIndonesian ? "Pustaka" : "Library"}</span>
+          </Link>
           <button onClick={() => setSidebarOpen(!sidebarOpen)} className="control-btn" aria-label={isIndonesian ? "Daftar Isi" : "Contents"}>
             <List size={18} /> <span className="hidden sm:inline">{isIndonesian ? "Daftar Isi" : "Contents"}</span>
           </button>

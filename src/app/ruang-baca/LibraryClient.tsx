@@ -30,10 +30,12 @@ import {
   ChevronsLeft,
   ChevronsRight,
   Check,
-  Filter
+  Filter,
+  ChevronDown,
+  ChevronsUpDown
 } from "lucide-react";
-import BookReader from "@/components/BookReader";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 export interface ChapterItem {
   title: string;
@@ -42,29 +44,41 @@ export interface ChapterItem {
   contentEn?: string;
 }
 
-const translateCategory = (cat: string, isIndo: boolean) => {
-  if (isIndo) return cat;
-  const map: Record<string, string> = {
-    "Hukum Umum": "General Law",
-    "Hukum Pidana": "Criminal Law",
-    "Hukum Perdata": "Civil Law",
-    "Hukum Tata Negara": "Constitutional Law",
-    "Hukum Administrasi Negara": "Administrative Law",
-    "Hukum Internasional": "International Law",
-    "Hukum Acara Pidana": "Criminal Procedural Law",
-    "Hukum Acara Perdata": "Civil Procedural Law",
-    "Hukum Acara": "Procedural Law",
-    "Hukum Agraria": "Agrarian Law",
-    "Pengantar Ilmu Hukum": "Introduction to Law",
-    "Ilmu Negara": "State Theory",
-    "Sistem Peradilan": "Judicial System",
-    "Hukum Perikatan": "Contract Law",
-    "Hukum Perdata Formil": "Formal Civil Law",
-    "Hukum Pidana Formil": "Formal Criminal Law",
-    "Hukum Internasional Publik": "Public International Law",
-    "Hukum Agraria Lanjut": "Advanced Agrarian Law"
+export const getCategoryKey = (cat: string): string => {
+  const c = (cat || "").toLowerCase();
+  if (c.includes("procedural") || c.includes("acara")) return "acara";
+  if (c.includes("criminal") || c.includes("pidana")) return "pidana";
+  if (c.includes("administrative") || c.includes("administrasi")) return "administrasi";
+  if (c.includes("constitutional") || c.includes("tata negara") || c.includes("negara")) return "tatanegara";
+  if (c.includes("civil") || c.includes("perdata")) return "perdata";
+  if (c.includes("fundamental") || c.includes("dasar") || c.includes("pengantar") || c.includes("pih")) return "dasar";
+  if (c.includes("kejaksaan") || c.includes("prosecut")) return "kejaksaan";
+  if (c.includes("agraria") || c.includes("agrarian") || c.includes("tanah")) return "agraria";
+  if (c.includes("internasional") || c.includes("international")) return "internasional";
+  if (c.includes("dagang") || c.includes("bisnis") || c.includes("commercial")) return "dagang";
+  return "umum";
+};
+
+export const getCategoryLabel = (key: string, isIndo: boolean): string => {
+  const labels: Record<string, { id: string; en: string }> = {
+    all: { id: "Semua Kategori", en: "All Categories" },
+    dasar: { id: "Dasar Ilmu Hukum", en: "Legal Fundamentals" },
+    pidana: { id: "Hukum Pidana", en: "Criminal Law" },
+    perdata: { id: "Hukum Perdata", en: "Civil Law" },
+    acara: { id: "Hukum Acara", en: "Procedural Law" },
+    tatanegara: { id: "Hukum Tata Negara", en: "Constitutional Law" },
+    administrasi: { id: "Hukum Administrasi Negara", en: "Administrative Law" },
+    kejaksaan: { id: "Kejaksaan & Peradilan", en: "Prosecution & Judiciary" },
+    agraria: { id: "Hukum Agraria", en: "Agrarian Law" },
+    internasional: { id: "Hukum Internasional", en: "International Law" },
+    dagang: { id: "Hukum Dagang & Bisnis", en: "Commercial Law" },
+    umum: { id: "Hukum Umum", en: "General Law" }
   };
-  return map[cat] || cat;
+  return labels[key] ? (isIndo ? labels[key].id : labels[key].en) : (isIndo ? "Hukum Umum" : "General Law");
+};
+
+const translateCategory = (cat: string, isIndo: boolean) => {
+  return getCategoryLabel(getCategoryKey(cat), isIndo);
 };
 
 export interface DocumentItem {
@@ -73,6 +87,9 @@ export interface DocumentItem {
   titleEn: string;
   author: string;
   category: string;
+  categoryKey: string;
+  categoryDisplayId: string;
+  categoryDisplayEn: string;
   source: string;
   coverColor: string;
   description: string;
@@ -94,7 +111,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
   const deferredSearchQuery = useDeferredValue(searchQuery);
   const isSearchPending = searchQuery !== deferredSearchQuery;
 
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeCategoryKey, setActiveCategoryKey] = useState("all");
   const [sortOrder, setSortOrder] = useState<"alphabetical" | "reverse" | "chapters" | "author">("alphabetical");
   const [activeTab, setActiveTab] = useState<"all" | "bookmarks">("all");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -105,9 +122,8 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
   const [bookmarkedIds, setBookmarkedIds] = useState<string[]>([]);
   const [lastReadId, setLastReadId] = useState<string | null>(null);
 
-  // Modal active document
-  const [activeDocument, setActiveDocument] = useState<DocumentItem | null>(null);
-  const lastOpenedDocIdRef = useRef<string | null>(null);
+  // Expandable chapters state
+  const [expandedDocIds, setExpandedDocIds] = useState<Set<string>>(new Set());
 
   // Search input ref for keyboard shortcut focus
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -170,6 +186,9 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
       }
 
       const estReadingTimeMinutes = Math.max(3, chapters.length * 3);
+      const catKey = getCategoryKey(category);
+      const categoryDisplayId = getCategoryLabel(catKey, true);
+      const categoryDisplayEn = getCategoryLabel(catKey, false);
 
       return {
         id,
@@ -177,6 +196,9 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
         titleEn,
         author,
         category,
+        categoryKey: catKey,
+        categoryDisplayId,
+        categoryDisplayEn,
         source,
         coverColor,
         description,
@@ -227,33 +249,25 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Restore focus after BookReader closes
-  useEffect(() => {
-    if (!activeDocument && lastOpenedDocIdRef.current) {
-      const targetId = `doc-card-${lastOpenedDocIdRef.current}`;
-      const el = document.getElementById(targetId);
-      if (el) {
-        el.focus();
-      }
-      lastOpenedDocIdRef.current = null;
-    }
-  }, [activeDocument]);
-
   // ---------------------------------------------------------------------------
   // 2. Computed Categories & Counts
   // ---------------------------------------------------------------------------
   const categoryCounts = useMemo(() => {
     const counts = new Map<string, number>();
+    counts.set("all", documents.length);
     documents.forEach((d) => {
-      counts.set(d.category, (counts.get(d.category) || 0) + 1);
+      counts.set(d.categoryKey, (counts.get(d.categoryKey) || 0) + 1);
     });
     return counts;
   }, [documents]);
 
   const categories = useMemo(() => {
-    const sorted = Array.from(categoryCounts.keys()).sort((a, b) => a.localeCompare(b));
-    return ["All", ...sorted];
-  }, [categoryCounts]);
+    const keys = Array.from(categoryCounts.keys()).filter((k) => k !== "all");
+    keys.sort((a, b) =>
+      getCategoryLabel(a, isIndonesian).localeCompare(getCategoryLabel(b, isIndonesian))
+    );
+    return ["all", ...keys];
+  }, [categoryCounts, isIndonesian]);
 
   const bookmarkedCount = useMemo(() => {
     return documents.filter((d) => bookmarkedIds.includes(d.id)).length;
@@ -271,24 +285,36 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
     }
 
     // Filter by category
-    if (activeCategory !== "All") {
-      result = result.filter((d) => d.category === activeCategory);
+    if (activeCategoryKey !== "all") {
+      result = result.filter((d) => d.categoryKey === activeCategoryKey);
     }
 
     const q = deferredSearchQuery.trim().toLowerCase();
     if (q) {
       result = result.filter((d) => {
-        const catTranslated = translateCategory(d.category, isIndonesian);
-        return (
+        const catId = d.categoryDisplayId.toLowerCase();
+        const catEn = d.categoryDisplayEn.toLowerCase();
+        const rawCat = d.category.toLowerCase();
+        const matchMeta =
           d.title.toLowerCase().includes(q) ||
           d.titleEn.toLowerCase().includes(q) ||
           d.author.toLowerCase().includes(q) ||
-          d.category.toLowerCase().includes(q) ||
-          catTranslated.toLowerCase().includes(q) ||
+          rawCat.includes(q) ||
+          catId.includes(q) ||
+          catEn.includes(q) ||
           d.source.toLowerCase().includes(q) ||
           d.description.toLowerCase().includes(q) ||
-          d.descriptionEn.toLowerCase().includes(q)
+          d.descriptionEn.toLowerCase().includes(q);
+
+        const matchChapters = d.chapters.some(
+          (ch) =>
+            ch.title.toLowerCase().includes(q) ||
+            (ch.titleEn && ch.titleEn.toLowerCase().includes(q)) ||
+            ch.content.toLowerCase().includes(q) ||
+            (ch.contentEn && ch.contentEn.toLowerCase().includes(q))
         );
+
+        return matchMeta || matchChapters;
       });
     }
 
@@ -310,7 +336,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
       }
       return 0;
     });
-  }, [documents, activeTab, bookmarkedIds, activeCategory, deferredSearchQuery, sortOrder]);
+  }, [documents, activeTab, bookmarkedIds, activeCategoryKey, deferredSearchQuery, sortOrder, isIndonesian]);
 
   // ---------------------------------------------------------------------------
   // 4. Safe Pagination (Prevents Cascading Re-render and Blank Flashes)
@@ -347,8 +373,8 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
     setCurrentPage(1);
   };
 
-  const handleCategoryChange = (cat: string) => {
-    setActiveCategory(cat);
+  const handleCategoryChange = (catKey: string) => {
+    setActiveCategoryKey(catKey);
     setCurrentPage(1);
   };
 
@@ -364,15 +390,44 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
 
   const handleResetFilters = () => {
     setSearchQuery("");
-    setActiveCategory("All");
+    setActiveCategoryKey("all");
     setSortOrder("alphabetical");
     setActiveTab("all");
     setCurrentPage(1);
+    setExpandedDocIds(new Set());
   };
+
+  // Toggle chapter expand per doc
+  const toggleExpandDoc = (id: string, e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setExpandedDocIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const expandAllChapters = () => {
+    setExpandedDocIds(new Set(paginatedDocs.map((d) => d.id)));
+  };
+
+  const collapseAllChapters = () => {
+    setExpandedDocIds(new Set());
+  };
+
+  const allVisibleExpanded = paginatedDocs.length > 0 && paginatedDocs.every((d) => expandedDocIds.has(d.id));
 
   // Toggle bookmark with localStorage sync
   const toggleBookmark = (id: string, e?: React.MouseEvent) => {
     if (e) {
+      e.preventDefault();
       e.stopPropagation();
     }
     setBookmarkedIds((prev) => {
@@ -385,16 +440,13 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
     });
   };
 
-  // Open book in reader modal
-  const handleOpenDocument = (doc: DocumentItem) => {
-    lastOpenedDocIdRef.current = doc.id;
-    setLastReadId(doc.id);
+  // Save last read
+  const handleSaveLastRead = (docId: string) => {
+    setLastReadId(docId);
     try {
-      localStorage.setItem("shulm_library_last_read", doc.id);
+      localStorage.setItem("shulm_library_last_read", docId);
     } catch {}
-    setActiveDocument(doc);
   };
-
   // Helper for pagination numbers
   const getPageNumbers = (current: number, total: number) => {
     if (total <= 7) {
@@ -618,21 +670,22 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
           {/* Horizontal Category Filter Pills (Responsive, Smooth Horizontal Scroll) */}
           <div className="relative py-1">
             <div className="flex items-center gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {categories.map((c) => {
-                const count = c === "All" ? documents.length : categoryCounts.get(c) || 0;
-                const isSelected = activeCategory === c;
+              {categories.map((catKey) => {
+                const count = categoryCounts.get(catKey) || 0;
+                const isSelected = activeCategoryKey === catKey;
+                const label = getCategoryLabel(catKey, isIndonesian);
                 return (
                   <button
-                    key={c}
+                    key={catKey}
                     type="button"
-                    onClick={() => handleCategoryChange(c)}
-                    className={`shrink-0 flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
+                    onClick={() => handleCategoryChange(catKey)}
+                    className={`shrink-0 flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer ${
                       isSelected
                         ? "bg-[var(--clay)] text-white shadow-xs scale-102"
                         : "bg-white/80 border border-[rgba(23,62,68,.12)] text-[#66736f] hover:text-[var(--ink-deep)] hover:border-[rgba(23,62,68,.25)] hover:bg-white"
                     }`}
                   >
-                    <span>{c === "All" ? (isIndonesian ? "Semua Kategori" : "All Categories") : translateCategory(c, isIndonesian)}</span>
+                    <span>{label}</span>
                     <span
                       className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full ${
                         isSelected ? "bg-white/20 text-white" : "bg-[rgba(23,62,68,.08)] text-[#66736f]"
@@ -647,7 +700,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
           </div>
 
           {/* Active Filter Chips & Clear Action */}
-          {(searchQuery || activeCategory !== "All" || activeTab === "bookmarks") && (
+          {(searchQuery || activeCategoryKey !== "all" || activeTab === "bookmarks") && (
             <div className="flex flex-wrap items-center gap-2 pt-2 text-xs">
               <span className="text-[#66736f] font-medium flex items-center gap-1 mr-1">
                 <Filter size={12} />
@@ -680,11 +733,11 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
                 </span>
               )}
 
-              {activeCategory !== "All" && (
+              {activeCategoryKey !== "all" && (
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[rgba(23,62,68,.08)] text-[var(--ink-deep)] font-semibold">
-                  <span>{translateCategory(activeCategory, isIndonesian)}</span>
+                  <span>{getCategoryLabel(activeCategoryKey, isIndonesian)}</span>
                   <button
-                    onClick={() => handleCategoryChange("All")}
+                    onClick={() => handleCategoryChange("all")}
                     className="hover:opacity-75"
                     aria-label="Remove category filter"
                   >
@@ -696,7 +749,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
               <button
                 type="button"
                 onClick={handleResetFilters}
-                className="inline-flex items-center gap-1 text-[var(--clay)] font-bold hover:underline ml-2"
+                className="inline-flex items-center gap-1 text-[var(--clay)] font-bold hover:underline ml-2 cursor-pointer"
               >
                 <RotateCcw size={12} />
                 <span>{isIndonesian ? "Reset Semua" : "Reset All"}</span>
@@ -710,7 +763,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
         {/* ------------------------------------------------------------------- */}
         <div id="library-catalog-anchor" className="scroll-mt-6" />
 
-        {/* Result summary counter */}
+        {/* Result summary counter & Chapter expansion master button */}
         <div className="flex items-center justify-between mb-6 text-xs text-[#66736f]">
           <p>
             {filteredAndSortedDocs.length > 0 ? (
@@ -726,14 +779,36 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
             )}
           </p>
 
-          {lastReadId && (
-            <span className="hidden sm:inline-flex items-center gap-1 text-[#66736f]">
-              <Clock size={12} className="text-[var(--clay)]" />
-              <span>
-                {isIndonesian ? "Terakhir dibaca tersimpan otomatis" : "Last read saved automatically"}
+          <div className="flex items-center gap-3">
+            {paginatedDocs.length > 0 && (
+              <button
+                type="button"
+                onClick={allVisibleExpanded ? collapseAllChapters : expandAllChapters}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-[rgba(23,62,68,.14)] text-[var(--ink-deep)] hover:border-[var(--clay)] hover:text-[var(--clay)] transition-colors shadow-2xs font-semibold cursor-pointer"
+                title={allVisibleExpanded ? (isIndonesian ? "Tutup semua pratinjau bab" : "Collapse all chapter previews") : (isIndonesian ? "Buka semua pratinjau bab" : "Expand all chapter previews")}
+              >
+                <ChevronsUpDown size={12} />
+                <span>
+                  {allVisibleExpanded
+                    ? isIndonesian
+                      ? "Tutup Bab"
+                      : "Collapse Chapters"
+                    : isIndonesian
+                    ? "Buka Bab"
+                    : "Expand Chapters"}
+                </span>
+              </button>
+            )}
+
+            {lastReadId && (
+              <span className="hidden sm:inline-flex items-center gap-1 text-[#66736f]">
+                <Clock size={12} className="text-[var(--clay)]" />
+                <span>
+                  {isIndonesian ? "Terakhir dibaca tersimpan otomatis" : "Last read saved automatically"}
+                </span>
               </span>
-            </span>
-          )}
+            )}
+          </div>
         </div>
 
         {/* ------------------------------------------------------------------- */}
@@ -793,30 +868,28 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
               {paginatedDocs.map((doc, idx) => {
                 const isBookmarked = bookmarkedIds.includes(doc.id);
                 const isLastRead = doc.id === lastReadId;
+                const isChapterExpanded = expandedDocIds.has(doc.id);
                 const displayTitle = !isIndonesian && doc.titleEn ? doc.titleEn : doc.title;
+                const displayCatLabel = isIndonesian ? doc.categoryDisplayId : doc.categoryDisplayEn;
 
                 return (
-                  <motion.div
-                    key={doc.id}
-                    id={`doc-card-${doc.id}`}
-                    role="button"
-                    tabIndex={0}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      duration: 0.3,
-                      delay: Math.min(idx * 0.02, 0.08)
-                    }}
-                    onClick={() => handleOpenDocument(doc)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        handleOpenDocument(doc);
-                      }
-                    }}
+                  <Link 
+                    key={doc.id} 
+                    href={`/ruang-baca/${doc.id}`}
+                    onClick={() => handleSaveLastRead(doc.id)}
+                    className="block outline-none"
                     aria-label={`Buka dokumen ${displayTitle}`}
-                    className="group bg-white border border-[rgba(23,62,68,.12)] rounded-2xl p-6 flex flex-col justify-between cursor-pointer hover:border-[var(--clay)] hover:shadow-[0_12px_36px_rgba(16,45,51,.09)] transition-all duration-200 relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-[var(--clay)]/40 transform-gpu will-change-transform"
                   >
+                    <motion.div
+                      id={`doc-card-${doc.id}`}
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        duration: 0.3,
+                        delay: Math.min(idx * 0.02, 0.08)
+                      }}
+                      className="group h-full bg-white border border-[rgba(23,62,68,.12)] rounded-2xl p-6 flex flex-col justify-between cursor-pointer hover:border-[var(--clay)] hover:shadow-[0_12px_36px_rgba(16,45,51,.09)] transition-all duration-200 relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-[var(--clay)]/40 transform-gpu will-change-transform"
+                    >
                     {/* Top Spine Accent */}
                     <div
                       className="absolute top-0 left-0 right-0 h-1.5 transition-all duration-300 group-hover:h-2"
@@ -828,7 +901,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
                       <div className="flex items-start justify-between gap-2 mb-4">
                         <div className="flex flex-wrap items-center gap-1.5">
                           <span className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--clay)] bg-[rgba(178,77,57,.08)] rounded-md">
-                            {translateCategory(doc.category, isIndonesian)}
+                            {displayCatLabel}
                           </span>
                           {isLastRead && (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--ink)] bg-[rgba(23,62,68,.08)] rounded-md">
@@ -842,7 +915,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
                         <button
                           type="button"
                           onClick={(e) => toggleBookmark(doc.id, e)}
-                          className={`p-1.5 rounded-lg transition-colors ${
+                          className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
                             isBookmarked
                               ? "text-[var(--clay)] bg-[rgba(178,77,57,.1)]"
                               : "text-[#66736f]/60 hover:text-[var(--clay)] hover:bg-[rgba(178,77,57,.08)]"
@@ -866,20 +939,68 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
 
                       {/* Snippet / Description (if available) */}
                       {doc.description && (
-                        <p className="text-xs text-[#66736f]/85 line-clamp-2 mb-6 leading-relaxed">
+                        <p className="text-xs text-[#66736f]/85 line-clamp-2 mb-4 leading-relaxed">
                           {!isIndonesian && doc.descriptionEn ? doc.descriptionEn : doc.description}
                         </p>
                       )}
+
+                      {/* Collapsible Chapters Outline */}
+                      <AnimatePresence initial={false}>
+                        {isChapterExpanded && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.25, ease: "easeInOut" }}
+                            className="overflow-hidden mb-4 border-t border-[rgba(23,62,68,.08)] pt-3 bg-[rgba(239,229,214,.2)] -mx-6 px-6 py-2"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <p className="text-[10px] font-bold text-[var(--clay)] uppercase tracking-wider mb-2 flex items-center justify-between">
+                              <span>{isIndonesian ? "Daftar Topik & Bab:" : "Topics & Chapters:"}</span>
+                              <span className="text-[#66736f] font-normal font-sans">
+                                ~{doc.estReadingTimeMinutes} {isIndonesian ? "mnt baca" : "min read"}
+                              </span>
+                            </p>
+                            <div className="max-h-40 overflow-y-auto space-y-1 pr-1 text-xs [-ms-overflow-style:none] [scrollbar-width:thin]">
+                              {doc.chapters.map((ch, chIdx) => (
+                                <div
+                                  key={`grid-ch-${doc.id}-${chIdx}`}
+                                  className="flex items-center justify-between gap-1.5 p-1.5 rounded-md bg-white border border-[rgba(23,62,68,.06)] text-[var(--ink-deep)]"
+                                >
+                                  <span className="truncate text-[11px]">
+                                    <strong className="text-[var(--clay)] font-mono mr-1">#{chIdx + 1}</strong>
+                                    {!isIndonesian && ch.titleEn ? ch.titleEn : ch.title}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
 
                     {/* Card Bottom: Metadata & CTA */}
                     <div className="pt-4 border-t border-[rgba(23,62,68,.08)] flex items-center justify-between gap-2 mt-auto">
                       <div className="flex flex-wrap items-center gap-2">
-                        {/* Chapters Count */}
-                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#66736f]">
+                        {/* Chapters Count & Toggle Button */}
+                        <button
+                          type="button"
+                          onClick={(e) => toggleExpandDoc(doc.id, e)}
+                          className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-semibold transition-colors cursor-pointer ${
+                            isChapterExpanded
+                              ? "bg-[rgba(178,77,57,.12)] text-[var(--clay)] font-bold"
+                              : "bg-[var(--paper)] text-[#66736f] hover:text-[var(--clay)] hover:bg-[rgba(178,77,57,.08)] border border-[rgba(23,62,68,.08)]"
+                          }`}
+                          title={isChapterExpanded ? (isIndonesian ? "Tutup daftar bab" : "Close chapters preview") : (isIndonesian ? "Buka pratinjau bab" : "Preview chapters")}
+                          aria-expanded={isChapterExpanded}
+                        >
                           <FileText size={12} className="text-[var(--clay)]" />
                           <span>{doc.chapterCount} {isIndonesian ? "Bab" : "Ch."}</span>
-                        </span>
+                          <ChevronDown
+                            size={12}
+                            className={`transition-transform duration-200 ${isChapterExpanded ? "rotate-180 text-[var(--clay)]" : ""}`}
+                          />
+                        </button>
 
                         {/* Source badge */}
                         <div className="inline-flex items-center max-w-[140px] px-2.5 py-1 bg-[var(--paper)] border border-[rgba(23,62,68,.1)] text-[var(--ink-deep)] rounded-md text-[10px] font-bold">
@@ -893,7 +1014,8 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
                         <ArrowRight size={13} />
                       </span>
                     </div>
-                  </motion.div>
+                    </motion.div>
+                  </Link>
                 );
               })}
             </div>
@@ -903,96 +1025,140 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
               {paginatedDocs.map((doc, idx) => {
                 const isBookmarked = bookmarkedIds.includes(doc.id);
                 const isLastRead = doc.id === lastReadId;
+                const isChapterExpanded = expandedDocIds.has(doc.id);
                 const displayTitle = !isIndonesian && doc.titleEn ? doc.titleEn : doc.title;
+                const displayCatLabel = isIndonesian ? doc.categoryDisplayId : doc.categoryDisplayEn;
 
                 return (
-                  <motion.div
-                    key={doc.id}
-                    id={`doc-card-${doc.id}`}
-                    role="button"
-                    tabIndex={0}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      duration: 0.25,
-                      delay: Math.min(idx * 0.02, 0.06)
-                    }}
-                    onClick={() => handleOpenDocument(doc)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        handleOpenDocument(doc);
-                      }
-                    }}
+                  <Link 
+                    key={doc.id} 
+                    href={`/ruang-baca/${doc.id}`}
+                    onClick={() => handleSaveLastRead(doc.id)}
+                    className="block outline-none"
                     aria-label={`Buka dokumen ${displayTitle}`}
-                    className="group bg-white border border-[rgba(23,62,68,.12)] rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer hover:border-[var(--clay)] hover:shadow-md transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[var(--clay)]/40 relative overflow-hidden"
                   >
+                    <motion.div
+                      id={`doc-card-${doc.id}`}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        duration: 0.25,
+                        delay: Math.min(idx * 0.02, 0.06)
+                      }}
+                      className="group bg-white border border-[rgba(23,62,68,.12)] rounded-xl p-4 sm:p-5 flex flex-col cursor-pointer hover:border-[var(--clay)] hover:shadow-md transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[var(--clay)]/40 relative overflow-hidden"
+                    >
                     {/* Left vertical spine */}
                     <div
                       className="absolute top-0 bottom-0 left-0 w-1.5"
                       style={{ backgroundColor: doc.coverColor || "var(--clay)" }}
                     />
 
-                    {/* Main content */}
-                    <div className="pl-2 flex-1 min-w-0">
-                      <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                        <span className="px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--clay)] bg-[rgba(178,77,57,.08)] rounded">
-                          {translateCategory(doc.category, isIndonesian)}
-                        </span>
-                        {isLastRead && (
-                          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[9px] font-bold text-[var(--ink)] bg-[rgba(23,62,68,.08)] rounded">
-                            <Clock size={10} />
-                            <span>{isIndonesian ? "Terakhir Dibaca" : "Recent"}</span>
+                    {/* Main Row */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      {/* Main content */}
+                      <div className="pl-2 flex-1 min-w-0">
+                        <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                          <span className="px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--clay)] bg-[rgba(178,77,57,.08)] rounded">
+                            {displayCatLabel}
                           </span>
-                        )}
-                        <span className="text-[11px] text-[#66736f] truncate max-w-[200px]">
-                          {doc.source}
-                        </span>
+                          {isLastRead && (
+                            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[9px] font-bold text-[var(--ink)] bg-[rgba(23,62,68,.08)] rounded">
+                              <Clock size={10} />
+                              <span>{isIndonesian ? "Terakhir Dibaca" : "Recent"}</span>
+                            </span>
+                          )}
+                          <span className="text-[11px] text-[#66736f] truncate max-w-[200px]">
+                            {doc.source}
+                          </span>
+                        </div>
+
+                        <h3 className="font-serif text-base sm:text-lg font-bold text-[var(--ink-deep)] leading-tight group-hover:text-[var(--clay)] transition-colors truncate">
+                          {displayTitle}
+                        </h3>
+                        <p className="text-xs font-semibold text-[#66736f] truncate mt-0.5">
+                          {!isIndonesian && doc.author === "Tim Redaksi Saku Hukum ULM" ? "Saku Hukum ULM Editorial Team" : doc.author}
+                        </p>
                       </div>
 
-                      <h3 className="font-serif text-base sm:text-lg font-bold text-[var(--ink-deep)] leading-tight group-hover:text-[var(--clay)] transition-colors truncate">
-                        {displayTitle}
-                      </h3>
-                      <p className="text-xs font-semibold text-[#66736f] truncate mt-0.5">
-                        {!isIndonesian && doc.author === "Tim Redaksi Saku Hukum ULM" ? "Saku Hukum ULM Editorial Team" : doc.author}
-                      </p>
+                      {/* Metadata & Actions */}
+                      <div className="pl-2 sm:pl-0 flex items-center justify-between sm:justify-end gap-4 shrink-0 border-t sm:border-t-0 pt-3 sm:pt-0 border-[rgba(23,62,68,.08)]">
+                        <div className="flex items-center gap-3 text-xs text-[#66736f]">
+                          {/* Chapter Toggle Button */}
+                          <button
+                            type="button"
+                            onClick={(e) => toggleExpandDoc(doc.id, e)}
+                            className={`inline-flex items-center gap-1 px-2 py-1 rounded-md font-semibold transition-colors cursor-pointer ${
+                              isChapterExpanded
+                                ? "bg-[rgba(178,77,57,.12)] text-[var(--clay)] font-bold"
+                                : "bg-[var(--paper)] text-[#66736f] hover:text-[var(--clay)] border border-[rgba(23,62,68,.08)]"
+                            }`}
+                            title={isChapterExpanded ? (isIndonesian ? "Tutup bab" : "Collapse chapters") : (isIndonesian ? "Buka pratinjau bab" : "Preview chapters")}
+                            aria-expanded={isChapterExpanded}
+                          >
+                            <FileText size={13} className="text-[var(--clay)]" />
+                            <span>{doc.chapterCount} {isIndonesian ? "Bab" : "Ch."}</span>
+                            <ChevronDown
+                              size={12}
+                              className={`transition-transform duration-200 ${isChapterExpanded ? "rotate-180 text-[var(--clay)]" : ""}`}
+                            />
+                          </button>
+
+                          <span className="hidden sm:inline-flex items-center gap-1 font-semibold">
+                            <Clock size={13} className="text-[#66736f]" />
+                            <span>~{doc.estReadingTimeMinutes} {isIndonesian ? "mnt" : "min"}</span>
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={(e) => toggleBookmark(doc.id, e)}
+                            className={`p-2 rounded-lg transition-colors cursor-pointer ${
+                              isBookmarked
+                                ? "text-[var(--clay)] bg-[rgba(178,77,57,.1)]"
+                                : "text-[#66736f]/60 hover:text-[var(--clay)] hover:bg-[rgba(178,77,57,.08)]"
+                            }`}
+                            title={isBookmarked ? "Hapus tersimpan" : "Simpan dokumen"}
+                            aria-label="Bookmark"
+                          >
+                            <Bookmark size={16} className={isBookmarked ? "fill-current" : ""} />
+                          </button>
+
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[var(--ink-deep)] text-white rounded-lg text-xs font-bold group-hover:bg-[var(--clay)] transition-colors shadow-xs">
+                            <span>{isIndonesian ? "Baca" : "Read"}</span>
+                            <ArrowRight size={13} />
+                          </span>
+                        </div>
+                      </div>
                     </div>
 
-                    {/* Metadata & Actions */}
-                    <div className="pl-2 sm:pl-0 flex items-center justify-between sm:justify-end gap-4 shrink-0 border-t sm:border-t-0 pt-3 sm:pt-0 border-[rgba(23,62,68,.08)]">
-                      <div className="flex items-center gap-3 text-xs text-[#66736f]">
-                        <span className="inline-flex items-center gap-1 font-semibold">
-                          <FileText size={13} className="text-[var(--clay)]" />
-                          <span>{doc.chapterCount} {isIndonesian ? "Bab" : "Ch."}</span>
-                        </span>
-                        <span className="inline-flex items-center gap-1 font-semibold">
-                          <Clock size={13} className="text-[#66736f]" />
-                          <span>~{doc.estReadingTimeMinutes} {isIndonesian ? "mnt" : "min"}</span>
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={(e) => toggleBookmark(doc.id, e)}
-                          className={`p-2 rounded-lg transition-colors ${
-                            isBookmarked
-                              ? "text-[var(--clay)] bg-[rgba(178,77,57,.1)]"
-                              : "text-[#66736f]/60 hover:text-[var(--clay)] hover:bg-[rgba(178,77,57,.08)]"
-                          }`}
-                          title={isBookmarked ? "Hapus tersimpan" : "Simpan dokumen"}
-                          aria-label="Bookmark"
+                    {/* List View Collapsible Chapters Outline */}
+                    <AnimatePresence initial={false}>
+                      {isChapterExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.25, ease: "easeInOut" }}
+                          className="overflow-hidden mt-3 pt-3 border-t border-[rgba(23,62,68,.08)] pl-2"
+                          onClick={(e) => e.stopPropagation()}
                         >
-                          <Bookmark size={16} className={isBookmarked ? "fill-current" : ""} />
-                        </button>
-
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[var(--ink-deep)] text-white rounded-lg text-xs font-bold group-hover:bg-[var(--clay)] transition-colors shadow-xs">
-                          <span>{isIndonesian ? "Baca" : "Read"}</span>
-                          <ArrowRight size={13} />
-                        </span>
-                      </div>
-                    </div>
-                  </motion.div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                            {doc.chapters.map((ch, chIdx) => (
+                              <div
+                                key={`list-ch-${doc.id}-${chIdx}`}
+                                className="flex items-center gap-1.5 p-1.5 rounded-md bg-[var(--paper)]/80 text-[var(--ink-deep)] text-xs border border-[rgba(23,62,68,.05)]"
+                              >
+                                <span className="text-[var(--clay)] font-mono font-bold text-[10px]">#{chIdx + 1}</span>
+                                <span className="truncate text-[11px]">{!isIndonesian && ch.titleEn ? ch.titleEn : ch.title}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                    </motion.div>
+                  </Link>
                 );
               })}
             </div>
@@ -1093,17 +1259,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
         )}
       </div>
 
-      {/* ------------------------------------------------------------------- */}
-      {/* BookReader Modal */}
-      {/* ------------------------------------------------------------------- */}
-      <AnimatePresence>
-        {activeDocument && (
-          <BookReader
-            book={activeDocument}
-            onClose={() => setActiveDocument(null)}
-          />
-        )}
-      </AnimatePresence>
+
     </div>
   );
 }

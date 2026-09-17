@@ -1,13 +1,14 @@
 "use client";
 /** River Margin design system: persistent shULM navigation behaves like a marked legal notebook, with a source-aware footer. */
 import { ArrowUpRight, Languages, Menu, X } from "lucide-react";
-import { type PropsWithChildren, useState, useEffect } from "react";
+import { type PropsWithChildren, useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { externalLinks, imagery, translations } from "@/lib/site-data";
 import { SearchDialog } from "./SearchDialog";
 import { Chatbot } from "./Chatbot";
+import packageJson from "../../package.json";
 
 function Wordmark() { return <Link href="/" className="wordmark" aria-label="Saku Hukum ULM — kembali ke beranda"><span>sh</span><strong>ULM</strong></Link>; }
 
@@ -16,24 +17,31 @@ export function SiteFrame({ children }: PropsWithChildren) {
   const { language, toggleLanguage, isIndonesian } = useLanguage(); 
   const [menuOpen, setMenuOpen] = useState(false); 
   const [headerVisible, setHeaderVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     
+    let ticking = false;
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY && currentScrollY > 70) {
-        setHeaderVisible(false);
-      } else {
-        setHeaderVisible(true);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          if (currentScrollY > lastScrollY.current && currentScrollY > 70) {
+            setHeaderVisible(false);
+          } else {
+            setHeaderVisible(true);
+          }
+          lastScrollY.current = currentScrollY;
+          ticking = false;
+        });
+        ticking = true;
       }
-      setLastScrollY(currentScrollY);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  }, []);
 
   const copy = translations[language]; 
   const navItems = copy.nav as readonly (readonly [string, string])[];
@@ -64,7 +72,7 @@ export function SiteFrame({ children }: PropsWithChildren) {
             <nav className="mobile-nav" aria-label={isIndonesian ? "Navigasi utama" : "Main navigation"}>
               {navItems.map(([label, href], index) => (
                 <Link key={href} href={href} onClick={() => setMenuOpen(false)} className={location === href ? "mobile-nav-link is-active" : "mobile-nav-link"}>
-                  <span className="nav-index">0{index + 1}</span>{label}
+                  <span className="nav-index">{(index + 1).toString().padStart(2, "0")}</span>{label}
                 </Link>
               ))}
             </nav>
@@ -81,11 +89,11 @@ export function SiteFrame({ children }: PropsWithChildren) {
           </div>
           <div className="footer-nav-col">
             <p className="footer-heading">{isIndonesian ? "Navigasi" : "Navigation"}</p>
-            {navItems.slice(0, 5).map(([label, href]) => <Link key={href} href={href} className="footer-nav-link">{label}</Link>)}
+            {navItems.slice(0, Math.ceil(navItems.length / 2)).map(([label, href]) => <Link key={href} href={href} className="footer-nav-link">{label}</Link>)}
           </div>
           <div className="footer-nav-col">
             <p className="footer-heading">{isIndonesian ? "Lainnya" : "More"}</p>
-            {navItems.slice(5).map(([label, href]) => <Link key={href} href={href} className="footer-nav-link">{label}</Link>)}
+            {navItems.slice(Math.ceil(navItems.length / 2)).map(([label, href]) => <Link key={href} href={href} className="footer-nav-link">{label}</Link>)}
           </div>
           <div className="footer-nav-col">
             <p className="footer-heading">{isIndonesian ? "Tautan Resmi" : "Official Links"}</p>
@@ -95,7 +103,7 @@ export function SiteFrame({ children }: PropsWithChildren) {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} Saku Hukum ULM · v2.0</p>
+          <p>© {new Date().getFullYear()} Saku Hukum ULM · v{packageJson.version}</p>
           <button type="button" className="back-to-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} aria-label={isIndonesian ? 'Kembali ke atas' : 'Back to top'}>
             <ArrowUpRight size={12} />{isIndonesian ? 'Ke atas' : 'Top'}
           </button>

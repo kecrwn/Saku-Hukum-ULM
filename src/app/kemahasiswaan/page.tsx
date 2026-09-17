@@ -33,12 +33,12 @@ export default function StudentLife() {
       />
       
       {/* Mock Court / Hero Feature - Full Bleed Design */}
-      <section className="w-full py-16 md:py-24 bg-[var(--ink-deep)] relative overflow-hidden">
+      <section className="w-full py-16 md:py-20 bg-[var(--ink-deep)] relative overflow-hidden">
         {/* Background elements */}
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[var(--clay)]/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
         
-        <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="content-width relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             
             {/* Image Side */}
             <motion.div 
@@ -112,12 +112,12 @@ export default function StudentLife() {
       </section>
 
       {/* Cards Grid */}
-      <section className="w-full max-w-7xl mx-auto px-4 md:px-8 py-24">
-        <div className="text-center max-w-3xl mx-auto mb-16">
+      <section className="content-width py-16 md:py-20">
+        <div className="text-center max-w-3xl mx-auto mb-14">
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-[var(--ink-deep)] mb-4">
             {isIndonesian ? "Pilar Kegiatan Mahasiswa" : "Pillars of Student Activity"}
           </h2>
-          <p className="text-[#66736f] text-lg">
+          <p className="text-[#66736f] text-base md:text-lg">
             {isIndonesian ? "Dari advokasi hingga kepenulisan, fakultas menawarkan beragam ekosistem untuk mengembangkan minat khusus Anda." : "From advocacy to writing, the faculty offers various ecosystems to develop your specific interests."}
           </p>
         </div>
@@ -132,16 +132,16 @@ export default function StudentLife() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
                 key={title as string} 
-                className="group flex flex-col p-8 md:p-10 bg-white border border-[rgba(23,62,68,.1)] rounded-3xl hover:border-[var(--clay)] transition-all duration-300 hover:shadow-[0_20px_40px_rgba(16,45,51,.08)] relative overflow-hidden"
+                className="group flex flex-col p-6 sm:p-8 md:p-10 bg-white border border-[rgba(23,62,68,.1)] rounded-2xl hover:border-[var(--clay)] transition-all duration-300 hover:shadow-[0_16px_36px_rgba(16,45,51,.07)] relative overflow-hidden"
               >
                 {/* Decorative background circle */}
                 <div className="absolute -right-12 -top-12 w-40 h-40 bg-[var(--clay)]/5 rounded-full blur-2xl group-hover:bg-[var(--clay)]/10 transition-colors duration-500" />
                 
-                <div className="h-16 w-16 rounded-2xl bg-[var(--paper)] border border-[rgba(23,62,68,.08)] text-[var(--clay)] flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500 shadow-sm relative z-10">
-                  <IconComponent size={28} strokeWidth={1.5} />
+                <div className="h-14 w-14 rounded-xl bg-[var(--paper)] border border-[rgba(23,62,68,.08)] text-[var(--clay)] flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-300 shadow-xs relative z-10">
+                  <IconComponent size={26} strokeWidth={1.5} />
                 </div>
-                <h3 className="text-2xl font-serif font-bold text-[var(--ink-deep)] mb-4 relative z-10">{title as string}</h3>
-                <p className="text-[#66736f] leading-relaxed text-base md:text-lg relative z-10">{description as string}</p>
+                <h3 className="text-2xl font-serif font-bold text-[var(--ink-deep)] mb-3 relative z-10">{title as string}</h3>
+                <p className="text-[#66736f] leading-relaxed text-sm md:text-base relative z-10">{description as string}</p>
               </motion.article>
             ); 
           })}
@@ -149,8 +149,8 @@ export default function StudentLife() {
       </section>
 
       {/* Roster / Organizations List */}
-      <section className="w-full bg-white border-y border-[rgba(23,62,68,.1)] py-24">
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
+      <section className="w-full bg-white border-y border-[rgba(23,62,68,.1)] py-16 md:py-20">
+        <div className="content-width">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
             <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-32">
               <span className="inline-block px-3 py-1 rounded-full bg-[var(--clay)]/10 text-[var(--clay)] text-xs font-bold tracking-widest uppercase mb-2">
@@ -210,22 +210,21 @@ export default function StudentLife() {
       </section>
 
       {/* Inquiry / Verification Banner */}
-      <section className="w-full max-w-7xl mx-auto px-4 md:px-8 py-24">
-        <div className="bg-[var(--clay)] rounded-[2.5rem] p-8 md:p-12 lg:p-16 shadow-2xl relative overflow-hidden flex flex-col lg:flex-row gap-10 items-center justify-between">
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/10 rounded-full blur-[100px] pointer-events-none translate-x-1/3 -translate-y-1/3" />
-          
-          <div className="flex flex-col sm:flex-row gap-8 z-10 w-full lg:w-2/3">
-            <div className="hidden sm:flex h-16 w-16 shrink-0 rounded-full bg-white/20 text-white items-center justify-center backdrop-blur-sm">
-              <CircleHelp size={32} />
+      <section className="content-width py-16 md:py-20">
+        <div className="bg-[var(--ink-deep)] text-[var(--paper)] rounded-2xl p-6 sm:p-10 lg:p-12 shadow-md relative overflow-hidden flex flex-col lg:flex-row gap-8 items-center justify-between border border-[var(--line)]">
+          <div className="flex flex-col sm:flex-row gap-6 z-10 w-full lg:w-2/3 items-start">
+            <div className="hidden sm:flex h-14 w-14 shrink-0 rounded-xl bg-white/10 text-[#f1cba5] items-center justify-center border border-white/15">
+              <CircleHelp size={28} />
             </div>
-            <div className="space-y-4">
-              <h2 className="text-3xl md:text-4xl font-serif font-bold text-white leading-tight">
+            <div className="space-y-3">
+              <span className="eyebrow !text-[#f1cba5]">{isIndonesian ? "Verifikasi Berkas & Jadwal" : "Verification & Agendas"}</span>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-[var(--paper)] leading-tight">
                 {isIndonesian ? "Konfirmasi Agenda & Rekrutmen Resmi." : "Confirm Official Agendas & Recruitment."}
               </h2>
-              <p className="text-white/80 text-lg leading-relaxed">
+              <p className="text-[var(--paper)]/80 text-sm sm:text-base leading-relaxed">
                 {isIndonesian 
-                  ? "Daftar unit kegiatan di atas dikumpulkan dari jejak publikasi resmi dan riset. Untuk mendaftar atau melihat agenda terbaru, selalu pastikan untuk mengecek kanal media sosial resmi UKM terkait atau menghubungi Bagian Kemahasiswaan Fakultas Hukum ULM." 
-                  : "The list of units above is compiled from official publication trails and research. To register or view current agendas, always ensure to check the related UKM's official social media channels or contact the FH ULM Student Affairs Department."}
+                  ? "Daftar unit kegiatan di atas dihimpun dari jejak publikasi resmi dan riset. Untuk mendaftar atau melihat agenda terbaru, selalu pastikan untuk mengecek kanal media sosial resmi UKM terkait atau Bagian Kemahasiswaan Fakultas Hukum ULM." 
+                  : "The list of units above is compiled from official publications and research. To register or view current agendas, always check the related UKM's official channels or the FH ULM Student Affairs Department."}
               </p>
             </div>
           </div>
@@ -235,10 +234,10 @@ export default function StudentLife() {
               href={externalLinks.instagram}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 bg-white text-[var(--clay)] px-8 py-4 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 whitespace-nowrap"
+              className="inline-flex items-center justify-center gap-2 bg-[var(--clay)] text-white px-7 py-3.5 rounded-xl font-bold hover:bg-[var(--paper)] hover:text-[var(--ink-deep)] transition-all duration-200 text-sm w-full sm:w-auto shadow-xs"
             >
               {isIndonesian ? "Cek Informasi Kampus" : "Check Campus Info"}
-              <ChevronRight size={18} />
+              <ChevronRight size={16} />
             </a>
           </div>
         </div>
