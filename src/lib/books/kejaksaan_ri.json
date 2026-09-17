@@ -1,0 +1,22 @@
+{
+  "id": "kejaksaan_ri",
+  "title": "Kejaksaan RI: Posisi dan Fungsinya",
+  "titleEn": "The Republic of Indonesia Prosecution Service: Position and Functions",
+  "author": "Marwan Effendy",
+  "category": "Kejaksaan",
+  "coverColor": "#004B23",
+  "chapters": [
+    {
+      "title": "Bab 1: Kedudukan Kejaksaan dalam Sistem Ketatanegaraan",
+      "titleEn": "Chapter 1: The Position of the Prosecution Service in the State System",
+      "content": "# Bab 1: Kedudukan Kejaksaan dalam Sistem Ketatanegaraan\n\n## Kejaksaan sebagai Alat Negara\nKejaksaan Republik Indonesia adalah lembaga pemerintahan yang melaksanakan kekuasaan negara di bidang penuntutan serta kewenangan lain berdasarkan undang-undang. Kedudukannya independen dalam penegakan hukum namun tetap merupakan bagian dari kekuasaan eksekutif.\n\n## Jaksa Agung\nJaksa Agung adalah pimpinan tertinggi Kejaksaan yang diangkat dan diberhentikan oleh Presiden.",
+      "contentEn": "# Chapter 1: The Position of the Prosecution Service in the State System\n\n## The Prosecution Service as a State Apparatus\nThe Republic of Indonesia Prosecution Service is a government institution that exercises state power in prosecution and other authorities based on the law. Its position is independent in law enforcement but remains part of the executive power.\n\n## The Attorney General\nThe Attorney General is the highest leader of the Prosecution Service, appointed and dismissed by the President."
+    },
+    {
+      "title": "Bab 2: Fungsi dan Kewenangan Kejaksaan",
+      "titleEn": "Chapter 2: Functions and Authorities of the Prosecution Service",
+      "content": "# Bab 2: Fungsi dan Kewenangan Kejaksaan\n\n## Penuntutan Pidana\nKejaksaan memiliki kewenangan mutlak (dominus litis) untuk mengendalikan perkara dan menentukan apakah suatu perkara pidana dapat dilimpahkan ke pengadilan atau tidak.\n\n## Jaksa Pengacara Negara (JPN)\nSelain pidana, jaksa juga berwenang bertindak sebagai pengacara negara di bidang perdata dan tata usaha negara, mewakili pemerintah maupun lembaga negara lainnya.",
+      "contentEn": "# Chapter 2: Functions and Authorities of the Prosecution Service\n\n## Criminal Prosecution\nThe Prosecution Service has the absolute authority to control a case and determine whether a criminal case can be submitted to the court.\n\n## State Attorney\nBesides criminal matters, prosecutors also have the authority to act as state attorneys in civil and administrative law fields, representing the government or other state institutions."
+    }
+  ]
+}

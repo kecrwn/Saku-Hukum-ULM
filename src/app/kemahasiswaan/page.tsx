@@ -63,8 +63,8 @@ export default function StudentLife() {
                   <div className="flex items-center gap-3 text-white">
                     <Gavel size={24} className="text-[var(--clay)]" />
                     <div>
-                      <p className="font-bold text-sm">Gedung Desmond J. Mahesa</p>
-                      <p className="text-xs opacity-70">Fasilitas Praktik Peradilan Semu (KPS)</p>
+                      <p className="font-bold text-sm">{isIndonesian ? "Gedung Desmond J. Mahesa" : "Desmond J. Mahesa Building"}</p>
+                      <p className="text-xs opacity-70">{isIndonesian ? "Fasilitas Praktik Peradilan Semu (KPS)" : "Mock Court Practice Facility (KPS)"}</p>
                     </div>
                   </div>
                 </div>

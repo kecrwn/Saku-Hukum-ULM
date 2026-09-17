@@ -6,7 +6,7 @@ export const imagery = {
   hero: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=1200", 
   materials: "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?auto=format&fit=crop&q=80&w=1200", 
   riverCampus: "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&q=80&w=1200", 
-  mootIllustration: "https://images.unsplash.com/photo-1505664173691-a28166c374c2?auto=format&fit=crop&q=80&w=1200", 
+  mootIllustration: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Historic_Courtroom.JPG", 
   mark: "https://upload.wikimedia.org/wikipedia/en/f/f4/Lambung_Mangkurat_University_emblem.png", 
   officialMoot: "https://images.unsplash.com/photo-1593115057322-e94b77572f20?auto=format&fit=crop&q=80&w=1200",
   adhyaksaChamber: "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=1200",
@@ -20,12 +20,12 @@ export const carouselImages = [
   "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=1200",
   "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?auto=format&fit=crop&q=80&w=1200",
   "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&q=80&w=1200",
-  "https://images.unsplash.com/photo-1505664173691-a28166c374c2?auto=format&fit=crop&q=80&w=1200",
+  "https://upload.wikimedia.org/wikipedia/commons/d/d6/Historic_Courtroom.JPG",
   "https://images.unsplash.com/photo-1593115057322-e94b77572f20?auto=format&fit=crop&q=80&w=1200",
   "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=1200",
   "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=1200",
   "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&q=80&w=1200",
-  "https://images.unsplash.com/photo-1589304043960-e4210dff9ba3?auto=format&fit=crop&q=80&w=1200"
+  "https://upload.wikimedia.org/wikipedia/commons/2/27/Courtroom_%284055605570%29.jpg"
 ];
 export const criminalRequiredCourses = [
   { code: "BPHPI3701", id: "Sistem Peradilan Pidana", en: "Criminal Justice System" }, { code: "BPHPI3707", id: "Tindak Pidana di Bidang Sumber Daya Alam", en: "Crimes in the Natural Resources Sector" }, { code: "BPHPI3703", id: "Viktimologi", en: "Victimology" }, { code: "BPHPI3704", id: "Perbandingan Hukum Pidana", en: "Comparative Criminal Law" }, { code: "BPHPI3705", id: "Tindak Pidana di Bidang Ekonomi", en: "Crimes in the Economic Sector" }, { code: "BPHPI3706", id: "Hukum Penitensier", en: "Penitentiary Law" },

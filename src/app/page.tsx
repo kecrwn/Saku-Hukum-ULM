@@ -150,7 +150,7 @@ export default function Home() {
           <span>{isIndonesian ? "mata kuliah wajib PK Hukum Pidana" : "required Criminal Law specialization courses"}</span>
         </div>
         <div>
-          <strong>Baik Sekali</strong>
+          <strong>{isIndonesian ? 'Baik Sekali' : 'Excellent'}</strong>
           <span>{isIndonesian ? 'Akreditasi BAN-PT berlaku hingga 2031' : 'BAN-PT accreditation valid until 2031'}</span>
           <SourceLink href={externalLinks.accreditationNews} label={isIndonesian ? "Berita akreditasi" : "Accreditation news"} />
         </div>

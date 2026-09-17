@@ -332,9 +332,9 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
         .chat-delete-btn:active{transform:translateY(0) scale(0.96)}
         
         .chat-body{flex:1;overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:18px}
-        .chat-msg{max-width:85%;padding:14px 18px;font-size:14px;line-height:1.55;border-radius:18px;box-shadow:0 4px 16px rgba(16,45,51,.03)}
-        .chat-msg-user{align-self:flex-end;background:var(--ink-deep);color:var(--paper);border-bottom-right-radius:4px}
-        .chat-msg-bot{align-self:flex-start;background:rgba(255,253,250,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(23,62,68,.08);color:var(--ink-deep);border-bottom-left-radius:4px}
+        .chat-msg{max-width:85%;padding:16px 20px;font-size:14.5px;line-height:1.65;border-radius:20px;box-shadow:0 6px 24px rgba(16,45,51,.04);letter-spacing:0.01em}
+        .chat-msg-user{align-self:flex-end;background:var(--ink-deep);color:var(--paper);border-bottom-right-radius:4px;font-weight:500;}
+        .chat-msg-bot{align-self:flex-start;background:linear-gradient(145deg, rgba(255,255,255,0.95), rgba(247,242,233,0.85));backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(23,62,68,.1);color:var(--ink-deep);border-bottom-left-radius:4px;box-shadow:0 8px 32px rgba(16,45,51,.06)}
         .chat-chips{display:flex;flex-wrap:wrap;gap:10px;padding-top:8px}
         .chat-chip{border:1px solid rgba(23,62,68,.15);background:rgba(255,255,255,.7);color:var(--ink-deep);font-size:12px;padding:8px 16px;border-radius:999px;cursor:pointer;font-family:var(--sans);font-weight:700;transition:all 200ms cubic-bezier(.23,1,.32,1)}
         .chat-chip:hover{background:var(--ink-deep);color:var(--paper);border-color:var(--ink-deep);transform:translateY(-2px)}
@@ -346,15 +346,20 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
         .chat-send:disabled{opacity:.4;cursor:default;background:var(--muted);transform:scale(0.95)}
         .chat-send:not(:disabled):hover{transform:scale(1.12) translateY(-2px);background:var(--ink-deep);box-shadow:0 6px 16px rgba(16,45,51,0.2)}
         .chat-send:not(:disabled):active{transform:scale(0.9)}
-        .markdown-body { display: flex; flex-direction: column; gap: 8px; }
+        .markdown-body { display: flex; flex-direction: column; gap: 12px; }
         .markdown-body p { margin: 0; }
-        .markdown-body strong { font-weight: 800; color: inherit; }
-        .markdown-body em { font-style: italic; }
-        .markdown-body ul, .markdown-body ol { margin: 4px 0; padding-left: 20px; }
-        .markdown-body li { margin-bottom: 4px; }
-        .markdown-body a { text-decoration: underline; text-underline-offset: 2px; }
-        .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 { margin: 12px 0 6px; font-family: var(--serif); line-height: 1.2; }
-        .chat-msg-bot .markdown-body strong { color: var(--clay); }
+        .markdown-body strong { font-weight: 700; color: inherit; }
+        .markdown-body em { font-style: italic; color: #5a6663; }
+        .markdown-body ul, .markdown-body ol { margin: 4px 0; padding-left: 22px; }
+        .markdown-body li { margin-bottom: 6px; position: relative; }
+        .markdown-body li::marker { color: var(--clay); font-weight: bold; }
+        .markdown-body a { text-decoration: none; color: var(--clay); border-bottom: 1px solid rgba(178,77,57,0.3); transition: border-color 0.2s ease; font-weight: 600; }
+        .markdown-body a:hover { border-bottom-color: var(--clay); }
+        .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 { margin: 16px 0 8px; font-family: var(--serif); line-height: 1.3; color: var(--ink-deep); letter-spacing: -0.01em; }
+        .markdown-body h1 { font-size: 1.5em; border-bottom: 1px solid rgba(23,62,68,.1); padding-bottom: 6px; }
+        .markdown-body h2 { font-size: 1.3em; }
+        .markdown-body h3 { font-size: 1.1em; }
+        .chat-msg-bot .markdown-body strong { color: var(--clay); background: rgba(178,77,57,0.06); padding: 2px 4px; border-radius: 4px; }
         .read-more-btn { align-self: flex-start; margin-top: 6px; font-size: 11px; font-weight: 800; color: var(--clay); background: transparent; border: none; cursor: pointer; padding: 0; text-transform: uppercase; letter-spacing: 0.05em; transition: opacity 150ms ease-out; }
         .read-more-btn:hover { opacity: 0.7; }
         .chat-msg-user .read-more-btn { color: var(--paper); opacity: 0.8; }

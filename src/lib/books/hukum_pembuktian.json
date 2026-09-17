@@ -1,0 +1,22 @@
+{
+  "id": "hukum_pembuktian",
+  "title": "Hukum Pembuktian",
+  "titleEn": "Law of Evidence",
+  "author": "Prof. Dr. Jur. Andi Hamzah",
+  "category": "Pidana",
+  "coverColor": "#4B0082",
+  "chapters": [
+    {
+      "title": "Bab 1: Sistem Pembuktian",
+      "titleEn": "Chapter 1: Evidentiary System",
+      "content": "# Bab 1: Sistem Pembuktian\n\n## Teori Pembuktian Negatief Wettelijk\nSistem hukum acara pidana Indonesia (KUHAP) menganut teori pembuktian 'negatief wettelijk'. Hakim hanya boleh menjatuhkan pidana jika sekurang-kurangnya terdapat dua alat bukti yang sah dan dari bukti tersebut hakim memperoleh keyakinan bahwa tindak pidana benar-benar terjadi dan terdakwalah pelakunya.",
+      "contentEn": "# Chapter 1: Evidentiary System\n\n## Negative Statutory Evidentiary Theory\nThe Indonesian criminal procedure code system adheres to the 'negative statutory' evidentiary theory. A judge may only impose a sentence if there are at least two valid pieces of evidence and from that evidence the judge obtains the conviction that a criminal offense actually occurred and the defendant is the perpetrator."
+    },
+    {
+      "title": "Bab 2: Alat Bukti yang Sah",
+      "titleEn": "Chapter 2: Valid Evidence",
+      "content": "# Bab 2: Alat Bukti yang Sah\n\n## Macam-Macam Alat Bukti\nMenurut Pasal 184 KUHAP, alat bukti yang sah terdiri dari:\n1. Keterangan saksi\n2. Keterangan ahli\n3. Surat\n4. Petunjuk\n5. Keterangan terdakwa",
+      "contentEn": "# Chapter 2: Valid Evidence\n\n## Types of Valid Evidence\nAccording to Article 184 of the Criminal Procedure Code, valid evidence consists of:\n1. Witness testimony\n2. Expert testimony\n3. Document\n4. Indication\n5. Defendant's statement"
+    }
+  ]
+}

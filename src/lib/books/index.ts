@@ -28,6 +28,12 @@ import tatanegara from './tatanegara.json';
 import administrasi from './administrasi.json';
 // @ts-ignore
 import pidana from './pidana.json';
+// @ts-ignore
+import hukum_pidana_indonesia from './hukum_pidana_indonesia.json';
+// @ts-ignore
+import kejaksaan_ri from './kejaksaan_ri.json';
+// @ts-ignore
+import hukum_pembuktian from './hukum_pembuktian.json';
 
 export const bookKnowledgeBase: Record<string, any> = {
   pih,
@@ -43,5 +49,8 @@ export const bookKnowledgeBase: Record<string, any> = {
   sistemperadilan,
   tatanegara,
   administrasi,
-  pidana
+  pidana,
+  hukum_pidana_indonesia,
+  kejaksaan_ri,
+  hukum_pembuktian
 };

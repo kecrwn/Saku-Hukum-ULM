@@ -1,0 +1,22 @@
+{
+  "id": "hukum_pidana_indonesia",
+  "title": "Hukum Pidana Indonesia",
+  "titleEn": "Indonesian Criminal Law",
+  "author": "Prof. Dr. Jur. Andi Hamzah",
+  "category": "Pidana",
+  "coverColor": "#8b0000",
+  "chapters": [
+    {
+      "title": "Bab 1: Asas-Asas Hukum Pidana",
+      "titleEn": "Chapter 1: Principles of Criminal Law",
+      "content": "# Bab 1: Asas-Asas Hukum Pidana\n\n## Asas Legalitas\nAsas legalitas (Nullum delictum nulla poena sine praevia lege poenali) adalah asas fundamental dalam hukum pidana Indonesia. Pasal 1 ayat (1) KUHP menegaskan bahwa tiada suatu perbuatan dapat dipidana kecuali atas kekuatan aturan pidana dalam perundang-undangan yang telah ada sebelum perbuatan dilakukan.\n\n## Asas Teritorialitas\nHukum pidana Indonesia berlaku bagi siapa saja yang melakukan tindak pidana di wilayah negara Republik Indonesia.",
+      "contentEn": "# Chapter 1: Principles of Criminal Law\n\n## Principle of Legality\nThe principle of legality is a fundamental principle in Indonesian criminal law. Article 1 paragraph (1) of the Criminal Code asserts that no act shall be punished except by virtue of a criminal statutory provision which precedes it.\n\n## Principle of Territoriality\nIndonesian criminal law applies to anyone who commits a criminal offense within the territory of the Republic of Indonesia."
+    },
+    {
+      "title": "Bab 2: Tindak Pidana dan Pertanggungjawaban Pidana",
+      "titleEn": "Chapter 2: Criminal Offenses and Criminal Liability",
+      "content": "# Bab 2: Tindak Pidana dan Pertanggungjawaban Pidana\n\n## Unsur-Unsur Tindak Pidana\nTindak pidana terdiri dari unsur objektif (perbuatan, akibat, keadaan) dan unsur subjektif (kesengajaan, kealpaan, niat).\n\n## Pertanggungjawaban Pidana\nSeseorang hanya dapat dipidana jika memiliki kesalahan (schuld), baik berupa kesengajaan (dolus) maupun kealpaan (culpa), dan mampu bertanggung jawab atas perbuatannya.",
+      "contentEn": "# Chapter 2: Criminal Offenses and Criminal Liability\n\n## Elements of a Criminal Offense\nA criminal offense consists of objective elements (act, consequence, circumstances) and subjective elements (intent, negligence, motive).\n\n## Criminal Liability\nA person can only be punished if they have culpability, either in the form of intent or negligence, and are capable of taking responsibility for their actions."
+    }
+  ]
+}

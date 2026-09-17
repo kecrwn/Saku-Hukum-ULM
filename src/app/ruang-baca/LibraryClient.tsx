@@ -42,6 +42,31 @@ export interface ChapterItem {
   contentEn?: string;
 }
 
+const translateCategory = (cat: string, isIndo: boolean) => {
+  if (isIndo) return cat;
+  const map: Record<string, string> = {
+    "Hukum Umum": "General Law",
+    "Hukum Pidana": "Criminal Law",
+    "Hukum Perdata": "Civil Law",
+    "Hukum Tata Negara": "Constitutional Law",
+    "Hukum Administrasi Negara": "Administrative Law",
+    "Hukum Internasional": "International Law",
+    "Hukum Acara Pidana": "Criminal Procedural Law",
+    "Hukum Acara Perdata": "Civil Procedural Law",
+    "Hukum Acara": "Procedural Law",
+    "Hukum Agraria": "Agrarian Law",
+    "Pengantar Ilmu Hukum": "Introduction to Law",
+    "Ilmu Negara": "State Theory",
+    "Sistem Peradilan": "Judicial System",
+    "Hukum Perikatan": "Contract Law",
+    "Hukum Perdata Formil": "Formal Civil Law",
+    "Hukum Pidana Formil": "Formal Criminal Law",
+    "Hukum Internasional Publik": "Public International Law",
+    "Hukum Agraria Lanjut": "Advanced Agrarian Law"
+  };
+  return map[cat] || cat;
+};
+
 export interface DocumentItem {
   id: string;
   title: string;
@@ -126,10 +151,9 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
         }));
       }
 
-      // Guarantee each chapter has valid title & content strings to prevent BookReader crashes
       let chapters: ChapterItem[] = rawChapters.map((ch: any, chIdx: number) => ({
         title: String(ch.title || ch.heading || `Bab ${chIdx + 1}`),
-        titleEn: ch.titleEn || ch.headingEn ? String(ch.titleEn || ch.headingEn) : undefined,
+        titleEn: ch.titleEn || ch.headingEn ? String(ch.titleEn || ch.headingEn) : `Chapter ${chIdx + 1}`,
         content: String(ch.content || ch.body || ""),
         contentEn: ch.contentEn || ch.bodyEn ? String(ch.contentEn || ch.bodyEn) : undefined
       }));
@@ -251,28 +275,32 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
       result = result.filter((d) => d.category === activeCategory);
     }
 
-    // Filter by search query (using deferred value so typing is never blocked)
     const q = deferredSearchQuery.trim().toLowerCase();
     if (q) {
       result = result.filter((d) => {
+        const catTranslated = translateCategory(d.category, isIndonesian);
         return (
           d.title.toLowerCase().includes(q) ||
           d.titleEn.toLowerCase().includes(q) ||
           d.author.toLowerCase().includes(q) ||
           d.category.toLowerCase().includes(q) ||
+          catTranslated.toLowerCase().includes(q) ||
           d.source.toLowerCase().includes(q) ||
-          d.description.toLowerCase().includes(q)
+          d.description.toLowerCase().includes(q) ||
+          d.descriptionEn.toLowerCase().includes(q)
         );
       });
     }
 
     // Sorting logic
     return [...result].sort((a, b) => {
+      const titleA = !isIndonesian && a.titleEn ? a.titleEn : a.title;
+      const titleB = !isIndonesian && b.titleEn ? b.titleEn : b.title;
       if (sortOrder === "alphabetical") {
-        return a.title.localeCompare(b.title, undefined, { sensitivity: "base" });
+        return titleA.localeCompare(titleB, undefined, { sensitivity: "base" });
       }
       if (sortOrder === "reverse") {
-        return b.title.localeCompare(a.title, undefined, { sensitivity: "base" });
+        return titleB.localeCompare(titleA, undefined, { sensitivity: "base" });
       }
       if (sortOrder === "chapters") {
         return b.chapterCount - a.chapterCount;
@@ -604,7 +632,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
                         : "bg-white/80 border border-[rgba(23,62,68,.12)] text-[#66736f] hover:text-[var(--ink-deep)] hover:border-[rgba(23,62,68,.25)] hover:bg-white"
                     }`}
                   >
-                    <span>{c === "All" ? (isIndonesian ? "Semua Kategori" : "All Categories") : c}</span>
+                    <span>{c === "All" ? (isIndonesian ? "Semua Kategori" : "All Categories") : translateCategory(c, isIndonesian)}</span>
                     <span
                       className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full ${
                         isSelected ? "bg-white/20 text-white" : "bg-[rgba(23,62,68,.08)] text-[#66736f]"
@@ -654,7 +682,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
 
               {activeCategory !== "All" && (
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[rgba(23,62,68,.08)] text-[var(--ink-deep)] font-semibold">
-                  <span>{activeCategory}</span>
+                  <span>{translateCategory(activeCategory, isIndonesian)}</span>
                   <button
                     onClick={() => handleCategoryChange("All")}
                     className="hover:opacity-75"
@@ -800,7 +828,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
                       <div className="flex items-start justify-between gap-2 mb-4">
                         <div className="flex flex-wrap items-center gap-1.5">
                           <span className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--clay)] bg-[rgba(178,77,57,.08)] rounded-md">
-                            {doc.category}
+                            {translateCategory(doc.category, isIndonesian)}
                           </span>
                           {isLastRead && (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--ink)] bg-[rgba(23,62,68,.08)] rounded-md">
@@ -833,7 +861,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
 
                       {/* Author */}
                       <p className="text-xs font-semibold text-[#66736f] mb-4 flex items-center gap-1.5">
-                        <span className="truncate">{doc.author}</span>
+                        <span className="truncate">{!isIndonesian && doc.author === "Tim Redaksi Saku Hukum ULM" ? "Saku Hukum ULM Editorial Team" : doc.author}</span>
                       </p>
 
                       {/* Snippet / Description (if available) */}
@@ -909,7 +937,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
                     <div className="pl-2 flex-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-2 mb-1.5">
                         <span className="px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--clay)] bg-[rgba(178,77,57,.08)] rounded">
-                          {doc.category}
+                          {translateCategory(doc.category, isIndonesian)}
                         </span>
                         {isLastRead && (
                           <span className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[9px] font-bold text-[var(--ink)] bg-[rgba(23,62,68,.08)] rounded">
@@ -926,7 +954,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
                         {displayTitle}
                       </h3>
                       <p className="text-xs font-semibold text-[#66736f] truncate mt-0.5">
-                        {doc.author}
+                        {!isIndonesian && doc.author === "Tim Redaksi Saku Hukum ULM" ? "Saku Hukum ULM Editorial Team" : doc.author}
                       </p>
                     </div>
 

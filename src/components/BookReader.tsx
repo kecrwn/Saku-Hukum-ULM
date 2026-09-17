@@ -157,7 +157,7 @@ export default function BookReader({ book, onClose }: BookReaderProps) {
           <button onClick={onClose} className="control-btn" aria-label={isIndonesian ? "Tutup" : "Close"}>
             <X size={18} strokeWidth={2.5} /> <span className="hidden sm:inline">{isIndonesian ? "Tutup" : "Close"}</span>
           </button>
-          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="control-btn" aria-label="Daftar Isi">
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="control-btn" aria-label={isIndonesian ? "Daftar Isi" : "Contents"}>
             <List size={18} /> <span className="hidden sm:inline">{isIndonesian ? "Daftar Isi" : "Contents"}</span>
           </button>
         </div>
@@ -193,13 +193,19 @@ export default function BookReader({ book, onClose }: BookReaderProps) {
               exit={{ x: -300, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
               className="w-full md:w-[300px] lg:w-[350px] shrink-0 h-full overflow-y-auto border-r border-[var(--border-color)] absolute md:relative z-10"
-              style={{ backgroundColor: 'inherit' }}
+              style={{ 
+                backgroundColor: theme === 'light' ? 'rgba(255, 255, 255, 0.85)' : theme === 'sepia' ? 'rgba(253, 246, 227, 0.85)' : 'rgba(18, 18, 18, 0.85)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)'
+              }}
             >
               <div className="p-6">
                 <div className="mb-8">
                   <div className="w-16 h-24 mb-4 rounded-sm shadow-md" style={{ backgroundColor: book.coverColor }} />
                   <h1 className="text-2xl font-bold leading-tight mb-2">{displayTitle}</h1>
-                  <p className="font-manrope text-sm opacity-60 uppercase tracking-wider">{book.author}</p>
+                  <p className="font-manrope text-sm opacity-60 uppercase tracking-wider">
+                    {!isIndonesian && book.author === "Tim Redaksi Saku Hukum ULM" ? "Saku Hukum ULM Editorial Team" : book.author}
+                  </p>
                 </div>
                 
                 <nav className="space-y-2">
