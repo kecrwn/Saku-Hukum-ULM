@@ -358,13 +358,13 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
         .read-more-btn { align-self: flex-start; margin-top: 6px; font-size: 11px; font-weight: 800; color: var(--clay); background: transparent; border: none; cursor: pointer; padding: 0; text-transform: uppercase; letter-spacing: 0.05em; transition: opacity 150ms ease-out; }
         .read-more-btn:hover { opacity: 0.7; }
         .chat-msg-user .read-more-btn { color: var(--paper); opacity: 0.8; }
-        .glass-model-menu { position: absolute; bottom: calc(100% + 8px); left: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(23, 62, 68, 0.1); border-radius: 12px; padding: 6px; box-shadow: 0 16px 40px rgba(16, 45, 51, 0.15); display: flex; flex-direction: column; min-width: 160px; max-width: 220px; max-height: 250px; overflow-y: auto; z-index: 100; animation: chat-slide-up 0.25s cubic-bezier(0.23, 1, 0.32, 1); transform-origin: bottom left; }
+        .glass-model-menu { position: absolute; top: calc(100% + 8px); left: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(23, 62, 68, 0.1); border-radius: 12px; padding: 6px; box-shadow: 0 16px 40px rgba(16, 45, 51, 0.15); display: flex; flex-direction: column; min-width: 160px; max-width: 220px; max-height: 250px; overflow-y: auto; z-index: 100; animation: chat-slide-down 0.2s cubic-bezier(0.23, 1, 0.32, 1); transform-origin: top left; }
+        @keyframes chat-slide-down { from { opacity: 0; transform: translateY(-8px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
         .glass-model-btn { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 700; color: #43534e; border-radius: 8px; transition: all 150ms ease; border: none; background: transparent; cursor: pointer; line-height: 1.3; }
         .glass-model-btn:hover { background: rgba(23, 62, 68, 0.05); }
         .glass-model-btn.active { background: rgba(23, 62, 68, 0.08); color: var(--clay); }
-        .glass-dropdown-toggle { background: rgba(23, 62, 68, 0.04); border: 1px solid rgba(23, 62, 68, 0.08); color: var(--ink-deep); font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all 200ms ease; margin-top: 4px; }
+        .glass-dropdown-toggle { background: rgba(23, 62, 68, 0.04); border: 1px solid rgba(23, 62, 68, 0.08); color: var(--ink-deep); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all 200ms ease; height: 26px; }
         .glass-dropdown-toggle:hover { background: rgba(23, 62, 68, 0.08); }
-        .chat-msg-time { font-size: 10px; opacity: 0.5; margin-top: 6px; text-align: right; display: flex; justify-content: flex-end; align-items: center; gap: 4px; }
         .chat-stop-active { background: var(--ink-deep) !important; opacity: 1 !important; cursor: pointer !important; }
         .chat-stop-spinner { position: absolute; inset: 2px; border: 2px solid rgba(255,255,255,0.15); border-top-color: rgba(255,255,255,0.9); border-radius: 50%; animation: chat-spin 1s linear infinite; pointer-events: none; }
         @keyframes chat-spin { to { transform: rotate(360deg); } }
@@ -378,26 +378,23 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
 
       {isOpen && (
         <div className={fullScreen ? "chat-panel-fullscreen" : "chat-panel"}>
-          <div className="chat-head items-start">
-            <div className="flex flex-col">
+          <div className="chat-head items-center">
+            <div className="flex items-center gap-3">
               <div className="chat-head-title">
-                <Bot size={19} />
+                <Bot size={20} />
                 {isIndonesian ? "Jaksa" : "Jaksa"}
               </div>
+              
+              {/* Task 2: Reposition the model-tier selector alongside the title */}
               <div className="relative">
                 <button 
                   type="button" 
                   onClick={() => setIsModelMenuOpen(!isModelMenuOpen)}
                   className="glass-dropdown-toggle"
                 >
-                  <span className="opacity-70">AI:</span> {currentModelName}
+                  <span className="opacity-70 font-normal">AI:</span> {currentModelName}
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isModelMenuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', marginLeft: '2px', opacity: 0.6 }}><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
-                {totalTokensUsed > 0 && (
-                  <div style={{ fontSize: '9px', color: 'var(--clay)', fontWeight: 800, opacity: 0.8, marginTop: '2px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    {totalTokensUsed.toLocaleString()} Tokens Used
-                  </div>
-                )}
                 {isModelMenuOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setIsModelMenuOpen(false)}></div>
@@ -422,7 +419,7 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
               </div>
             </div>
             
-            <div className="flex gap-2 items-center mt-1">
+            <div className="flex gap-2 items-center">
               <button
                 type="button"
                 onClick={handleClearChat}
@@ -458,30 +455,33 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
               }
               
               return (
-                <div key={m.id} className={`chat-msg ${m.role === "user" ? "chat-msg-user" : "chat-msg-bot"}`}>
-                  <ExpandableMessage content={m.role === 'assistant' ? cleanContent : m.content} isIndonesian={isIndonesian} />
-                  
-                  {m.role === "assistant" && (
-                    <div className="chat-msg-actions">
-                      <button onClick={() => handleCopyMessage(m.id, cleanContent)} className="chat-msg-action-btn" title="Copy" aria-label="Copy message">
-                        {copiedMessageId === m.id ? <CheckCheck size={14} className="text-green-500" /> : <Copy size={14} />}
-                      </button>
-                      <button onClick={() => handleShareMessage(cleanContent)} className="chat-msg-action-btn" title="Share" aria-label="Share message">
-                        <Share2 size={14} />
-                      </button>
-                      <button onClick={() => setExpandedMessage(cleanContent)} className="chat-msg-action-btn" title="Expand" aria-label="Expand message">
-                        <Expand size={14} />
-                      </button>
-                      {messages[messages.length - 1]?.id === m.id && (
-                        <button onClick={() => reload()} className="chat-msg-action-btn" title="Retry" aria-label="Retry message">
-                          <RefreshCcw size={14} />
+                <div key={m.id} className="flex flex-col mb-1 w-full">
+                  <div className={`chat-msg ${m.role === "user" ? "chat-msg-user" : "chat-msg-bot"}`}>
+                    <ExpandableMessage content={m.role === 'assistant' ? cleanContent : m.content} isIndonesian={isIndonesian} />
+                    
+                    {m.role === "assistant" && (
+                      <div className="chat-msg-actions">
+                        <button onClick={() => handleCopyMessage(m.id, cleanContent)} className="chat-msg-action-btn" title="Copy" aria-label="Copy message">
+                          {copiedMessageId === m.id ? <CheckCheck size={14} className="text-green-500" /> : <Copy size={14} />}
                         </button>
-                      )}
-                    </div>
-                  )}
+                        <button onClick={() => handleShareMessage(cleanContent)} className="chat-msg-action-btn" title="Share" aria-label="Share message">
+                          <Share2 size={14} />
+                        </button>
+                        <button onClick={() => setExpandedMessage(cleanContent)} className="chat-msg-action-btn" title="Expand" aria-label="Expand message">
+                          <Expand size={14} />
+                        </button>
+                        {messages[messages.length - 1]?.id === m.id && (
+                          <button onClick={() => reload()} className="chat-msg-action-btn" title="Retry" aria-label="Retry message">
+                            <RefreshCcw size={14} />
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
 
+                  {/* Task 3: Move the response-time indicator outside the bubble */}
                   {m.role === "assistant" && generationTimes[m.id] && (
-                    <div className="chat-msg-time">
+                    <div className="flex items-center gap-1.5 text-[9px] font-sans font-semibold uppercase tracking-widest text-[#66736f] opacity-70 mt-1.5 ml-3 self-start">
                       <Clock size={10} /> {(generationTimes[m.id] / 1000).toFixed(1)}s
                     </div>
                   )}

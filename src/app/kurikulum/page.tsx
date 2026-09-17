@@ -1,22 +1,286 @@
 "use client";
 /** River Margin / shULM: curriculum content prioritises the official 2020 PDF, with research context clearly separated from formal course rules. */
-import { BookOpenCheck, Download, Scale, ShieldCheck, BookOpen } from "lucide-react";
+import {
+  BookOpen,
+  BookOpenCheck,
+  CalendarDays,
+  CheckCircle2,
+  Download,
+  FileText,
+  GraduationCap,
+  Scale,
+  ShieldCheck,
+} from "lucide-react";
 import { PageIntro } from "@/components/PageIntro";
 import { SourceLink } from "@/components/SourceLink";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { criminalElectiveCourses, criminalRequiredCourses, externalLinks, semesterFocus } from "@/lib/site-data";
+import {
+  criminalElectiveCourses,
+  criminalRequiredCourses,
+  externalLinks,
+  semesterFocus,
+  specializationPolicy,
+} from "@/lib/site-data";
 
-export default function Curriculum() { const { isIndonesian } = useLanguage(); return <><PageIntro label={isIndonesian ? "Kurikulum" : "Curriculum"} title={isIndonesian ? "Hukum Pidana sebagai arah kajian." : "Criminal law as a direction of study."} summary={isIndonesian ? "Bagian Hukum Pidana adalah fokus akademik paling relevan untuk minat menuju profesi jaksa; ini bukan jaminan atau jalur rekrutmen otomatis." : "The Criminal Law Section is the academic focus most relevant to an interest in prosecution; it is not a guarantee or automatic recruitment route."} sourceCount={isIndonesian ? "Kurikulum 2020 • dokumen resmi" : "Curriculum 2020 • official document"} /><section className="content-width track-callout"><div className="track-icon"><Scale size={26} /></div><div><p className="eyebrow">{isIndonesian ? "Peminatan" : "Specialization"}</p><h2>{isIndonesian ? "Program Kekhususan Hukum Pidana" : "Criminal Law Specialization Programme"}</h2><p>{isIndonesian ? "Halaman Bagian Hukum Pidana menyebut penguatan hukum pidana materiil, formil, sumber daya alam dan lingkungan, ekonomi, teknologi, serta perbandingan hukum pidana." : "The Criminal Law Section page highlights substantive and procedural criminal law, natural resources and environmental issues, economics, technology, and comparative criminal law."}</p></div><SourceLink href={externalLinks.pidana} label={isIndonesian ? "Bagian Hukum Pidana" : "Criminal Law Section"} /></section><section className="content-width split-section"><div className="section-heading"><p className="eyebrow">{isIndonesian ? "Lensa kajian" : "Study lenses"}</p><h2>{isIndonesian ? "Baca daftar mata kuliah bersama konteks Kalimantan." : "Read the course list alongside a Kalimantan context."}</h2></div><div className="fact-list"><div><Scale size={19} /><span><strong>{isIndonesian ? "Lingkungan & sumber daya alam" : "Environment & natural resources"}</strong><small>{isIndonesian ? "Dokumen riset tambahan menautkan kajian pidana FH ULM dengan isu lingkungan dan sumber daya alam. Hal ini selaras dengan mata kuliah Tindak Pidana di Bidang Sumber Daya Alam yang tercantum resmi, bukan jaminan topik atau kelas tertentu." : "The additional research report connects FH ULM criminal-law study with environmental and natural-resource issues. This is compatible with the officially listed Natural Resources Crime course, not a promise of a particular topic or class."}</small></span></div><div><BookOpenCheck size={19} /><span><strong>{isIndonesian ? "Praktik dan pembaruan hukum" : "Practice and legal change"}</strong><small>{isIndonesian ? "Hukum Acara Pidana, Praktik Peradilan Pidana, serta pilihan tentang telematika dan hukum pidana internasional memberi titik baca untuk memahami perubahan praktik hukum. Periksa penawaran semester berjalan pada kanal fakultas." : "Criminal Procedure, Criminal Court Practice, and electives on telematics and international criminal law provide useful points for reading legal-practice change. Check current-semester offerings through faculty channels."}</small></span></div></div><div className="source-row"><SourceLink href={externalLinks.pidana} label={isIndonesian ? "Fokus Bagian Pidana" : "Criminal Law Section focus"} /><SourceLink href={externalLinks.curriculumPdf} label={isIndonesian ? "PDF Kurikulum 2020" : "Curriculum 2020 PDF"} /></div></section><section className="content-width curriculum-layout"><div><div className="section-heading compact"><p className="eyebrow">{isIndonesian ? "Formasi per semester" : "Semester formation"}</p><h2>{isIndonesian ? "Rute yang dipublikasikan." : "The published route."}</h2></div><div className="semester-rail">{semesterFocus.map((item) => <article className="semester-card" key={item.semester}><span className="semester-number">{item.semester}</span><div><strong>{item.credits}</strong><p>{isIndonesian ? item.id : item.en}</p></div></article>)}</div><div className="notice-box"><BookOpenCheck size={19} /><p>{isIndonesian ? "Tabel ini hanya menampilkan titik fokus yang dapat dibaca dari dokumen. Gunakan PDF formasi mata kuliah resmi untuk susunan lengkap, prasyarat, serta penawaran semester berjalan." : "This table shows only focus points readable in the document. Use the official course-formation PDF for the full structure, prerequisites, and current-semester offerings."}</p><a href={externalLinks.curriculumPdf} target="_blank" rel="noreferrer"><Download size={16} />{isIndonesian ? "Unduh PDF resmi" : "Download official PDF"}</a></div></div><aside className="curriculum-side-note"><ShieldCheck size={21} /><p className="eyebrow">{isIndonesian ? "Batas data" : "Data boundary"}</p><h3>{isIndonesian ? "Dokumen resmi tetap menjadi aturan utama." : "The official document remains the governing record."}</h3><p>{isIndonesian ? "Dokumen riset tambahan memakai arsitektur kode dan SKS yang tidak sama dengan PDF Kurikulum 2020. Karena itu, kredit tiap mata kuliah, daftar pilihan bebas, jadwal, dosen pengampu, dan penawaran aktual di halaman ini tetap merujuk ke dokumen serta kanal akademik resmi." : "The additional research report uses a course-code and credit structure that does not match the Curriculum 2020 PDF. Course credits, free-elective listings, schedules, assigned lecturers, and current offerings on this page therefore continue to refer to the official document and academic channels."}</p></aside></section><section className="content-width course-section"><div className="section-heading"><p className="eyebrow">{isIndonesian ? "Mata kuliah wajib" : "Required courses"}</p><h2>{isIndonesian ? "Enam mata kuliah PK Hukum Pidana." : "Six Criminal Law specialization courses."}</h2><p>{isIndonesian ? "Masing-masing tercantum sebagai 2 SKS dalam dokumen Kurikulum 2020." : "Each is listed as 2 credits in the Curriculum 2020 document."}</p></div><div className="course-list">{criminalRequiredCourses.map((course) => <div className="course-row" key={course.code}><code>{course.code}</code><span>{isIndonesian ? course.id : course.en}</span><strong>2 SKS</strong></div>)}</div><SourceLink href={externalLinks.pidana} label={isIndonesian ? "Daftar wajib Bagian Pidana" : "Criminal Law required list"} /></section><section className="content-width elective-section"><div className="section-heading"><p className="eyebrow">{isIndonesian ? "Pilihan bebas" : "Free electives"}</p><h2>{isIndonesian ? "Ruang perluasan kajian." : "Room to expand the enquiry."}</h2><p>{isIndonesian ? "Daftar berikut muncul di blok Wajib dan Pilihan Bebas PK Hukum Pidana; setiap baris ditampilkan 2 SKS pada PDF." : "The following list appears in the Criminal Law Required and Free-Elective block; each line is shown as 2 credits in the PDF."}</p></div><div className="elective-grid">{criminalElectiveCourses.map((course, index) => <div className="elective-item" key={course.code}><span>0{index + 1}</span><div><code>{course.code}</code><p>{isIndonesian ? course.id : course.en}</p></div><small>2 SKS</small></div>)}</div><SourceLink href={externalLinks.curriculumPdf} label={isIndonesian ? "PDF Kurikulum 2020, hlm. 3–4" : "Curriculum 2020 PDF, pp. 3–4"} /></section>
-    <section className="content-width split-section">
-      <div className="section-heading">
-        <p className="eyebrow">{isIndonesian ? "Kalender Akademik" : "Academic Calendar"}</p>
-        <h2>{isIndonesian ? "Jadwal Ganjil 2026/2027" : "Odd Semester 2026/2027"}</h2>
-      </div>
-      <div className="fact-list">
-        <div><BookOpen size={19} /><span><strong>{isIndonesian ? "UTS (Ujian Tengah Semester)" : "Midterms (UTS)"}</strong><small>12 – 16 October 2026</small></span></div>
-        <div><BookOpen size={19} /><span><strong>{isIndonesian ? "UAS (Ujian Akhir Semester)" : "Finals (UAS)"}</strong><small>14 – 23 December 2026</small></span></div>
-        <div><BookOpen size={19} /><span><strong>{isIndonesian ? "Input Nilai" : "Grade Entry"}</strong><small>21 Dec 2026 – 8 Jan 2027</small></span></div>
-      </div>
-    </section>
+export default function Curriculum() {
+  const { isIndonesian } = useLanguage();
 
-  </>; }
+  return (
+    <>
+      <PageIntro
+        label={isIndonesian ? "Kurikulum" : "Curriculum"}
+        title={isIndonesian ? "Hukum Pidana sebagai arah kajian." : "Criminal law as a direction of study."}
+        summary={
+          isIndonesian
+            ? "Bagian Hukum Pidana adalah fokus akademik paling relevan untuk minat menuju profesi jaksa; ini bukan jaminan atau jalur rekrutmen otomatis."
+            : "The Criminal Law Section is the academic focus most relevant to an interest in prosecution; it is not a guarantee or automatic recruitment route."
+        }
+        sourceCount={isIndonesian ? "Kurikulum 2020 • dokumen resmi" : "Curriculum 2020 • official document"}
+      />
+
+      <section className="content-width track-callout">
+        <div className="track-icon">
+          <Scale size={26} />
+        </div>
+        <div>
+          <p className="eyebrow">{isIndonesian ? "Peminatan" : "Specialization"}</p>
+          <h2>{isIndonesian ? "Program Kekhususan Hukum Pidana" : "Criminal Law Specialization Programme"}</h2>
+          <p>
+            {isIndonesian
+              ? "Halaman Bagian Hukum Pidana menyebut penguatan hukum pidana materiil, formil, sumber daya alam dan lingkungan, ekonomi, teknologi, serta perbandingan hukum pidana."
+              : "The Criminal Law Section page highlights substantive and procedural criminal law, natural resources and environmental issues, economics, technology, and comparative criminal law."}
+          </p>
+        </div>
+        <SourceLink href={externalLinks.pidana} label={isIndonesian ? "Bagian Hukum Pidana" : "Criminal Law Section"} />
+      </section>
+
+      <section className="content-width split-section">
+        <div className="section-heading">
+          <p className="eyebrow">{isIndonesian ? "Lensa kajian" : "Study lenses"}</p>
+          <h2>{isIndonesian ? "Baca daftar mata kuliah bersama konteks Kalimantan." : "Read the course list alongside a Kalimantan context."}</h2>
+          <p>
+            {isIndonesian
+              ? "Kajian hukum pidana di FH ULM terikat erat dengan dinamika bentang alam lahan basah, industri ekstraktif, dan pembaruan hukum nasional."
+              : "Criminal law studies at FH ULM are closely intertwined with wetland environments, extractive industries, and national legal reform."}
+          </p>
+        </div>
+        <div className="fact-list">
+          <div>
+            <Scale size={19} />
+            <span>
+              <strong>{isIndonesian ? "Lingkungan & sumber daya alam" : "Environment & natural resources"}</strong>
+              <small>
+                {isIndonesian
+                  ? "Dokumen riset tambahan menautkan kajian pidana FH ULM dengan isu lingkungan dan sumber daya alam. Hal ini selaras dengan mata kuliah Tindak Pidana di Bidang Sumber Daya Alam yang tercantum resmi, bukan jaminan topik atau kelas tertentu."
+                  : "The additional research report connects FH ULM criminal-law study with environmental and natural-resource issues. This is compatible with the officially listed Natural Resources Crime course, not a promise of a particular topic or class."}
+              </small>
+            </span>
+          </div>
+          <div>
+            <BookOpenCheck size={19} />
+            <span>
+              <strong>{isIndonesian ? "Praktik dan pembaruan hukum" : "Practice and legal change"}</strong>
+              <small>
+                {isIndonesian
+                  ? "Hukum Acara Pidana, Praktik Peradilan Pidana, serta pilihan tentang telematika dan hukum pidana internasional memberi titik baca untuk memahami perubahan praktik hukum. Periksa penawaran semester berjalan pada kanal fakultas."
+                  : "Criminal Procedure, Criminal Court Practice, and electives on telematics and international criminal law provide useful points for reading legal-practice change. Check current-semester offerings through faculty channels."}
+              </small>
+            </span>
+          </div>
+        </div>
+        <div className="source-row">
+          <SourceLink href={externalLinks.pidana} label={isIndonesian ? "Fokus Bagian Pidana" : "Criminal Law Section focus"} />
+          <SourceLink href={externalLinks.curriculumPdf} label={isIndonesian ? "PDF Kurikulum 2020" : "Curriculum 2020 PDF"} />
+          <SourceLink href={externalLinks.curriculum} label={isIndonesian ? "Portal Kurikulum FH ULM" : "FH ULM Curriculum Portal"} />
+        </div>
+      </section>
+
+      <section className="content-width curriculum-layout">
+        <div>
+          <div className="section-heading compact">
+            <p className="eyebrow">{isIndonesian ? "Formasi per semester" : "Semester formation"}</p>
+            <h2>{isIndonesian ? "Rute yang dipublikasikan." : "The published route."}</h2>
+            <p>
+              {isIndonesian
+                ? "Distribusi beban studi formal per semester berdasarkan dokumen Kurikulum 2020 Program Studi S1 Hukum."
+                : "Formal study load distribution per semester based on the official 2020 Undergraduate Law Curriculum document."}
+            </p>
+          </div>
+          <div className="semester-rail">
+            {semesterFocus.map((item) => (
+              <article className="semester-card" key={item.semester}>
+                <span className="semester-number">{item.semester}</span>
+                <div>
+                  <strong>{isIndonesian ? item.credits : (item.creditsEn || item.credits)}</strong>
+                  <p>{isIndonesian ? item.id : item.en}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+          <div className="notice-box">
+            <BookOpenCheck size={19} />
+            <p>
+              {isIndonesian
+                ? "Tabel ini hanya menampilkan titik fokus yang dapat dibaca dari dokumen. Gunakan PDF formasi mata kuliah resmi untuk susunan lengkap, prasyarat, serta penawaran semester berjalan."
+                : "This table shows only focus points readable in the document. Use the official course-formation PDF for the full structure, prerequisites, and current-semester offerings."}
+            </p>
+            <a href={externalLinks.curriculumPdf} target="_blank" rel="noreferrer">
+              <Download size={16} className="text-inherit" />
+              {isIndonesian ? "Unduh PDF resmi" : "Download official PDF"}
+            </a>
+          </div>
+        </div>
+        <aside className="curriculum-side-note">
+          <ShieldCheck size={21} className="mb-3 block" />
+          <p className="eyebrow">{isIndonesian ? "Batas data" : "Data boundary"}</p>
+          <h3>{isIndonesian ? "Dokumen resmi tetap menjadi aturan utama." : "The official document remains the governing record."}</h3>
+          <p>
+            {isIndonesian
+              ? "Dokumen riset tambahan memakai arsitektur kode dan SKS yang tidak sama dengan PDF Kurikulum 2020. Karena itu, kredit tiap mata kuliah, daftar pilihan bebas, jadwal, dosen pengampu, dan penawaran aktual di halaman ini tetap merujuk ke dokumen serta kanal akademik resmi."
+              : "The additional research report uses a course-code and credit structure that does not match the Curriculum 2020 PDF. Course credits, free-elective listings, schedules, assigned lecturers, and current offerings on this page therefore continue to refer to the official document and academic channels."}
+          </p>
+        </aside>
+      </section>
+
+      <section className="content-width split-section">
+        <div className="section-heading">
+          <p className="eyebrow">{isIndonesian ? "Mekanisme Peminatan" : "Specialization Policy"}</p>
+          <h2>{isIndonesian ? "Prosedur dan syarat PK Hukum Pidana." : "Procedures and criteria for Criminal Law."}</h2>
+          <p>
+            {isIndonesian
+              ? "Panduan teknis pengajuan peminatan program kekhususan dan administrasi berkas akademik di lingkungan FH ULM."
+              : "Technical guidelines for academic specialization track selection and file administration at FH ULM."}
+          </p>
+        </div>
+        <div className="fact-list">
+          <div>
+            <GraduationCap size={19} />
+            <span>
+              <strong>{isIndonesian ? "Tahapan Pemilihan Program Kekhususan" : "Specialization Selection Stage"}</strong>
+              <small>
+                {isIndonesian
+                  ? `Pemilihan peminatan diajukan pada ${specializationPolicy.selectionSemester} setelah mahasiswa menyelesaikan fondasi mata kuliah hukum dasar.`
+                  : `Specialization selection occurs in ${specializationPolicy.selectionSemester} after students complete core foundational law coursework.`}
+              </small>
+            </span>
+          </div>
+          <div>
+            <ShieldCheck size={19} />
+            <span>
+              <strong>{isIndonesian ? "Evaluator & Kriteria Seleksi" : "Evaluator & Selection Criteria"}</strong>
+              <small>
+                {isIndonesian
+                  ? `Ditetapkan oleh ${specializationPolicy.evaluator} dengan pertimbangan: ${specializationPolicy.criteriaId}`
+                  : `Administered by ${specializationPolicy.evaluator} with consideration of: ${specializationPolicy.criteriaEn}`}
+              </small>
+            </span>
+          </div>
+          <div>
+            <FileText size={19} />
+            <span>
+              <strong>{isIndonesian ? "Identitas Berkas & Skripsi" : "Administrative Filing & Thesis"}</strong>
+              <small>
+                {isIndonesian
+                  ? `${specializationPolicy.folderColor} Membedakan berkas usulan penelitian, seminar proposal, hingga pendaftaran sidang skripsi Bagian Hukum Pidana.`
+                  : `${specializationPolicy.folderColor} Standardizes submission verification for research topic proposals, proposal defense, and thesis examination registries in Criminal Law.`}
+              </small>
+            </span>
+          </div>
+        </div>
+        <div className="source-row">
+          <SourceLink href={externalLinks.pidana} label={isIndonesian ? "Bagian Hukum Pidana" : "Criminal Law Section"} />
+          <SourceLink href={externalLinks.curriculum} label={isIndonesian ? "Formasi Kurikulum FH ULM" : "FH ULM Curriculum Formation"} />
+        </div>
+      </section>
+
+      <section className="content-width course-section">
+        <div className="section-heading">
+          <p className="eyebrow">{isIndonesian ? "Mata kuliah wajib" : "Required courses"}</p>
+          <h2>{isIndonesian ? "Enam mata kuliah PK Hukum Pidana." : "Six Criminal Law specialization courses."}</h2>
+          <p>{isIndonesian ? "Masing-masing tercantum sebagai 2 SKS dalam dokumen Kurikulum 2020." : "Each is listed as 2 credits in the Curriculum 2020 document."}</p>
+        </div>
+        <div className="course-list">
+          {criminalRequiredCourses.map((course) => (
+            <div className="course-row" key={course.code}>
+              <code>{course.code}</code>
+              <span>{isIndonesian ? course.id : course.en}</span>
+              <strong className="whitespace-nowrap">{isIndonesian ? "2 SKS" : "2 Credits"}</strong>
+            </div>
+          ))}
+        </div>
+        <SourceLink href={externalLinks.pidana} label={isIndonesian ? "Daftar wajib Bagian Pidana" : "Criminal Law required list"} />
+      </section>
+
+      <section className="content-width elective-section">
+        <div className="section-heading">
+          <p className="eyebrow">{isIndonesian ? "Pilihan bebas" : "Free electives"}</p>
+          <h2>{isIndonesian ? "Ruang perluasan kajian." : "Room to expand the enquiry."}</h2>
+          <p>
+            {isIndonesian
+              ? "Daftar berikut muncul di blok Wajib dan Pilihan Bebas PK Hukum Pidana; setiap baris ditampilkan 2 SKS pada PDF."
+              : "The following list appears in the Criminal Law Required and Free-Elective block; each line is shown as 2 credits in the PDF."}
+          </p>
+        </div>
+        <div className="elective-grid">
+          {criminalElectiveCourses.map((course, index) => (
+            <div className="elective-item" key={course.code}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <div>
+                <code>{course.code}</code>
+                <p>{isIndonesian ? course.id : course.en}</p>
+              </div>
+              <small className="whitespace-nowrap">{isIndonesian ? "2 SKS" : "2 Credits"}</small>
+            </div>
+          ))}
+        </div>
+        <SourceLink href={externalLinks.curriculumPdf} label={isIndonesian ? "PDF Kurikulum 2020, hlm. 3–4" : "Curriculum 2020 PDF, pp. 3–4"} />
+      </section>
+
+      <section className="content-width split-section">
+        <div className="section-heading">
+          <p className="eyebrow">{isIndonesian ? "Kalender Akademik" : "Academic Calendar"}</p>
+          <h2>{isIndonesian ? "Jadwal Ganjil 2026/2027" : "Odd Semester 2026/2027"}</h2>
+          <p>
+            {isIndonesian
+              ? "Agenda penting perkuliahan, registrasi kartu rencana studi, dan evaluasi semester ganjil tahun akademik 2026/2027."
+              : "Key milestones for coursework, study plan registration, and odd semester evaluation for academic year 2026/2027."}
+          </p>
+        </div>
+        <div className="fact-list">
+          <div>
+            <CalendarDays size={19} />
+            <span>
+              <strong>{isIndonesian ? "KRS & Registrasi Akademik" : "KRS & Academic Registration"}</strong>
+              <small>{isIndonesian ? "10 – 21 Agustus 2026 (Pengisian Kartu Rencana Studi via SIMARI)" : "10 – 21 August 2026 (Course plan registration via SIMARI)"}</small>
+            </span>
+          </div>
+          <div>
+            <BookOpen size={19} />
+            <span>
+              <strong>{isIndonesian ? "UTS (Ujian Tengah Semester)" : "Midterms (UTS)"}</strong>
+              <small>{isIndonesian ? "12 – 16 Oktober 2026" : "12 – 16 October 2026"}</small>
+            </span>
+          </div>
+          <div>
+            <GraduationCap size={19} />
+            <span>
+              <strong>{isIndonesian ? "UAS (Ujian Akhir Semester)" : "Finals (UAS)"}</strong>
+              <small>{isIndonesian ? "14 – 23 Desember 2026" : "14 – 23 December 2026"}</small>
+            </span>
+          </div>
+          <div>
+            <CheckCircle2 size={19} />
+            <span>
+              <strong>{isIndonesian ? "Input Nilai & Evaluasi Semester" : "Grade Entry & Semester Review"}</strong>
+              <small>{isIndonesian ? "21 Desember 2026 – 8 Januari 2027" : "21 December 2026 – 8 January 2027"}</small>
+            </span>
+          </div>
+        </div>
+        <div className="source-row">
+          <SourceLink href="https://ulm.ac.id/id/wp-content/uploads/Kalender-Akademik.pdf" label={isIndonesian ? "PDF Kalender Akademik ULM" : "ULM Academic Calendar PDF"} />
+          <SourceLink href={externalLinks.ulm} label={isIndonesian ? "Portal Akademik ULM" : "ULM Academic Portal"} />
+        </div>
+      </section>
+    </>
+  );
+}

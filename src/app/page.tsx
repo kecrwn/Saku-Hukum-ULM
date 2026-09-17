@@ -2,14 +2,35 @@
 /** River Margin design system: the home page introduces Saku Hukum ULM as an asymmetrical, tactile study notebook rather than an official portal. */
 import { useState, useEffect } from "react";
 import type { LucideIcon } from "lucide-react";
-import { ArrowDownRight, ArrowUpRight, BadgeCheck, BookOpen, Compass, GraduationCap, Landmark, Scale, Users, UserPlus, MessageSquare, Link as LinkIcon, Home as HomeIcon, FileText } from "lucide-react";
-import Link   from "next/link";
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  BadgeCheck,
+  BookOpen,
+  Compass,
+  GraduationCap,
+  Landmark,
+  Scale,
+  Users,
+  UserPlus,
+  MessageSquare,
+  Link as LinkIcon,
+  Home as HomeIcon,
+  FileText,
+} from "lucide-react";
+import Link from "next/link";
 import Image from "next/image";
 import { SourceLink } from "@/components/SourceLink";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { externalLinks, imagery, carouselImages } from "@/lib/site-data";
 
-type RouteCard = { number: string; title: string; description: string; href: string; icon: LucideIcon };
+type RouteCard = {
+  number: string;
+  title: string;
+  description: string;
+  href: string;
+  icon: LucideIcon;
+};
 
 export default function Home() {
   const { isIndonesian } = useLanguage();
@@ -41,15 +62,171 @@ export default function Home() {
 
   const [heroIdx, setHeroIdx] = useState(0);
   useEffect(() => {
-    const timer = setInterval(() => setHeroIdx(prev => (prev + 1) % carouselImages.length), 3500);
+    const timer = setInterval(() => setHeroIdx((prev) => (prev + 1) % carouselImages.length), 3500);
     return () => clearInterval(timer);
   }, []);
 
-  return <>
-    <section className="hero content-width"><div className="hero-copy"><p className="eyebrow">{isIndonesian ? "PANDUAN STUDI PRIBADI • ULM" : "PERSONAL STUDY GUIDE • ULM"}</p><h1>{isIndonesian ? <>Baca jalurmu.<br /><em>Susun</em> catatanmu.</> : <>Read your path.<br /><em>Build</em> your notes.</>}</h1><p className="hero-summary">{isIndonesian ? "Teman belajar bilingual untuk menelusuri Fakultas Hukum ULM, peminatan Hukum Pidana, dan arah menuju profesi jaksa—dengan sumber terbuka sebagai pijakan." : "A bilingual study companion for tracing FH ULM, Criminal Law specialization, and a direction toward prosecution—with public sources as its foundation."}</p><div className="hero-actions"><Link className="primary-link" href="/kurikulum">{isIndonesian ? "Telusuri kurikulum" : "Explore curriculum"}<ArrowDownRight size={18} /></Link><Link className="text-link" href="/tentang">{isIndonesian ? "Mulai dari konteks" : "Start with context"}<ArrowUpRight size={16} /></Link></div><p className="hero-disclaimer">{isIndonesian ? "Bukan situs resmi ULM. Detail yang belum tersedia secara publik ditandai apa adanya." : "Not an official ULM website. Details unavailable publicly are marked as such."}</p></div><div className="hero-image-wrap"><Image src={carouselImages[heroIdx]} alt={isIndonesian ? "Ilustrasi editorial buku dan catatan studi hukum" : "Editorial illustration of law books and study notes"} width={1200} height={800} className="object-cover w-full h-full transition-opacity duration-1000" priority decoding="async" /><div className="hero-image-caption" style={{ backgroundImage: "linear-gradient(to top, rgba(0,0,0,0.7), transparent)" }}><span>{isIndonesian ? "Saku Hukum" : "Law Pocket"}</span><span>0{heroIdx + 1} / 0{carouselImages.length}</span></div></div></section>
-    <section className="content-width home-facts"><div><strong>1958</strong><span>{isIndonesian ? "ULM berdiri; FH termasuk fakultas awal" : "ULM founded; Law among initial faculties"}</span><SourceLink href={externalLinks.ulmHistory} label={isIndonesian ? "Sejarah ULM" : "ULM History"} /></div><div><strong>4</strong><span>{isIndonesian ? "peminatan pada formasi Kurikulum 2020" : "specializations in Curriculum 2020 formation"}</span></div><div><strong>6</strong><span>{isIndonesian ? "mata kuliah wajib PK Hukum Pidana" : "required Criminal Law specialization courses"}</span></div><div><strong>A</strong><span>{isIndonesian ? 'Akreditasi "Baik Sekali" 2026' : '"Excellent" Accreditation 2026'}</span><SourceLink href={externalLinks.accreditationNews} label={isIndonesian ? "Berita akreditasi" : "Accreditation news"} /></div></section>
-    <section className="content-width quick-facts"><div><BadgeCheck size={20} /><h3>{isIndonesian ? "Akreditasi Terbaik" : "Top Accreditation"}</h3><p>{isIndonesian ? "Akreditasi 'Baik Sekali' dari BAN-PT, berlaku hingga 2031" : "'Excellent' accreditation from BAN-PT, valid until 2031"}</p><SourceLink href={externalLinks.accreditation} label={isIndonesian ? "Akreditasi FH ULM" : "FH ULM Accreditation"} /></div><div><BookOpen size={20} /><h3>{isIndonesian ? "Empat Peminatan" : "Four Specializations"}</h3><p>{isIndonesian ? "4 peminatan: Hukum Pidana, Perdata, Tata Negara, Internasional" : "4 specializations: Criminal, Civil, Constitutional, International Law"}</p></div><div><Landmark size={20} /><h3>{isIndonesian ? "Hukumonline Corner" : "Hukumonline Corner"}</h3><p>{isIndonesian ? "Hukumonline Corner pertama di Kalimantan" : "First Hukumonline Corner in Kalimantan"}</p><SourceLink href={externalLinks.hukumonlineCorner} label={isIndonesian ? "Berita ULM" : "ULM News"} /></div></section>
-    <section className="content-width route-section"><div className="section-heading"><p className="eyebrow">{isIndonesian ? "Peta saku" : "Pocket map"}</p><h2>{isIndonesian ? "Sepuluh halaman, satu jejak belajar." : "Ten pages, one study trail."}</h2><p>{isIndonesian ? "Pilih halaman yang sesuai dengan pertanyaanmu hari ini." : "Choose the page that matches today’s question."}</p></div><div className="route-grid">{routes.map((route) => { const Icon = route.icon; return <Link href={route.href} className="route-card" key={route.href}><span>{route.number}</span><Icon size={21} /><h3>{route.title}</h3><p>{route.description}</p><ArrowUpRight size={17} /></Link>; })}</div></section>
-    <section className="content-width home-image-band"><div className="band-visual" style={{ minHeight: '360px' }}><Image src={imagery.riverCampus} alt={isIndonesian ? "Ilustrasi editorial lingkungan kampus tepi sungai di Banjarmasin" : "Editorial illustration of a riverside campus environment in Banjarmasin"} fill className="object-cover" loading="lazy" decoding="async" /><span className="image-note">{isIndonesian ? "Ilustrasi editorial" : "Editorial illustration"}</span></div><div><p className="eyebrow">{isIndonesian ? "Cara memakai panduan" : "How to use the guide"}</p><h2>{isIndonesian ? "Kumpulkan rujukan sebelum membuat keputusan." : "Collect references before making decisions."}</h2><p>{isIndonesian ? "Setiap halaman menyimpan tautan menuju sumber institusi. Gunakan Saku Hukum ULM sebagai meja orientasi, lalu baca dokumen asli untuk aturan, jadwal, ketentuan, dan pembaruan." : "Each page keeps a link to an institutional source. Use Saku Hukum ULM as an orientation desk, then read the original document for rules, schedules, terms, and updates."}</p><p>{isIndonesian ? "Setiap sumber ditandai dengan tautan langsung. Tidak ada klaim yang berdiri tanpa rujukan." : "Every source is marked with a direct link. No claim stands without a reference."}</p><SourceLink href={externalLinks.faculty} label={isIndonesian ? "Situs FH ULM" : "FH ULM website"} /></div></section>
-  </>;
+  return (
+    <>
+      <section className="hero content-width">
+        <div className="hero-copy">
+          <p className="eyebrow">{isIndonesian ? "PANDUAN STUDI PRIBADI • ULM" : "PERSONAL STUDY GUIDE • ULM"}</p>
+          <h1>
+            {isIndonesian ? (
+              <>
+                Baca jalurmu.
+                <br />
+                <em>Susun</em> catatanmu.
+              </>
+            ) : (
+              <>
+                Read your path.
+                <br />
+                <em>Build</em> your notes.
+              </>
+            )}
+          </h1>
+          <p className="hero-summary">
+            {isIndonesian
+              ? "Teman belajar bilingual untuk menelusuri Fakultas Hukum ULM, peminatan Hukum Pidana, dan arah menuju profesi jaksa—dengan sumber terbuka sebagai pijakan."
+              : "A bilingual study companion for tracing FH ULM, Criminal Law specialization, and a direction toward prosecution—with public sources as its foundation."}
+          </p>
+          <div className="hero-actions">
+            <Link className="primary-link" href="/kurikulum">
+              {isIndonesian ? "Telusuri kurikulum" : "Explore curriculum"}
+              <ArrowDownRight size={18} />
+            </Link>
+            <Link className="text-link" href="/tentang">
+              {isIndonesian ? "Mulai dari konteks" : "Start with context"}
+              <ArrowUpRight size={16} />
+            </Link>
+          </div>
+          <p className="hero-disclaimer">
+            {isIndonesian
+              ? "Bukan situs resmi ULM. Detail yang belum tersedia secara publik ditandai apa adanya."
+              : "Not an official ULM website. Details unavailable publicly are marked as such."}
+          </p>
+        </div>
+        <div className="hero-image-wrap">
+          <Image
+            src={carouselImages[heroIdx]}
+            alt={isIndonesian ? "Ilustrasi editorial buku dan catatan studi hukum" : "Editorial illustration of law books and study notes"}
+            width={1200}
+            height={800}
+            className="object-cover w-full h-full transition-opacity duration-1000"
+            priority
+            decoding="async"
+          />
+          <div
+            className="hero-image-caption"
+            style={{
+              left: 0,
+              right: 0,
+              bottom: 0,
+              padding: "28px 24px 14px",
+              background: "linear-gradient(transparent, rgba(16, 45, 51, 0.78))",
+            }}
+          >
+            <span>{isIndonesian ? "Saku Hukum" : "Law Pocket"}</span>
+            <span>
+              {String(heroIdx + 1).padStart(2, "0")} / {String(carouselImages.length).padStart(2, "0")}
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <section className="content-width home-facts">
+        <div>
+          <strong>1958</strong>
+          <span>{isIndonesian ? "ULM berdiri; FH termasuk fakultas awal" : "ULM founded; Law among initial faculties"}</span>
+          <SourceLink href={externalLinks.ulmHistory} label={isIndonesian ? "Sejarah ULM" : "ULM History"} />
+        </div>
+        <div>
+          <strong>4</strong>
+          <span>{isIndonesian ? "peminatan pada formasi Kurikulum 2020" : "specializations in Curriculum 2020 formation"}</span>
+        </div>
+        <div>
+          <strong>6</strong>
+          <span>{isIndonesian ? "mata kuliah wajib PK Hukum Pidana" : "required Criminal Law specialization courses"}</span>
+        </div>
+        <div>
+          <strong>Baik Sekali</strong>
+          <span>{isIndonesian ? 'Akreditasi BAN-PT berlaku hingga 2031' : 'BAN-PT accreditation valid until 2031'}</span>
+          <SourceLink href={externalLinks.accreditationNews} label={isIndonesian ? "Berita akreditasi" : "Accreditation news"} />
+        </div>
+      </section>
+
+      <section className="content-width quick-facts">
+        <div>
+          <BadgeCheck size={20} />
+          <h3>{isIndonesian ? "Akreditasi BAN-PT" : "BAN-PT Accreditation"}</h3>
+          <p>{isIndonesian ? "Akreditasi 'Baik Sekali' dari BAN-PT, berlaku hingga 2031" : "'Excellent' accreditation from BAN-PT, valid until 2031"}</p>
+          <SourceLink href={externalLinks.accreditation} label={isIndonesian ? "Akreditasi FH ULM" : "FH ULM Accreditation"} />
+        </div>
+        <div>
+          <BookOpen size={20} />
+          <h3>{isIndonesian ? "Empat Peminatan" : "Four Specializations"}</h3>
+          <p>{isIndonesian ? "4 peminatan: Hukum Pidana, Perdata, Tata Negara, Internasional" : "4 specializations: Criminal, Civil, Constitutional, International Law"}</p>
+          <SourceLink href={externalLinks.curriculum} label={isIndonesian ? "Formasi Kurikulum" : "Curriculum Formation"} />
+        </div>
+        <div>
+          <Landmark size={20} />
+          <h3>{isIndonesian ? "Hukumonline Corner" : "Hukumonline Corner"}</h3>
+          <p>{isIndonesian ? "Hukumonline Corner pertama di Kalimantan" : "First Hukumonline Corner in Kalimantan"}</p>
+          <SourceLink href={externalLinks.hukumonlineCorner} label={isIndonesian ? "Berita ULM" : "ULM News"} />
+        </div>
+      </section>
+
+      <section className="content-width route-section">
+        <div className="section-heading">
+          <p className="eyebrow">{isIndonesian ? "Peta saku" : "Pocket map"}</p>
+          <h2>{isIndonesian ? "Sepuluh halaman, satu jejak belajar." : "Ten pages, one study trail."}</h2>
+          <p>{isIndonesian ? "Pilih halaman yang sesuai dengan pertanyaanmu hari ini." : "Choose the page that matches today’s question."}</p>
+        </div>
+        <div className="route-grid">
+          {routes.map((route) => {
+            const Icon = route.icon;
+            return (
+              <Link href={route.href} className="route-card" key={route.href}>
+                <span>{route.number}</span>
+                <Icon size={21} />
+                <h3>{route.title}</h3>
+                <p>{route.description}</p>
+                <ArrowUpRight size={17} />
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="content-width home-image-band">
+        <div className="band-visual" style={{ minHeight: "360px", padding: 0 }}>
+          <Image
+            src={imagery.riverCampus}
+            alt={isIndonesian ? "Ilustrasi editorial lingkungan kampus tepi sungai di Banjarmasin" : "Editorial illustration of a riverside campus environment in Banjarmasin"}
+            fill
+            className="object-cover"
+            loading="lazy"
+            decoding="async"
+          />
+          <span className="image-note z-10">{isIndonesian ? "Ilustrasi editorial" : "Editorial illustration"}</span>
+        </div>
+        <div>
+          <p className="eyebrow">{isIndonesian ? "Cara memakai panduan" : "How to use the guide"}</p>
+          <h2>{isIndonesian ? "Kumpulkan rujukan sebelum membuat keputusan." : "Collect references before making decisions."}</h2>
+          <p>
+            {isIndonesian
+              ? "Setiap halaman menyimpan tautan menuju sumber institusi. Gunakan Saku Hukum ULM sebagai meja orientasi, lalu baca dokumen asli untuk aturan, jadwal, ketentuan, dan pembaruan."
+              : "Each page keeps a link to an institutional source. Use Saku Hukum ULM as an orientation desk, then read the original document for rules, schedules, terms, and updates."}
+          </p>
+          <p>
+            {isIndonesian
+              ? "Setiap sumber ditandai dengan tautan langsung. Tidak ada klaim yang berdiri tanpa rujukan."
+              : "Every source is marked with a direct link. No claim stands without a reference."}
+          </p>
+          <SourceLink href={externalLinks.faculty} label={isIndonesian ? "Situs FH ULM" : "FH ULM website"} />
+        </div>
+      </section>
+    </>
+  );
 }

@@ -138,11 +138,57 @@ KNOWLEDGE BASE:
     }),
     read_local_law: tool({
       description: 'Fetch extremely detailed comprehensive Indonesian Law knowledge base files. Use this before using web_search for Indonesian law topics.',
-      parameters: z.object({ topic_id: z.string().describe(`The ID of the topic. Must be one of: ${availableLawTopics.map(t => t.id).join(', ')}`) }),
+      parameters: z.object({ 
+        topic_id: z.string().describe(`The ID of the topic or file name (e.g. 'pih', 'pidana', 'perdata', 'kuhp'). If unsure, try a related keyword.`) 
+      }),
       execute: async ({ topic_id }) => {
-        const knowledge = lawKnowledgeBase[topic_id];
-        if (!knowledge) return "Topic not found in local database. Try using web_search.";
-        return JSON.stringify(knowledge);
+        try {
+          const fs = require('fs');
+          const path = require('path');
+          
+          // Search both books and knowledge directories
+          const dirs = [
+            path.join(process.cwd(), 'src/lib/books'),
+            path.join(process.cwd(), 'src/lib/knowledge')
+          ];
+          
+          let foundPath = null;
+          let availableFiles: string[] = [];
+
+          for (const dir of dirs) {
+            if (fs.existsSync(dir)) {
+              const files = fs.readdirSync(dir).filter((f: string) => f.endsWith('.json'));
+              availableFiles.push(...files.map((f: string) => f.replace('.json', '')));
+              
+              const exactMatch = files.find((f: string) => f === `${topic_id}.json`);
+              if (exactMatch) {
+                foundPath = path.join(dir, exactMatch);
+                break;
+              }
+              
+              // Fallback to partial match if exact match not found
+              const partialMatch = files.find((f: string) => f.includes(topic_id) || topic_id.includes(f.replace('.json', '')));
+              if (partialMatch && !foundPath) {
+                foundPath = path.join(dir, partialMatch);
+              }
+            }
+          }
+          
+          if (!foundPath) {
+            return `Topic not found in local database. Available local topics: ${availableFiles.join(', ')}. Try using web_search or one of these available topics.`;
+          }
+          
+          const rawData = fs.readFileSync(foundPath, 'utf8');
+          const data = JSON.parse(rawData);
+          
+          // Strip out extremely long arrays or content if necessary to prevent context overflow,
+          // but since these are meant to be comprehensive, we return it.
+          // The LLM context window is large enough.
+          return JSON.stringify(data);
+        } catch (err: any) {
+          console.error('[read_local_law] Error:', err.message);
+          return "Failed to read local database. Fallback to web_search.";
+        }
       },
     }),
   };
@@ -169,13 +215,25 @@ KNOWLEDGE BASE:
     FALLBACK_CHAIN = ['deepseek-ai/deepseek-v4-flash-0731', 'moonshotai/kimi-k3', 'nvidia/nemotron-3-super-120b-a12b', initialFastModel];
   }
 
+  // Keep the last 15 messages to prevent context drift and ensure system prompt is not dropped
+  let trimmedMessages = messages.length > 15 ? messages.slice(-15) : [...messages];
+
+  // TASK 1: Add a lightweight reminder of the core output rules appended fresh right before generation on every turn
+  const lastUserIdx = trimmedMessages.findLastIndex((m: any) => m.role === 'user');
+  if (lastUserIdx >= 0) {
+    trimmedMessages[lastUserIdx] = {
+      ...trimmedMessages[lastUserIdx],
+      content: trimmedMessages[lastUserIdx].content + '\n\n[SYSTEM REMINDER: DO NOT output any reasoning, internal monologue, or <think> tags. Always answer directly and immediately. Do not say "Let me think". Just provide the final answer.]'
+    };
+  }
+
   for (const modelName of FALLBACK_CHAIN) {
     try {
       const model = getClient(modelName);
       const result = await streamText({
         model,
         system: systemPrompt,
-        messages,
+        messages: trimmedMessages,
         tools,
         maxSteps: 3,
         maxTokens: TIER_TOKENS[modelName] || 2048

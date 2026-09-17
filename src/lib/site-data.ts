@@ -34,7 +34,12 @@ export const criminalElectiveCourses = [
   { code: "BPHPI3702", id: "Kriminologi", en: "Criminology" }, { code: "BPHPI3708", id: "Tindak Pidana Telematika", en: "Telematics Crime" }, { code: "BPHPI3709", id: "Hukum Pidana Internasional", en: "International Criminal Law" }, { code: "BPHPI3710", id: "Aspek Pidana dalam Media Massa", en: "Criminal-Law Aspects of Mass Media" }, { code: "BPHPI3711", id: "Hukum Pidana Adat", en: "Customary Criminal Law" }, { code: "BPHPI3712", id: "Psikologi Kriminal", en: "Criminal Psychology" }, { code: "BPHPI3713", id: "Hukum Pidana Anak", en: "Juvenile Criminal Law" }, { code: "BPHPI3714", id: "Hukum Pidana Islam", en: "Islamic Criminal Law" }, { code: "BPHPI3715", id: "Tindak Pidana Pemilu", en: "Election Crime" }, { code: "BPHPI3716", id: "Tindak Pidana Kekayaan Intelektual", en: "Intellectual Property Crime" },
 ];
 export const semesterFocus = [
-  { semester: "I", credits: "19 SKS", id: "Fondasi studi hukum", en: "Foundations of legal study" }, { semester: "II", credits: "21 SKS", id: "Termasuk Hukum Pidana (3 SKS)", en: "Includes Criminal Law (3 credits)" }, { semester: "III", credits: "23 SKS", id: "Hukum Pidana Lanjut & Hukum Acara Pidana", en: "Advanced Criminal Law & Criminal Procedure" }, { semester: "IV", credits: "23 SKS", id: "Tindak Pidana Tertentu dalam KUHP", en: "Specific Crimes in the Criminal Code" }, { semester: "V", credits: "23 SKS", id: "Termasuk Tindak Pidana Korupsi", en: "Includes Corruption Crime" }, { semester: "VI", credits: "Dokumen menunjukkan praktik", id: "Praktik Peradilan Pidana (2 SKS) dan peminatan", en: "Criminal Court Practice (2 credits) and specialization" },
+  { semester: "I", credits: "19 SKS", creditsEn: "19 Credits", id: "Fondasi studi hukum", en: "Foundations of legal study" },
+  { semester: "II", credits: "21 SKS", creditsEn: "21 Credits", id: "Termasuk Hukum Pidana (3 SKS)", en: "Includes Criminal Law (3 credits)" },
+  { semester: "III", credits: "23 SKS", creditsEn: "23 Credits", id: "Hukum Pidana Lanjut & Hukum Acara Pidana", en: "Advanced Criminal Law & Criminal Procedure" },
+  { semester: "IV", credits: "23 SKS", creditsEn: "23 Credits", id: "Tindak Pidana Tertentu dalam KUHP", en: "Specific Crimes in the Criminal Code" },
+  { semester: "V", credits: "23 SKS", creditsEn: "23 Credits", id: "Termasuk Tindak Pidana Korupsi", en: "Includes Corruption Crime" },
+  { semester: "VI", credits: "Dokumen menunjukkan praktik", creditsEn: "Document indicates practice", id: "Praktik Peradilan Pidana (2 SKS) dan peminatan", en: "Criminal Court Practice (2 credits) and specialization" },
 ];
 
 export const admissionPathways = [
