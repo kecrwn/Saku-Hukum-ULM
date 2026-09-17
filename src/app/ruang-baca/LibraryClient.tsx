@@ -29,7 +29,8 @@ import {
   ArrowRight,
   ChevronsLeft,
   ChevronsRight,
-  Check
+  Check,
+  Filter
 } from "lucide-react";
 import BookReader from "@/components/BookReader";
 import { motion, AnimatePresence } from "framer-motion";
