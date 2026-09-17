@@ -48,7 +48,7 @@ export function SiteFrame({ children }: PropsWithChildren) {
 
   return (
     <div className="site-frame">
-      <header className={`site-header ${headerVisible ? "translate-y-0" : "-translate-y-full"} transition-transform duration-300 ease-in-out`}>
+      <header className={`site-header ${headerVisible ? "translate-y-0" : "-translate-y-full"} transition-transform duration-200 ease-in-out`}>
         <div className="header-inner">
           <Wordmark />
           <nav className="desktop-nav" aria-label={isIndonesian ? "Navigasi utama" : "Main navigation"}>

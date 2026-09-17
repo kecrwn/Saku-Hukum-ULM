@@ -88,23 +88,29 @@ export default function Home() {
           </h1>
           <p className="hero-summary">
             {isIndonesian
-              ? "Teman belajar bilingual untuk menelusuri Fakultas Hukum ULM, peminatan Hukum Pidana, dan arah menuju profesi jaksa—dengan sumber terbuka sebagai pijakan."
-              : "A bilingual study companion for tracing FH ULM, Criminal Law specialization, and a direction toward prosecution—with public sources as its foundation."}
+              ? "Panduan belajar praktis untuk mengenal Fakultas Hukum ULM, peminatan Hukum Pidana, dan jalur karier kejaksaan—semua berdasar data resmi."
+              : "A practical study guide to FH ULM, Criminal Law studies, and prosecutor career paths—all grounded in official public data."}
           </p>
           <div className="hero-actions">
-            <Link className="primary-link" href="/kurikulum">
-              {isIndonesian ? "Telusuri kurikulum" : "Explore curriculum"}
+            <Link
+              className="primary-link inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-[var(--ink-deep)] text-[var(--paper)] font-bold text-xs tracking-wide hover:bg-[var(--clay)] hover:text-white transition-all duration-200 shadow-sm active:scale-[0.98]"
+              href="/kurikulum"
+            >
+              {isIndonesian ? "Jelajahi Kurikulum" : "Explore Curriculum"}
               <ArrowDownRight size={18} />
             </Link>
-            <Link className="text-link" href="/tentang">
-              {isIndonesian ? "Mulai dari konteks" : "Start with context"}
+            <Link
+              className="secondary-btn inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white/80 border border-[rgba(23,62,68,.18)] text-[var(--ink-deep)] font-bold text-xs tracking-wide hover:bg-white hover:border-[var(--clay)] hover:text-[var(--clay)] hover:shadow-xs transition-all duration-200 active:scale-[0.98]"
+              href="/tentang"
+            >
+              {isIndonesian ? "Mulai dari Konteks" : "Start with Context"}
               <ArrowUpRight size={16} />
             </Link>
           </div>
           <p className="hero-disclaimer">
             {isIndonesian
-              ? "Bukan situs resmi ULM. Detail yang belum tersedia secara publik ditandai apa adanya."
-              : "Not an official ULM website. Details unavailable publicly are marked as such."}
+              ? "Bukan situs resmi ULM. Informasi yang belum dibuka ke publik ditandai secara jelas."
+              : "Not an official ULM website. Information not publicly available is clearly marked."}
           </p>
         </div>
         <div className="hero-image-wrap">
@@ -113,7 +119,7 @@ export default function Home() {
             alt={isIndonesian ? "Ilustrasi editorial buku dan catatan studi hukum" : "Editorial illustration of law books and study notes"}
             width={1200}
             height={800}
-            className="object-cover w-full h-full transition-opacity duration-1000"
+            className="object-cover w-full h-full transition-opacity duration-300"
             priority
             decoding="async"
           />
@@ -138,19 +144,19 @@ export default function Home() {
       <section className="content-width home-facts">
         <div>
           <strong>1958</strong>
-          <span>{isIndonesian ? "ULM berdiri; FH termasuk fakultas awal" : "ULM founded; Law among initial faculties"}</span>
+          <span>{isIndonesian ? "Tahun ULM berdiri; FH adalah salah satu fakultas pertama" : "ULM was founded; Law was among the first faculties"}</span>
           <SourceLink href={externalLinks.ulmHistory} label={isIndonesian ? "Sejarah ULM" : "ULM History"} />
         </div>
         <div>
           <strong>4</strong>
-          <span>{isIndonesian ? "peminatan pada formasi Kurikulum 2020" : "specializations in Curriculum 2020 formation"}</span>
+          <span>{isIndonesian ? "peminatan studi pada Kurikulum 2020" : "specializations in the 2020 curriculum"}</span>
         </div>
         <div>
           <strong>6</strong>
-          <span>{isIndonesian ? "mata kuliah wajib PK Hukum Pidana" : "required Criminal Law specialization courses"}</span>
+          <span>{isIndonesian ? "mata kuliah wajib peminatan Hukum Pidana" : "required courses for Criminal Law specialization"}</span>
         </div>
         <div>
-          <strong>{isIndonesian ? 'Baik Sekali' : 'Excellent'}</strong>
+          <strong>{isIndonesian ? 'Baik Sekali' : 'Baik Sekali'}</strong>
           <span>{isIndonesian ? 'Akreditasi BAN-PT berlaku hingga 2031' : 'BAN-PT accreditation valid until 2031'}</span>
           <SourceLink href={externalLinks.accreditationNews} label={isIndonesian ? "Berita akreditasi" : "Accreditation news"} />
         </div>
@@ -160,19 +166,19 @@ export default function Home() {
         <div>
           <BadgeCheck size={20} />
           <h3>{isIndonesian ? "Akreditasi BAN-PT" : "BAN-PT Accreditation"}</h3>
-          <p>{isIndonesian ? "Akreditasi 'Baik Sekali' dari BAN-PT, berlaku hingga 2031" : "'Excellent' accreditation from BAN-PT, valid until 2031"}</p>
+          <p>{isIndonesian ? "Terakreditasi 'Baik Sekali' dari BAN-PT, berlaku hingga 2031" : "Accredited 'Baik Sekali' by BAN-PT, valid until 2031"}</p>
           <SourceLink href={externalLinks.accreditation} label={isIndonesian ? "Akreditasi FH ULM" : "FH ULM Accreditation"} />
         </div>
         <div>
           <BookOpen size={20} />
           <h3>{isIndonesian ? "Empat Peminatan" : "Four Specializations"}</h3>
-          <p>{isIndonesian ? "4 peminatan: Hukum Pidana, Perdata, Tata Negara, Internasional" : "4 specializations: Criminal, Civil, Constitutional, International Law"}</p>
+          <p>{isIndonesian ? "Pilihan fokus: Pidana, Perdata, Tata Negara, dan Internasional" : "Focus tracks: Criminal, Civil, Constitutional, International Law"}</p>
           <SourceLink href={externalLinks.curriculum} label={isIndonesian ? "Formasi Kurikulum" : "Curriculum Formation"} />
         </div>
         <div>
           <Landmark size={20} />
           <h3>{isIndonesian ? "Hukumonline Corner" : "Hukumonline Corner"}</h3>
-          <p>{isIndonesian ? "Hukumonline Corner pertama di Kalimantan" : "First Hukumonline Corner in Kalimantan"}</p>
+          <p>{isIndonesian ? "Pojok literasi hukum digital pertama di kampus Kalimantan" : "First digital legal database corner on a Kalimantan campus"}</p>
           <SourceLink href={externalLinks.hukumonlineCorner} label={isIndonesian ? "Berita ULM" : "ULM News"} />
         </div>
       </section>
@@ -212,19 +218,19 @@ export default function Home() {
           <span className="image-note z-10">{isIndonesian ? "Ilustrasi editorial" : "Editorial illustration"}</span>
         </div>
         <div>
-          <p className="eyebrow">{isIndonesian ? "Cara memakai panduan" : "How to use the guide"}</p>
-          <h2>{isIndonesian ? "Kumpulkan rujukan sebelum membuat keputusan." : "Collect references before making decisions."}</h2>
+          <p className="eyebrow">{isIndonesian ? "Cara Memakai Panduan" : "How to Use This Guide"}</p>
+          <h2>{isIndonesian ? "Selalu cek rujukan sebelum mengambil keputusan." : "Always check official sources before deciding."}</h2>
           <p>
             {isIndonesian
-              ? "Setiap halaman menyimpan tautan menuju sumber institusi. Gunakan Saku Hukum ULM sebagai meja orientasi, lalu baca dokumen asli untuk aturan, jadwal, ketentuan, dan pembaruan."
-              : "Each page keeps a link to an institutional source. Use Saku Hukum ULM as an orientation desk, then read the original document for rules, schedules, terms, and updates."}
+              ? "Setiap halaman dilengkapi tautan ke sumber resmi kampus. Gunakan Saku Hukum ULM sebagai rangkuman awal, lalu periksa berkas aslinya untuk aturan, tanggal, dan pengumuman terbaru."
+              : "Every page links directly to official campus sources. Use Saku Hukum ULM as a quick starting summary, then check the original documents for rules, dates, and announcements."}
           </p>
           <p>
             {isIndonesian
-              ? "Setiap sumber ditandai dengan tautan langsung. Tidak ada klaim yang berdiri tanpa rujukan."
-              : "Every source is marked with a direct link. No claim stands without a reference."}
+              ? "Semua data ditautkan langsung ke sumber terpercaya—tanpa klaim tanpa bukti."
+              : "All information links directly to verified sources—no unsupported claims."}
           </p>
-          <SourceLink href={externalLinks.faculty} label={isIndonesian ? "Situs FH ULM" : "FH ULM website"} />
+          <SourceLink href={externalLinks.faculty} label={isIndonesian ? "Situs Resmi FH ULM" : "Official FH ULM Website"} />
         </div>
       </section>
     </>

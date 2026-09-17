@@ -45,7 +45,7 @@ export default function StudentLife() {
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
+              transition={{ duration: 0.3 }}
               className="order-2 lg:order-1 relative"
             >
               <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border border-white/10 group">
@@ -53,7 +53,7 @@ export default function StudentLife() {
                   src={imagery.mootIllustration} 
                   alt={isIndonesian ? "Ilustrasi Peradilan Semu" : "Mock Court Illustration"} 
                   fill
-                  className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-1000 ease-out" 
+                  className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-300 ease-out" 
                   loading="lazy" 
                 />
                 <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-black/20 to-transparent opacity-80 mix-blend-multiply" />
@@ -76,7 +76,7 @@ export default function StudentLife() {
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.2 }}
+              transition={{ duration: 0.3, delay: 0.08 }}
               className="order-1 lg:order-2 space-y-8"
             >
               <div>
@@ -130,14 +130,14 @@ export default function StudentLife() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                transition={{ duration: 0.25, delay: idx * 0.04 }}
                 key={title as string} 
-                className="group flex flex-col p-6 sm:p-8 md:p-10 bg-white border border-[rgba(23,62,68,.1)] rounded-2xl hover:border-[var(--clay)] transition-all duration-300 hover:shadow-[0_16px_36px_rgba(16,45,51,.07)] relative overflow-hidden"
+                className="group flex flex-col p-6 sm:p-8 md:p-10 bg-white border border-[rgba(23,62,68,.1)] rounded-2xl hover:border-[var(--clay)] transition-all duration-200 hover:shadow-[0_16px_36px_rgba(16,45,51,.07)] relative overflow-hidden"
               >
                 {/* Decorative background circle */}
-                <div className="absolute -right-12 -top-12 w-40 h-40 bg-[var(--clay)]/5 rounded-full blur-2xl group-hover:bg-[var(--clay)]/10 transition-colors duration-500" />
+                <div className="absolute -right-12 -top-12 w-40 h-40 bg-[var(--clay)]/5 rounded-full blur-2xl group-hover:bg-[var(--clay)]/10 transition-colors duration-200" />
                 
-                <div className="h-14 w-14 rounded-xl bg-[var(--paper)] border border-[rgba(23,62,68,.08)] text-[var(--clay)] flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-300 shadow-xs relative z-10">
+                <div className="h-14 w-14 rounded-xl bg-[var(--paper)] border border-[rgba(23,62,68,.08)] text-[var(--clay)] flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-200 shadow-xs relative z-10">
                   <IconComponent size={26} strokeWidth={1.5} />
                 </div>
                 <h3 className="text-2xl font-serif font-bold text-[var(--ink-deep)] mb-3 relative z-10">{title as string}</h3>
@@ -191,7 +191,7 @@ export default function StudentLife() {
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: idx * 0.1 }}
+                  transition={{ duration: 0.25, delay: idx * 0.04 }}
                   key={idx} 
                   className="flex gap-6 p-6 rounded-2xl bg-[var(--paper)] border border-[rgba(23,62,68,.05)] hover:border-[rgba(23,62,68,.15)] transition-all group cursor-default"
                 >

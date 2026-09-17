@@ -7,6 +7,7 @@ import {
   FileText,
   Check,
   Copy,
+  Share2,
   ExternalLink,
   Search,
   X,
@@ -30,7 +31,7 @@ import {
   ChevronRight
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { directDownloads } from "@/lib/site-data";
+import { directDownloads, contactRecords } from "@/lib/site-data";
 import { SourceLink } from "@/components/SourceLink";
 
 type ViewMode = "grid" | "table";
@@ -92,7 +93,7 @@ export default function DokumenPage() {
           (doc.descriptionEn && doc.descriptionEn.toLowerCase().includes(q));
         const matchInst = doc.institution && doc.institution.toLowerCase().includes(q);
         const matchCat = doc.categoryId.toLowerCase().includes(q) || doc.categoryEn.toLowerCase().includes(q);
-        const matchType = doc.type.toLowerCase().includes(q);
+        const matchType = doc.type.toLowerCase().includes(q) || (doc.type === "DOCX" && (q === "doc" || q === "docs" || q === "word"));
 
         if (!matchTitle && !matchDesc && !matchInst && !matchCat && !matchType) {
           return false;
@@ -147,16 +148,55 @@ export default function DokumenPage() {
     e.preventDefault();
     e.stopPropagation();
     try {
-      if (typeof navigator !== "undefined" && navigator.clipboard) {
+      if (typeof navigator !== "undefined" && navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(url);
         setCopiedUrl(url);
         setTimeout(() => {
           setCopiedUrl((cur) => (cur === url ? null : cur));
         }, 2200);
+        return;
       }
+      // Fallback for older browsers or non-secure contexts
+      const textArea = document.createElement("textarea");
+      textArea.value = url;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      document.execCommand("copy");
+      textArea.remove();
+      setCopiedUrl(url);
+      setTimeout(() => {
+        setCopiedUrl((cur) => (cur === url ? null : cur));
+      }, 2200);
     } catch (err) {
       console.error("Clipboard write failed", err);
     }
+  };
+
+  const handleShare = async (e: React.MouseEvent, docTitle: string, url: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
+      try {
+        await navigator.share({
+          title: docTitle,
+          text: `${docTitle} - Saku Hukum ULM`,
+          url: url
+        });
+        return;
+      } catch (err: unknown) {
+        if ((err as Error)?.name !== "AbortError") {
+          console.error("Web Share failed, copying link instead", err);
+        } else {
+          return;
+        }
+      }
+    }
+    // Fallback to copy link
+    await handleCopyLink(e, url);
   };
 
   const resetFilters = () => {
@@ -237,18 +277,11 @@ export default function DokumenPage() {
       </section>
 
       {/* 3. Interactive Filter & Search Desk */}
-      <section
-        style={{
-          marginTop: "48px",
-          background: "var(--card)",
-          border: "1px solid var(--line)",
-          padding: "24px 28px",
-          boxShadow: "0 6px 20px rgba(30,48,43,0.03)"
-        }}
-      >
+      {/* 3. Interactive Filter & Search Desk */}
+      <section className="doc-filter-panel">
         {/* Search Input Bar */}
-        <div style={{ display: "flex", gap: "12px", alignItems: "center", position: "relative" }}>
-          <div style={{ position: "relative", flex: 1 }}>
+        <div className="doc-search-bar-row">
+          <div className="doc-search-input-wrap">
             <Search
               size={18}
               style={{
@@ -313,148 +346,136 @@ export default function DokumenPage() {
             )}
           </div>
 
-          {/* Sort Selector */}
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
-            <ArrowUpDown size={15} style={{ color: "var(--muted)" }} />
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as SortOption)}
-              style={{
-                background: "var(--paper)",
-                border: "1px solid var(--line)",
-                borderRadius: "8px",
-                padding: "12px 14px",
-                fontSize: "12px",
-                fontFamily: "var(--sans)",
-                fontWeight: 700,
-                color: "var(--ink-deep)",
-                cursor: "pointer",
-                outline: "none"
-              }}
-            >
-              <option value="featured">{isIndonesian ? "Rekomendasi / Utama" : "Recommended"}</option>
-              <option value="name">{isIndonesian ? "Nama Dokumen (A-Z)" : "Document Name (A-Z)"}</option>
-              <option value="size">{isIndonesian ? "Ukuran Berkas (Terbesar)" : "File Size (Largest)"}</option>
-            </select>
-          </div>
+          {/* Sort Selector & View Mode Toggle Controls */}
+          <div className="doc-search-controls">
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", flex: 1 }}>
+              <ArrowUpDown size={15} style={{ color: "var(--muted)", flexShrink: 0 }} />
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                className="doc-sort-select"
+                style={{ width: "100%" }}
+              >
+                <option value="featured">{isIndonesian ? "Rekomendasi / Utama" : "Recommended"}</option>
+                <option value="name">{isIndonesian ? "Nama Dokumen (A-Z)" : "Document Name (A-Z)"}</option>
+                <option value="size">{isIndonesian ? "Ukuran Berkas (Terbesar)" : "File Size (Largest)"}</option>
+              </select>
+            </div>
 
-          {/* View Mode Toggle */}
-          <div
-            style={{
-              display: "inline-flex",
-              background: "var(--paper)",
-              padding: "3px",
-              borderRadius: "8px",
-              border: "1px solid var(--line)",
-              flexShrink: 0
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => setViewMode("grid")}
-              aria-label="Grid View"
+            {/* View Mode Toggle */}
+            <div
               style={{
-                padding: "8px 12px",
-                background: viewMode === "grid" ? "var(--card)" : "transparent",
-                color: viewMode === "grid" ? "var(--clay)" : "var(--muted)",
-                border: "none",
-                borderRadius: "6px",
-                boxShadow: viewMode === "grid" ? "0 2px 6px rgba(0,0,0,0.06)" : "none",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                gap: "5px",
-                fontSize: "11px",
-                fontWeight: 700
+                display: "inline-flex",
+                background: "var(--paper)",
+                padding: "3px",
+                borderRadius: "8px",
+                border: "1px solid var(--line)",
+                flexShrink: 0
               }}
             >
-              <LayoutGrid size={15} />
-              <span className="hidden sm:inline">{isIndonesian ? "Kartu" : "Grid"}</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewMode("table")}
-              aria-label="Table View"
-              style={{
-                padding: "8px 12px",
-                background: viewMode === "table" ? "var(--card)" : "transparent",
-                color: viewMode === "table" ? "var(--clay)" : "var(--muted)",
-                border: "none",
-                borderRadius: "6px",
-                boxShadow: viewMode === "table" ? "0 2px 6px rgba(0,0,0,0.06)" : "none",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                gap: "5px",
-                fontSize: "11px",
-                fontWeight: 700
-              }}
-            >
-              <List size={15} />
-              <span className="hidden sm:inline">{isIndonesian ? "Tabel" : "Table"}</span>
-            </button>
+              <button
+                type="button"
+                onClick={() => setViewMode("grid")}
+                aria-label="Grid View"
+                style={{
+                  padding: "8px 12px",
+                  background: viewMode === "grid" ? "var(--card)" : "transparent",
+                  color: viewMode === "grid" ? "var(--clay)" : "var(--muted)",
+                  border: "none",
+                  borderRadius: "6px",
+                  boxShadow: viewMode === "grid" ? "0 2px 6px rgba(0,0,0,0.06)" : "none",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "5px",
+                  fontSize: "11px",
+                  fontWeight: 700
+                }}
+              >
+                <LayoutGrid size={15} />
+                <span className="hidden sm:inline">{isIndonesian ? "Kartu" : "Grid"}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode("table")}
+                aria-label="Table View"
+                style={{
+                  padding: "8px 12px",
+                  background: viewMode === "table" ? "var(--card)" : "transparent",
+                  color: viewMode === "table" ? "var(--clay)" : "var(--muted)",
+                  border: "none",
+                  borderRadius: "6px",
+                  boxShadow: viewMode === "table" ? "0 2px 6px rgba(0,0,0,0.06)" : "none",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "5px",
+                  fontSize: "11px",
+                  fontWeight: 700
+                }}
+              >
+                <List size={15} />
+                <span className="hidden sm:inline">{isIndonesian ? "Tabel" : "Table"}</span>
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Filter Chips Bar (Categories & Formats) */}
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "8px",
-            marginTop: "18px",
-            alignItems: "center",
-            paddingTop: "16px",
-            borderTop: "1px solid var(--line)"
-          }}
-        >
-          <span style={{ fontSize: "11px", fontWeight: 800, color: "var(--muted)", marginRight: "4px" }}>
-            {isIndonesian ? "KATEGORI:" : "CATEGORY:"}
-          </span>
-
-          <button
-            type="button"
-            onClick={() => setSelectedCategory("all")}
-            style={{
-              padding: "6px 13px",
-              fontSize: "11px",
-              fontWeight: 800,
-              borderRadius: "20px",
-              cursor: "pointer",
-              transition: "all 150ms ease",
-              border: selectedCategory === "all" ? "1px solid var(--clay)" : "1px solid var(--line)",
-              background: selectedCategory === "all" ? "var(--clay)" : "transparent",
-              color: selectedCategory === "all" ? "#ffffff" : "var(--ink-deep)"
-            }}
+        <div className="doc-filter-chips-row">
+          {/* Category Pills: Smooth Horizontal Overflow Track with No-Scrollbar */}
+          <div
+            className="doc-category-scroll-track no-scrollbar"
+            role="tablist"
+            aria-label={isIndonesian ? "Pilihan Kategori" : "Category selection"}
           >
-            {isIndonesian ? "Semua Berkas" : "All Documents"} ({totalDocs})
-          </button>
+            <span
+              style={{
+                fontSize: "11px",
+                fontWeight: 800,
+                color: "var(--muted)",
+                marginRight: "4px",
+                flexShrink: 0
+              }}
+            >
+              {isIndonesian ? "KATEGORI:" : "CATEGORY:"}
+            </span>
 
-          {directDownloads.map((cat, idx) => {
-            const isSelected = selectedCategory === cat.categoryId || selectedCategory === cat.categoryEn;
-            return (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => setSelectedCategory(cat.categoryId)}
-                style={{
-                  padding: "6px 13px",
-                  fontSize: "11px",
-                  fontWeight: 800,
-                  borderRadius: "20px",
-                  cursor: "pointer",
-                  transition: "all 150ms ease",
-                  border: isSelected ? "1px solid var(--clay)" : "1px solid var(--line)",
-                  background: isSelected ? "var(--clay)" : "transparent",
-                  color: isSelected ? "#ffffff" : "var(--ink-deep)"
-                }}
-              >
-                {isIndonesian ? cat.categoryId : cat.categoryEn} ({cat.items.length})
-              </button>
-            );
-          })}
+            <button
+              type="button"
+              onClick={() => setSelectedCategory("all")}
+              className="doc-category-pill"
+              style={{
+                border: selectedCategory === "all" ? "1px solid var(--clay)" : "1px solid var(--line)",
+                background: selectedCategory === "all" ? "var(--clay)" : "transparent",
+                color: selectedCategory === "all" ? "#ffffff" : "var(--ink-deep)"
+              }}
+            >
+              {isIndonesian ? "Semua Berkas" : "All Documents"} ({totalDocs})
+            </button>
 
-          <div style={{ marginLeft: "auto", display: "flex", gap: "6px", alignItems: "center" }}>
+            {directDownloads.map((cat, idx) => {
+              const isSelected = selectedCategory === cat.categoryId || selectedCategory === cat.categoryEn;
+              return (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setSelectedCategory(cat.categoryId)}
+                  className="doc-category-pill"
+                  style={{
+                    border: isSelected ? "1px solid var(--clay)" : "1px solid var(--line)",
+                    background: isSelected ? "var(--clay)" : "transparent",
+                    color: isSelected ? "#ffffff" : "var(--ink-deep)"
+                  }}
+                >
+                  {isIndonesian ? cat.categoryId : cat.categoryEn} ({cat.items.length})
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Format Filter Group (All / PDF / DOCX) */}
+          <div className="doc-format-filter-group" aria-label={isIndonesian ? "Filter Tipe Dokumen" : "Format Filter"}>
             <span style={{ fontSize: "11px", fontWeight: 800, color: "var(--muted)", marginRight: "4px" }}>
               {isIndonesian ? "FORMAT:" : "FORMAT:"}
             </span>
@@ -466,17 +487,19 @@ export default function DokumenPage() {
                   type="button"
                   onClick={() => setSelectedFormat(fmt)}
                   style={{
-                    padding: "4px 10px",
-                    fontSize: "10px",
+                    padding: "5px 12px",
+                    fontSize: "10.5px",
                     fontWeight: 800,
                     borderRadius: "4px",
                     cursor: "pointer",
                     border: isFmtSelected ? "1px solid var(--ink-deep)" : "1px solid var(--line)",
                     background: isFmtSelected ? "var(--ink-deep)" : "transparent",
-                    color: isFmtSelected ? "var(--paper)" : "var(--muted)"
+                    color: isFmtSelected ? "var(--paper)" : "var(--muted)",
+                    transition: "all 150ms ease",
+                    whiteSpace: "nowrap"
                   }}
                 >
-                  {fmt === "all" ? (isIndonesian ? "Semua" : "All") : fmt}
+                  {fmt === "all" ? (isIndonesian ? "Semua" : "All") : fmt === "DOCX" ? "DOCX / Docs" : fmt}
                 </button>
               );
             })}
@@ -490,7 +513,9 @@ export default function DokumenPage() {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginTop: "28px",
+          flexWrap: "wrap",
+          gap: "8px",
+          marginTop: "24px",
           marginBottom: "16px"
         }}
       >
@@ -775,7 +800,7 @@ export default function DokumenPage() {
                     )}
                   </a>
 
-                  {/* Secondary Actions: Copy Link & Open in Tab */}
+                  {/* Secondary Actions: Copy Link, Share & Open in Tab */}
                   <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
                     <button
                       type="button"
@@ -794,6 +819,16 @@ export default function DokumenPage() {
                           <span className="hidden sm:inline">{isIndonesian ? "Salin" : "Copy"}</span>
                         </>
                       )}
+                    </button>
+
+                    <button
+                      type="button"
+                      className="doc-secondary-btn"
+                      onClick={(e) => handleShare(e, isIndonesian ? doc.id : doc.en, doc.url)}
+                      title={isIndonesian ? "Bagikan berkas resmi" : "Share official file"}
+                    >
+                      <Share2 size={14} />
+                      <span className="hidden sm:inline">{isIndonesian ? "Bagikan" : "Share"}</span>
                     </button>
 
                     <a
@@ -946,6 +981,16 @@ export default function DokumenPage() {
                         >
                           {isCopied ? <Check size={13} style={{ color: "var(--reed)" }} /> : <Copy size={13} />}
                         </button>
+
+                        <button
+                          type="button"
+                          className="doc-secondary-btn"
+                          onClick={(e) => handleShare(e, isIndonesian ? doc.id : doc.en, doc.url)}
+                          style={{ padding: "8px 10px" }}
+                          title={isIndonesian ? "Bagikan berkas" : "Share document"}
+                        >
+                          <Share2 size={13} />
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -956,7 +1001,37 @@ export default function DokumenPage() {
         </div>
       )}
 
-      {/* 6. Document Submission & Integrity Boundary Note */}
+      {/* 6. Kontak & Rekam Jejak */}
+      <section style={{ marginTop: "64px" }}>
+        <div className="section-heading" style={{ marginBottom: "24px" }}>
+          <p className="eyebrow">{isIndonesian ? "Kontak Akademik & Karier" : "Academic & Career Contacts"}</p>
+          <h2 style={{ fontSize: "24px", color: "var(--ink-deep)", margin: "0 0 8px" }}>
+            {isIndonesian ? "Jejaring & Layanan Mahasiswa" : "Network & Student Services"}
+          </h2>
+          <p style={{ color: "var(--muted)", margin: 0 }}>
+            {isIndonesian ? "Layanan bimbingan, rekam jejak, dan kemitraan strategis." : "Advising services, track records, and strategic partnerships."}
+          </p>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "16px" }}>
+          {contactRecords.map((contact, idx) => (
+            <div key={idx} style={{ padding: "20px", background: "var(--card)", border: "1px solid var(--line)", borderRadius: "8px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px" }}>
+                <div style={{ padding: "8px", background: "var(--paper)", borderRadius: "6px", border: "1px solid var(--line)" }}>
+                  <GraduationCap size={18} style={{ color: "var(--clay)" }} />
+                </div>
+                <h3 style={{ fontSize: "14px", margin: 0, color: "var(--ink-deep)", lineHeight: 1.4 }}>
+                  {isIndonesian ? contact.id : contact.en}
+                </h3>
+              </div>
+              <p style={{ fontSize: "12px", color: "var(--muted)", margin: 0, lineHeight: 1.5 }}>
+                {isIndonesian ? contact.descId : contact.descEn}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 7. Document Submission & Integrity Boundary Note */}
       <section className="source-boundary" style={{ marginTop: "64px" }}>
         <ShieldCheck size={52} strokeWidth={1.2} style={{ color: "#f3ceac" }} />
         <div>

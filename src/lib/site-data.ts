@@ -39,7 +39,7 @@ export const semesterFocus = [
   { semester: "III", credits: "23 SKS", creditsEn: "23 Credits", id: "Hukum Pidana Lanjut & Hukum Acara Pidana", en: "Advanced Criminal Law & Criminal Procedure" },
   { semester: "IV", credits: "23 SKS", creditsEn: "23 Credits", id: "Tindak Pidana Tertentu dalam KUHP", en: "Specific Crimes in the Criminal Code" },
   { semester: "V", credits: "23 SKS", creditsEn: "23 Credits", id: "Termasuk Tindak Pidana Korupsi", en: "Includes Corruption Crime" },
-  { semester: "VI", credits: "Dokumen menunjukkan praktik", creditsEn: "Document indicates practice", id: "Praktik Peradilan Pidana (2 SKS) dan peminatan", en: "Criminal Court Practice (2 credits) and specialization" },
+  { semester: "VI", credits: "Praktik & Peminatan", creditsEn: "Practice & Specialization", id: "Praktik Peradilan Pidana (2 SKS) dan peminatan", en: "Criminal Court Practice (2 credits) and specialization" },
 ];
 
 export const admissionPathways = [
@@ -47,9 +47,9 @@ export const admissionPathways = [
     type: "national",
     id: "SNBP (Seleksi Nasional Berdasarkan Prestasi)",
     en: "SNBP (National Merit-Based Selection)",
-    descId: "Jalur prestasi akademik rapor dan portofolio bagi siswa SMA/SMK/MA berprestasi via snpmb.id.",
+    descId: "Jalur seleksi rapor dan prestasi akademik untuk siswa berprestasi melalui portal snpmb.id.",
     statsId: "2026 SNBT: 192 kursi terisi 100%. UKT S1 Hukum berkisar Rp500.000 - Rp3.405.000.",
-    descEn: "Merit-based academic report and portfolio pathway for high school graduates via snpmb.id.",
+    descEn: "Merit track based on high school report cards and achievements via snpmb.id.",
     statsEn: "2026 SNBT: 192 seats filled 100%. Law tuition ranges from Rp500,000 to Rp3,405,000 per semester.",
     url: "https://snpmb.id/"
   },
@@ -57,16 +57,16 @@ export const admissionPathways = [
     type: "national",
     id: "SNBT (Seleksi Nasional Berdasarkan Tes)",
     en: "SNBT (National Test-Based Selection)",
-    descId: "Jalur ujian tertulis berbasis komputer (UTBK) skala nasional melalui panitia SNPMB.",
-    descEn: "National computer-based written examination (UTBK) track managed centrally by SNPMB.",
+    descId: "Jalur ujian tulis berbasis komputer (UTBK) serentak se-Indonesia lewat snpmb.id.",
+    descEn: "Nationwide computer-based written exam (UTBK) organized by SNPMB.",
     url: "https://snpmb.id/"
   },
   {
     type: "university",
     id: "Seleksi Mandiri ULM (UTMBK)",
     en: "ULM Computer-Based Independent Selection",
-    descId: "Jalur mandiri berbasis tes komputer yang dikelola langsung oleh panitia admisi ULM via admisi.ulm.ac.id.",
-    descEn: "University-administered computerized entrance examination conducted via admisi.ulm.ac.id.",
+    descId: "Jalur ujian mandiri berbasis komputer yang diadakan langsung oleh ULM lewat admisi.ulm.ac.id.",
+    descEn: "ULM's own computer-based entrance test managed via admisi.ulm.ac.id.",
     url: "https://admisi.ulm.ac.id/"
   }
 ];
@@ -74,9 +74,9 @@ export const admissionPathways = [
 export const specializationPolicy = {
   selectionSemester: "Semester V / VI",
   evaluator: "Tim Peminatan Program Kekhususan FH ULM",
-  criteriaId: "Evaluasi nilai mata kuliah prasyarat kepidanaan dan ketersediaan kuota kelas.",
-  criteriaEn: "Evaluation of prerequisite criminal-law course grades and classroom quota capacity.",
-  folderColor: "Map Merah (Red Folder) untuk berkas usulan dan ujian skripsi PK Hukum Pidana."
+  criteriaId: "Nilai mata kuliah hukum pidana dasar dan kuota kelas yang tersedia.",
+  criteriaEn: "Grades in foundational criminal law courses and available class quotas.",
+  folderColor: "Map Merah: map resmi untuk berkas usulan dan ujian skripsi PK Hukum Pidana."
 };
 
 export const prosecutorCareerSteps = [
@@ -84,29 +84,29 @@ export const prosecutorCareerSteps = [
     step: "01",
     id: "Sarjana Hukum (S1)",
     en: "Bachelor of Laws (S.H.)",
-    descId: "Menyelesaikan program S1 Ilmu Hukum (akreditasi 'Baik Sekali') dengan fokus PK Hukum Pidana & Praktik Peradilan Pidana.",
-    descEn: "Graduate from accredited S1 Law program with focus on Criminal Law & Criminal Court Practice."
+    descId: "Lulus S1 Ilmu Hukum dengan peminatan Hukum Pidana dan pengalaman praktik peradilan semu.",
+    descEn: "Graduate with an S1 Law degree focusing on Criminal Law and courtroom practice."
   },
   {
     step: "02",
     id: "Seleksi CASN Kejaksaan RI",
     en: "Kejaksaan RI CASN Selection",
-    descId: "Mendaftar formasi Calon Jaksa pada seleksi CPNS Kejaksaan RI (SKD CAT & SKB teknis hukum, psikotes, kesehatan).",
-    descEn: "Apply for Prospective Prosecutor vacancy in Kejaksaan RI CPNS (CAT exams, legal interview, fitness)."
+    descId: "Lolos seleksi CPNS Kejaksaan RI formasi Calon Jaksa (tes SKD CAT, tes hukum SKB, psikotes, dan tes kesehatan).",
+    descEn: "Pass the Kejaksaan RI CPNS selection for Candidate Prosecutors (SKD CAT, legal exam, psych evaluation, and medical test)."
   },
   {
     step: "03",
     id: "Pendidikan PPPJ di Badiklat",
     en: "PPPJ Formation at Badiklat",
-    descId: "Menjalani Pendidikan dan Pelatihan Pembentukan Jaksa di Badiklat Kejaksaan RI Ragunan, Jakarta Selatan.",
-    descEn: "Undergo intensive Prosecutor Formation Education and Training (PPPJ) at Badiklat Kejaksaan RI."
+    descId: "Mengikuti Pendidikan dan Pelatihan Pembentukan Jaksa (PPPJ) di Badiklat Kejaksaan RI Ragunan, Jakarta Selatan.",
+    descEn: "Complete Prosecutor Training (PPPJ) at the Attorney General's Training Center (Badiklat) in Jakarta."
   },
   {
     step: "04",
     id: "Pelantikan Ajun Jaksa",
     en: "Appointment as Ajun Jaksa",
-    descId: "Pengucapan sumpah dan pelantikan resmi sebagai Ajun Jaksa dengan penempatan di seluruh wilayah Republik Indonesia.",
-    descEn: "Official swearing-in and appointment as Ajun Jaksa with nationwide placement in public prosecution offices."
+    descId: "Mengucapkan sumpah dan dilantik menjadi Ajun Jaksa dengan penempatan di kejaksaan seluruh Indonesia.",
+    descEn: "Take the oath and get appointed as an Ajun Jaksa, posted to prosecution offices across Indonesia."
   }
 ];
 
@@ -114,31 +114,31 @@ export const quickFacts = [
   {
     titleId: "Akreditasi 'Baik Sekali'",
     titleEn: "'Excellent' Accreditation",
-    descId: "Program Studi S1 Hukum FH ULM meraih akreditasi tertinggi dari BAN-PT, berlaku Juni 2026–2031.",
-    descEn: "The S1 Law program achieved the highest BAN-PT accreditation, valid June 2026–2031.",
+    descId: "Program S1 Ilmu Hukum FH ULM terakreditasi 'Baik Sekali' oleh BAN-PT hingga Juni 2031.",
+    descEn: "The S1 Law program at FH ULM is accredited 'Baik Sekali' by BAN-PT through June 2031.",
     link: "accreditationNews"
   },
   {
     titleId: "4 Program Kekhususan",
     titleEn: "4 Specializations",
-    descId: "Hukum Pidana, Hukum Perdata, Hukum Tata Negara, dan Hukum Internasional tersedia sejak Kurikulum 2020.",
-    descEn: "Criminal, Civil, Constitutional, and International Law tracks available since the 2020 Curriculum.",
+    descId: "Tersedia 4 bidang peminatan: Hukum Pidana, Perdata, Tata Negara, dan Hukum Internasional.",
+    descEn: "Offers 4 study tracks: Criminal, Civil, Constitutional, and International Law.",
     link: "curriculum"
   },
   {
     titleId: "Hukumonline Corner Pertama di Kalimantan",
     titleEn: "First Hukumonline Corner in Kalimantan",
-    descId: "ULM menjadi universitas pertama di Kalimantan yang memiliki pojok akses literasi hukum Hukumonline.",
-    descEn: "ULM became the first university in Kalimantan with a Hukumonline legal literacy access point.",
+    descId: "ULM adalah kampus pertama di Kalimantan yang memiliki pojok akses riset hukum Hukumonline.",
+    descEn: "ULM is the first university in Kalimantan with a Hukumonline Corner for legal research and case law.",
     link: "hukumonlineCorner"
   }
 ];
 
 export const campusHighlights = [
-  { id: "Perpustakaan FH dengan koleksi hukum lengkap dan akses jurnal internasional.", en: "FH library with a comprehensive legal collection and international journal access." },
-  { id: "Ruang Peradilan Semu dan Gedung Desmond J. Mahesa untuk praktik litigasi.", en: "Mock Court Room and Desmond J. Mahesa Building for litigation practice." },
-  { id: "LKBH ULM: lembaga bantuan hukum tertua di Kalimantan Selatan.", en: "LKBH ULM: the oldest legal aid clinic in South Kalimantan." },
-  { id: "Laboratorium komputer hukum dengan akses ke basis data peraturan perundang-undangan.", en: "Legal computing lab with access to the statutory regulation database." }
+  { id: "Perpustakaan hukum lengkap dengan akses jurnal nasional dan internasional.", en: "Well-stocked law library with access to national and international journals." },
+  { id: "Ruang sidang semu di Gedung Desmond J. Mahesa untuk latihan praktik persidangan.", en: "Moot courtroom in the Desmond J. Mahesa Building for litigation practice." },
+  { id: "LKBH ULM: klinik bantuan hukum tertua bagi masyarakat di Kalimantan Selatan.", en: "LKBH ULM: South Kalimantan's oldest legal aid clinic providing community assistance." },
+  { id: "Laboratorium komputer hukum untuk menelusuri peraturan dan putusan pengadilan.", en: "Legal computer lab for searching legislation and court decisions." }
 ];
 
 export const translations = {
@@ -154,8 +154,8 @@ export const directDownloads = [
       {
         id: "Buku Pedoman & Formasi Kurikulum 2020",
         en: "Curriculum 2020 Guidebook & Course Matrix",
-        descriptionId: "Struktur sebaran 144+ SKS, daftar mata kuliah wajib, konsentrasi hukum, dan prasyarat akademik jenjang S1.",
-        descriptionEn: "Distribution structure of 144+ credits, compulsory courses, legal concentrations, and academic prerequisites.",
+        descriptionId: "Sebaran 144+ SKS, daftar mata kuliah wajib, pilihan peminatan, dan syarat kelulusan S1.",
+        descriptionEn: "Course matrix for 144+ credits, required courses, specializations, and degree rules.",
         url: "https://fh.ulm.ac.id/wp-content/uploads/2023/04/SKS.pdf",
         type: "PDF",
         size: "2.4 MB",
@@ -167,8 +167,8 @@ export const directDownloads = [
       {
         id: "Kalender Akademik Resmi ULM 2026/2027",
         en: "Official ULM Academic Calendar 2026/2027",
-        descriptionId: "Jadwal semester ganjil/genap, KRS, masa perkuliahan, UTS/UAS, wisuda, dan libur akademik berdasar SK Rektor.",
-        descriptionEn: "Odd/even semester schedules, KRS window, lecture periods, midterms/finals, graduation based on Rector Decree.",
+        descriptionId: "Jadwal semester, periode KRS, perkuliahan, UTS/UAS, dan wisuda sesuai SK Rektor.",
+        descriptionEn: "Academic calendar for semesters, KRS window, classes, exams, and graduation.",
         url: "https://akademik.ulm.ac.id/assets/kalender_akademik.pdf",
         type: "PDF",
         size: "3.2 MB",
@@ -180,8 +180,8 @@ export const directDownloads = [
       {
         id: "SK Tarif UKT Mahasiswa ULM",
         en: "ULM Tuition Fee (UKT) Schedule",
-        descriptionId: "Rincian kelompok besaran Uang Kuliah Tunggal (UKT) mahasiswa program sarjana Fakultas Hukum.",
-        descriptionEn: "Detailed breakdown of Single Tuition Fee (UKT) brackets for Faculty of Law undergraduate students.",
+        descriptionId: "Daftar kelompok besaran Uang Kuliah Tunggal (UKT) mahasiswa S1 Fakultas Hukum.",
+        descriptionEn: "Breakdown of tuition fee (UKT) categories for undergraduate law students.",
         url: "https://ppkn.fkip.ulm.ac.id/wp-content/uploads/2025/08/SK-2063-Tarif-UKT-Mahasiswa-Tahun-Akademik-2024-2025.pdf",
         type: "PDF",
         size: "1.6 MB",
@@ -193,8 +193,8 @@ export const directDownloads = [
       {
         id: "Formulir Perubahan & Pembatalan KRS (KPRS)",
         en: "KRS Course Revision & Add/Drop Form",
-        descriptionId: "Blangko resmi pengajuan penambahan, pembatalan, atau perubahan mata kuliah pada masa revisi KRS.",
-        descriptionEn: "Official form for adding, dropping, or revising courses during the academic revision window.",
+        descriptionId: "Formulir resmi untuk menambah, membatalkan, atau mengubah mata kuliah saat masa revisi KRS.",
+        descriptionEn: "Official form to add, drop, or change courses during the KRS revision period.",
         url: "https://fh.ulm.ac.id/wp-content/uploads/Formulir-KPRS-FHULM.docx",
         type: "DOCX",
         size: "54 KB",
@@ -206,8 +206,8 @@ export const directDownloads = [
       {
         id: "Formulir Pengajuan Cuti Akademik",
         en: "Academic Leave of Absence Application Form",
-        descriptionId: "Surat permohonan penghentian studi sementara dengan persetujuan Dosen PA dan Dekan FH ULM.",
-        descriptionEn: "Application letter for temporary academic pause approved by Academic Advisor and Dean.",
+        descriptionId: "Surat permohonan cuti kuliah resmi dengan persetujuan Dosen PA dan Dekan FH ULM.",
+        descriptionEn: "Official application form for academic leave approved by Academic Advisor and Dean.",
         url: "https://akademik.ulm.ac.id/download/form-cuti-akademik.pdf",
         type: "PDF",
         size: "320 KB",
@@ -225,8 +225,8 @@ export const directDownloads = [
       {
         id: "SOP Pengajuan Judul & Pembimbing Skripsi",
         en: "Thesis Title Proposal & Advisor SOP",
-        descriptionId: "Alur standar operasional prosedur penentuan topik, penunjukan pembimbing I/II, dan verifikasi SKS prasyarat.",
-        descriptionEn: "Standard operating procedure for topic selection, advisor appointment, and prerequisite credit verification.",
+        descriptionId: "Alur pengajuan judul skripsi, penunjukan pembimbing, dan syarat SKS minimal.",
+        descriptionEn: "Step-by-step procedure for proposing thesis topics, advisor assignment, and credit requirements.",
         url: "https://fh.ulm.ac.id/wp-content/uploads/SOP-Skripsi.pdf",
         type: "PDF",
         size: "1.1 MB",
@@ -238,8 +238,8 @@ export const directDownloads = [
       {
         id: "Buku Pedoman Penulisan Karya Tulis & Skripsi",
         en: "Legal Research & Thesis Writing Handbook",
-        descriptionId: "Panduan tata cara penulisan ilmiah, metodologi penelitian hukum yuridis normatif/empiris, dan gaya sitasi.",
-        descriptionEn: "Manual for academic legal writing, normative/empirical research methodology, and citation styles.",
+        descriptionId: "Pedoman tata cara penulisan skripsi, metode riset hukum normatif dan empiris, serta cara sitasi.",
+        descriptionEn: "Guide for legal thesis writing, normative and empirical research methods, and citation rules.",
         url: "https://fh.ulm.ac.id/wp-content/uploads/Pedoman-Skripsi-FH-ULM.pdf",
         type: "PDF",
         size: "3.8 MB",
@@ -251,8 +251,8 @@ export const directDownloads = [
       {
         id: "Template Naskah Skripsi Format Baku",
         en: "Standard Thesis Manuscript Template",
-        descriptionId: "Berkas master Microsoft Word berisi format cover, lembar pengesahan, abstrak bilingual, dan tata letak bab.",
-        descriptionEn: "Master MS Word file containing standardized layout for covers, approvals, bilingual abstracts, and chapters.",
+        descriptionId: "Template Microsoft Word berisi format sampul, lembar persetujuan, abstrak dua bahasa, dan bab skripsi.",
+        descriptionEn: "MS Word template with formatted title page, approval sheet, bilingual abstract, and chapters.",
         url: "https://fh.ulm.ac.id/wp-content/uploads/Template-Skripsi-FHULM.docx",
         type: "DOCX",
         size: "115 KB",
@@ -264,8 +264,8 @@ export const directDownloads = [
       {
         id: "Formulir Pendaftaran Ujian Skripsi / Pendadaran",
         en: "Thesis Defense Examination Registration Form",
-        descriptionId: "Berkas pendaftaran ujian pendadaran komprehensif lengkap dengan daftar cek berkas persetujuan penguji.",
-        descriptionEn: "Registration form for comprehensive thesis defense including examiner approval checklist.",
+        descriptionId: "Formulir pendaftaran sidang ujian skripsi lengkap dengan daftar periksa persetujuan dosen.",
+        descriptionEn: "Registration form for the final thesis defense, including examiner approval checklist.",
         url: "https://fh.ulm.ac.id/wp-content/uploads/Form-Ujian.docx",
         type: "DOCX",
         size: "48 KB",
@@ -277,8 +277,8 @@ export const directDownloads = [
       {
         id: "Surat Keterangan Bebas Pustaka & Laboratorium",
         en: "Library & Laboratory Clearance Certificate Form",
-        descriptionId: "Formulir verifikasi bebas pinjaman pustaka dan laboratorium hukum sebagai prasyarat wisuda sarjana.",
-        descriptionEn: "Clearance verification form confirming zero outstanding library loans as graduation prerequisite.",
+        descriptionId: "Formulir bukti bebas pinjaman buku perpustakaan dan alat laboratorium untuk syarat wisuda.",
+        descriptionEn: "Clearance form confirming no outstanding library books or lab equipment loans for graduation.",
         url: "https://perpustakaan.ulm.ac.id/download/bebas-pustaka.pdf",
         type: "PDF",
         size: "210 KB",
@@ -296,8 +296,8 @@ export const directDownloads = [
       {
         id: "Buku Pedoman Praktik Peradilan Semu (Moot Court)",
         en: "Moot Court Practice Guidebook",
-        descriptionId: "Tata tertib persidangan, peran hakim, jaksa penuntut umum, penasihat hukum, dan panitera di Lab Peradilan.",
-        descriptionEn: "Rules of mock court proceedings, roles of judges, prosecutors, defense counsel, and clerks.",
+        descriptionId: "Panduan simulasi sidang: tata tertib serta tugas hakim, jaksa penuntut umum, advokat, dan panitera.",
+        descriptionEn: "Moot court rules and roles for judges, prosecutors, defense lawyers, and clerks.",
         url: "https://fh.ulm.ac.id/wp-content/uploads/Pedoman-Peradilan-Semu.pdf",
         type: "PDF",
         size: "2.1 MB",
@@ -309,8 +309,8 @@ export const directDownloads = [
       {
         id: "Template Berkas Acara Sidang & Gugatan Perdata",
         en: "Court Minutes & Civil Claim Templates",
-        descriptionId: "Format berkas surat gugatan, jawaban, replik, duplik, daftar alat bukti, dan naskah putusan perdata.",
-        descriptionEn: "Templates for civil lawsuits, answers, rejoinders, evidence lists, and trial judgments.",
+        descriptionId: "Contoh format surat gugatan, jawaban, replik, duplik, daftar bukti, dan naskah putusan perdata.",
+        descriptionEn: "Templates for civil lawsuits, answers, rejoinders, evidence lists, and court judgments.",
         url: "https://fh.ulm.ac.id/wp-content/uploads/Format-Berkas-Peradilan.docx",
         type: "DOCX",
         size: "82 KB",
@@ -328,8 +328,8 @@ export const directDownloads = [
       {
         id: "Syarat Rekrutmen Calon Jaksa CPNS Kejaksaan RI",
         en: "Prosecutor CPNS Recruitment Qualifications",
-        descriptionId: "Ketentuan kualifikasi, batas usia, syarat IPK, postur fisik, dan sertifikat penunjang formasi Ahli Pertama Jaksa.",
-        descriptionEn: "Official qualification criteria, age limit, GPA minimum, physical standards, and certificates for Prosecutor positions.",
+        descriptionId: "Ketentuan kualifikasi, batas usia, syarat IPK minimal, standar fisik, dan berkas wajib formasi Ahli Pertama Jaksa.",
+        descriptionEn: "Eligibility criteria, age limits, minimum GPA, physical standards, and required documents for prosecutor positions.",
         url: "https://rekrutmen.kejaksaan.go.id/syarat.pdf",
         type: "PDF",
         size: "1.8 MB",
@@ -341,7 +341,7 @@ export const directDownloads = [
       {
         id: "Kisi-Kisi SKB Bidang Hukum Calon Hakim Mahkamah Agung",
         en: "Supreme Court Candidate Judge SKB Legal Syllabus",
-        descriptionId: "Ruang lingkup materi Seleksi Kompetensi Bidang substansi hukum pidana, perdata, tata usaha negara, dan kode etik.",
+        descriptionId: "Materi ujian SKB bidang hukum: hukum pidana, perdata, tata usaha negara, dan kode etik kehakiman.",
         descriptionEn: "Field Competency Selection syllabus covering criminal, civil, administrative law, and judicial ethics.",
         url: "https://rekrutmen.mahkamahagung.go.id/panduan-skb-hukum.pdf",
         type: "PDF",
@@ -354,8 +354,8 @@ export const directDownloads = [
       {
         id: "Format Surat Lamaran & Pernyataan Seleksi ASN Hukum",
         en: "Civil Service Legal Selection Application Templates",
-        descriptionId: "Contoh format surat lamaran bertanda tangan dan meterai elektronik sesuai persyaratan BKN dan kementerian.",
-        descriptionEn: "Standard application letters and sworn statements formatted per BKN and ministry recruitment rules.",
+        descriptionId: "Contoh resmi surat lamaran dan surat pernyataan bermeterai elektronik sesuai aturan BKN dan kementerian.",
+        descriptionEn: "Standard application letters and e-meterai declarations formatted to meet BKN and ministry rules.",
         url: "https://rekrutmen.kejaksaan.go.id/format-surat-pernyataan.docx",
         type: "DOCX",
         size: "62 KB",
@@ -365,5 +365,153 @@ export const directDownloads = [
         featured: false
       }
     ]
+  },
+  {
+    categoryId: "Referensi & Literatur Pidana",
+    categoryEn: "Criminal Law Reference & Literature",
+    items: [
+      {
+        id: "Pengantar Ilmu Hukum (PIH) - Prof. Abdullah",
+        en: "Introduction to Jurisprudence (PIH) - Prof. Abdullah",
+        descriptionId: "Buku rujukan utama tentang konsep dasar hukum, norma, dan sumber-sumber hukum.",
+        descriptionEn: "Main reference book on basic legal concepts, norms, and sources of law.",
+        url: "#",
+        type: "PDF",
+        size: "4.2 MB",
+        institution: "FH ULM Press",
+        edition: "Edisi Revisi",
+        verifiedDate: "Agustus 2026",
+        featured: true
+      },
+      {
+        id: "Hukum Acara Pidana Edisi I",
+        en: "Criminal Procedure Law Edition I",
+        descriptionId: "Literatur standar untuk mata kuliah Hukum Acara Pidana.",
+        descriptionEn: "Standard literature for the Criminal Procedure Law course.",
+        url: "#",
+        type: "PDF",
+        size: "3.5 MB",
+        institution: "FH ULM Press",
+        edition: "Edisi I",
+        verifiedDate: "Agustus 2026",
+        featured: false
+      },
+      {
+        id: "Buku Ajar Hukum Acara Pidana Lanjut",
+        en: "Advanced Criminal Procedure Law Textbook",
+        descriptionId: "Pembahasan mendalam tentang proses peradilan pidana, pembuktian, dan upaya hukum.",
+        descriptionEn: "In-depth discussion on the criminal justice process, evidence, and legal remedies.",
+        url: "#",
+        type: "PDF",
+        size: "5.1 MB",
+        institution: "FH ULM Press",
+        edition: "Tahun Terbit 2024",
+        verifiedDate: "Agustus 2026",
+        featured: true
+      },
+      {
+        id: "Buku Ajar Hukum Pidana",
+        en: "Criminal Law Textbook",
+        descriptionId: "Materi esensial tentang asas-asas hukum pidana materil.",
+        descriptionEn: "Essential material on the principles of substantive criminal law.",
+        url: "#",
+        type: "PDF",
+        size: "4.8 MB",
+        institution: "FH ULM Press",
+        edition: "Edisi Terbaru",
+        verifiedDate: "Agustus 2026",
+        featured: false
+      },
+      {
+        id: "SOP Penanganan Perkara Tindak Pidana Umum (Kejaksaan)",
+        en: "General Crime Case Handling SOP (Prosecutor)",
+        descriptionId: "Standar Operasional Prosedur resmi penanganan perkara pidana umum di lingkungan Kejaksaan RI.",
+        descriptionEn: "Official Standard Operating Procedure for handling general criminal cases within Kejaksaan RI.",
+        url: "#",
+        type: "PDF",
+        size: "2.5 MB",
+        institution: "Kejaksaan Agung RI",
+        edition: "Baku",
+        verifiedDate: "Agustus 2026",
+        featured: true
+      },
+      {
+        id: "Asas-Asas Hukum Penuntutan (Journal)",
+        en: "Principles of Prosecution Law (Journal)",
+        descriptionId: "Kajian akademis tentang diskresi dan asas-asas penuntutan dalam sistem peradilan Indonesia.",
+        descriptionEn: "Academic study on discretion and prosecution principles in the Indonesian justice system.",
+        url: "#",
+        type: "PDF",
+        size: "1.2 MB",
+        institution: "Jurnal Hukum ULM",
+        edition: "Vol. 12 No. 2",
+        verifiedDate: "Agustus 2026",
+        featured: false
+      },
+      {
+        id: "Tesis: Kewenangan Kejaksaan Dalam Upaya Perampasan Aset (TPPU)",
+        en: "Thesis: Prosecution Authority in Asset Recovery (TPPU)",
+        descriptionId: "Penelitian akhir tentang peran kejaksaan dalam pemulihan kerugian negara akibat pencucian uang.",
+        descriptionEn: "Final research on the prosecutor's role in recovering state losses from money laundering.",
+        url: "#",
+        type: "PDF",
+        size: "6.7 MB",
+        institution: "Program Pascasarjana ULM",
+        edition: "2025",
+        verifiedDate: "Agustus 2026",
+        featured: false
+      }
+    ]
+  }
+];
+
+export const contactRecords = [
+  {
+    id: "Bimbingan Akademik & Admin Umum FH ULM",
+    en: "Academic Advising & General Admin FH ULM",
+    descId: "Layanan administrasi kemahasiswaan, KRS, dan konsultasi akademik reguler.",
+    descEn: "Student administration services, study plan (KRS), and regular academic consultation."
+  },
+  {
+    id: "Mentorship Hukum Pidana Khusus - Prof. Dr. Ifrani",
+    en: "Specialized Criminal Law Mentorship - Prof. Dr. Ifrani",
+    descId: "Bimbingan intensif peminatan hukum pidana, difokuskan pada tindak pidana khusus.",
+    descEn: "Intensive guidance for criminal law specialization, focusing on special crimes."
+  },
+  {
+    id: "Profil Akademik - Dr. Mispansyah",
+    en: "Academic Profile - Dr. Mispansyah",
+    descId: "Pakar hukum pidana materil dan acara pidana FH ULM.",
+    descEn: "Expert in substantive and procedural criminal law at FH ULM."
+  },
+  {
+    id: "UPA PKK ULM (Career CDC)",
+    en: "UPA PKK ULM (Career CDC)",
+    descId: "Pusat Pengembangan Karier dan Kewirausahaan ULM untuk persiapan lulusan.",
+    descEn: "ULM Career and Entrepreneurship Development Center for graduate preparation."
+  },
+  {
+    id: "Helpdesk Karier Kejaksaan (Biro Kepegawaian)",
+    en: "Prosecutor Career Helpdesk (Biro Kepegawaian Kejaksaan)",
+    descId: "Layanan informasi resmi mengenai rekrutmen CPNS dan jenjang karier Kejaksaan.",
+    descEn: "Official information service regarding CPNS recruitment and Kejaksaan career paths."
+  },
+  {
+    id: "Kolaborasi Adhyaksa Chambers",
+    en: "Adhyaksa Chambers Collaboration",
+    descId: "Kemitraan strategis FH ULM dan Kejaksaan dalam mediasi Perdata & Tata Usaha Negara.",
+    descEn: "Strategic partnership between FH ULM and Kejaksaan in Civil & Administrative mediation."
+  },
+  {
+    id: "Kuliah Umum Akademik Kejati Kalsel",
+    en: "Kejati Kalsel Public Academic Lectures",
+    descId: "Forum diskusi rutin bersama praktisi Kejaksaan Tinggi Kalimantan Selatan.",
+    descEn: "Regular discussion forums with practitioners from the South Kalimantan High Prosecution Office."
+  },
+  {
+    id: "Portal Hasil Penempatan CASN Kejaksaan",
+    en: "CASN Kejaksaan Placement Results Portal",
+    descId: "Sistem informasi kelulusan dan penempatan CPNS Kejaksaan RI seluruh Indonesia.",
+    descEn: "Information system for graduation and placement of Kejaksaan RI CPNS nationwide."
   }
 ];

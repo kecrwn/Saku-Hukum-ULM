@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, useDeferredValue } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { lawKnowledgeBase, availableLawTopics } from "@/lib/knowledge";
 import {
@@ -18,7 +18,8 @@ import {
   ShieldCheck,
   Briefcase,
   Globe,
-  SlidersHorizontal
+  SlidersHorizontal,
+  ArrowUpDown
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -84,13 +85,17 @@ interface NormalizedTopic {
   totalSections: number;
 }
 
+type SortMode = "default" | "alphabetical" | "reverse" | "sections";
+
 export default function PustakaPage() {
   const { isIndonesian } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
+  const [sortBy, setSortBy] = useState<SortMode>("default");
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const deferredSearchQuery = useDeferredValue(searchQuery);
 
   // ---------------------------------------------------------------------------
   // 1. Data Normalization & Null-Safety Guardrails
@@ -152,9 +157,9 @@ export default function PustakaPage() {
   }, [normalizedTopics]);
 
   // ---------------------------------------------------------------------------
-  // 3. Resilient Filtering & Search
+  // 3. Resilient Filtering, Search & Sorting
   // ---------------------------------------------------------------------------
-  const filteredTopics = useMemo(() => {
+  const filteredAndSortedTopics = useMemo(() => {
     let result = normalizedTopics;
 
     // Filter by active category
@@ -162,8 +167,8 @@ export default function PustakaPage() {
       result = result.filter((t) => t.catId === activeCategory);
     }
 
-    // Filter by search query
-    const q = searchQuery.trim().toLowerCase();
+    // Filter by search query (using deferred query for zero lag)
+    const q = deferredSearchQuery.trim().toLowerCase();
     if (q) {
       result = result.filter((t) => {
         const matchName = t.name.toLowerCase().includes(q);
@@ -183,8 +188,29 @@ export default function PustakaPage() {
       });
     }
 
+    // Sort topics based on selected criteria
+    if (sortBy === "alphabetical") {
+      return [...result].sort((a, b) => {
+        const titleA = isIndonesian ? a.title : a.titleEn;
+        const titleB = isIndonesian ? b.title : b.titleEn;
+        return titleA.localeCompare(titleB, isIndonesian ? "id" : "en", { sensitivity: "base" });
+      });
+    }
+
+    if (sortBy === "reverse") {
+      return [...result].sort((a, b) => {
+        const titleA = isIndonesian ? a.title : a.titleEn;
+        const titleB = isIndonesian ? b.title : b.titleEn;
+        return titleB.localeCompare(titleA, isIndonesian ? "id" : "en", { sensitivity: "base" });
+      });
+    }
+
+    if (sortBy === "sections") {
+      return [...result].sort((a, b) => b.totalSections - a.totalSections);
+    }
+
     return result;
-  }, [normalizedTopics, activeCategory, searchQuery]);
+  }, [normalizedTopics, activeCategory, deferredSearchQuery, sortBy, isIndonesian]);
 
   // ---------------------------------------------------------------------------
   // 4. Keyboard Shortcuts (/ to focus search)
@@ -214,11 +240,11 @@ export default function PustakaPage() {
 
   // Auto-expand matching topics when actively searching
   useEffect(() => {
-    const q = searchQuery.trim();
+    const q = deferredSearchQuery.trim();
     if (q) {
-      setExpandedIds(new Set(filteredTopics.map((t) => t.id)));
+      setExpandedIds(new Set(filteredAndSortedTopics.map((t) => t.id)));
     }
-  }, [searchQuery, filteredTopics]);
+  }, [deferredSearchQuery, filteredAndSortedTopics]);
 
   // ---------------------------------------------------------------------------
   // 5. Accordion Expand/Collapse Controls
@@ -236,7 +262,7 @@ export default function PustakaPage() {
   };
 
   const expandAll = () => {
-    setExpandedIds(new Set(filteredTopics.map((t) => t.id)));
+    setExpandedIds(new Set(filteredAndSortedTopics.map((t) => t.id)));
   };
 
   const collapseAll = () => {
@@ -246,13 +272,16 @@ export default function PustakaPage() {
   const handleReset = () => {
     setSearchQuery("");
     setActiveCategory("all");
+    setSortBy("default");
     setExpandedIds(new Set());
   };
 
-  const allAreExpanded = filteredTopics.length > 0 && filteredTopics.every((t) => expandedIds.has(t.id));
+  const allAreExpanded =
+    filteredAndSortedTopics.length > 0 &&
+    filteredAndSortedTopics.every((t) => expandedIds.has(t.id));
 
   return (
-    <div className="w-full min-h-screen bg-[var(--paper)] py-12 md:py-20 transition-colors duration-500 font-sans text-[var(--ink)]">
+    <div className="w-full min-h-screen bg-[var(--paper)] py-12 md:py-20 transition-colors duration-200 font-sans text-[var(--ink)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
         {/* ----------------------------------------------------------------- */}
         {/* Header Section */}
@@ -262,7 +291,7 @@ export default function PustakaPage() {
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.2 }}
               className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[rgba(178,77,57,.08)] border border-[rgba(178,77,57,.15)] text-[var(--clay)] font-bold tracking-widest uppercase text-[11px]"
             >
               <BookOpen size={14} className="shrink-0" />
@@ -289,7 +318,7 @@ export default function PustakaPage() {
           <motion.h1
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: 0.05 }}
+            transition={{ duration: 0.2, delay: 0.03 }}
             className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[var(--ink-deep)] leading-tight tracking-tight mb-4"
           >
             {isIndonesian ? "Pustaka Hukum Indonesia" : "Indonesian Law Library"}
@@ -298,7 +327,7 @@ export default function PustakaPage() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
+            transition={{ duration: 0.2, delay: 0.05 }}
             className="text-base sm:text-lg text-[var(--muted)] max-w-3xl leading-relaxed"
           >
             {isIndonesian
@@ -308,92 +337,124 @@ export default function PustakaPage() {
         </header>
 
         {/* ----------------------------------------------------------------- */}
-        {/* Controls: Search, Category Tabs & Accordion Actions */}
+        {/* Controls: Search, Sort, Category Tabs & Accordion Actions */}
         {/* ----------------------------------------------------------------- */}
         <div className="space-y-4 mb-8">
-          {/* Search Row */}
-          <div className="relative group max-w-3xl">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[var(--muted)] group-focus-within:text-[var(--clay)] transition-colors">
-              <Search size={18} />
+          {/* Search & Sort Row */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            {/* Search Box */}
+            <div className="relative group flex-1">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[var(--muted)] group-focus-within:text-[var(--clay)] transition-colors">
+                <Search size={18} />
+              </div>
+              <input
+                ref={searchInputRef}
+                type="text"
+                className="w-full pl-11 pr-20 py-3.5 bg-white border border-[var(--line)] rounded-xl text-[var(--ink-deep)] placeholder:text-[var(--muted)]/70 focus:outline-none focus:border-[var(--clay)] focus:ring-2 focus:ring-[var(--clay)]/20 transition-all shadow-xs text-sm font-sans"
+                placeholder={
+                  isIndonesian
+                    ? "Cari topik hukum, pasal, istilah, atau penjelasan... (tekan /)"
+                    : "Search topics, statutes, articles, or explanations... (press /)"
+                }
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                aria-label={isIndonesian ? "Pencarian pustaka hukum" : "Search law library"}
+              />
+              <div className="absolute inset-y-0 right-0 pr-3 flex items-center gap-1.5">
+                {searchQuery ? (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    className="p-1 rounded-md text-[var(--muted)] hover:text-[var(--ink-deep)] hover:bg-[rgba(23,62,68,.08)] transition-colors cursor-pointer"
+                    title={isIndonesian ? "Hapus pencarian" : "Clear search"}
+                    aria-label="Clear search"
+                  >
+                    <X size={16} />
+                  </button>
+                ) : (
+                  <kbd className="hidden sm:inline-block px-2 py-0.5 text-[10px] font-bold text-[var(--muted)]/70 bg-[var(--paper)] border border-[var(--line)] rounded">
+                    /
+                  </kbd>
+                )}
+              </div>
             </div>
-            <input
-              ref={searchInputRef}
-              type="text"
-              className="w-full pl-11 pr-20 py-3.5 bg-white border border-[var(--line)] rounded-xl text-[var(--ink-deep)] placeholder:text-[var(--muted)]/70 focus:outline-none focus:border-[var(--clay)] focus:ring-2 focus:ring-[var(--clay)]/20 transition-all shadow-xs text-sm font-sans"
-              placeholder={
-                isIndonesian
-                  ? "Cari topik hukum, pasal, istilah, atau penjelasan... (tekan /)"
-                  : "Search topics, statutes, articles, or explanations... (press /)"
-              }
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              aria-label={isIndonesian ? "Pencarian pustaka hukum" : "Search law library"}
-            />
-            <div className="absolute inset-y-0 right-0 pr-3 flex items-center gap-1.5">
-              {searchQuery ? (
-                <button
-                  type="button"
-                  onClick={() => setSearchQuery("")}
-                  className="p-1 rounded-md text-[var(--muted)] hover:text-[var(--ink-deep)] hover:bg-[rgba(23,62,68,.08)] transition-colors"
-                  title={isIndonesian ? "Hapus pencarian" : "Clear search"}
-                  aria-label="Clear search"
-                >
-                  <X size={16} />
-                </button>
-              ) : (
-                <kbd className="hidden sm:inline-block px-2 py-0.5 text-[10px] font-bold text-[var(--muted)]/70 bg-[var(--paper)] border border-[var(--line)] rounded">
-                  /
-                </kbd>
-              )}
+
+            {/* Sort Selector Dropdown */}
+            <div className="relative shrink-0 sm:w-60">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortMode)}
+                className="w-full appearance-none pl-9 pr-9 py-3.5 bg-white border border-[var(--line)] rounded-xl text-xs sm:text-sm font-semibold text-[var(--ink-deep)] focus:outline-none focus:border-[var(--clay)] focus:ring-2 focus:ring-[var(--clay)]/20 transition-all shadow-xs cursor-pointer hover:border-[rgba(23,62,68,.3)]"
+                aria-label={isIndonesian ? "Urutan topik pustaka" : "Sort library topics"}
+              >
+                <option value="default">
+                  {isIndonesian ? "Urutan: Kurikulum Standar" : "Order: Standard Curriculum"}
+                </option>
+                <option value="alphabetical">
+                  {isIndonesian ? "Nama Topik: A - Z" : "Topic: A - Z"}
+                </option>
+                <option value="reverse">
+                  {isIndonesian ? "Nama Topik: Z - A" : "Topic: Z - A"}
+                </option>
+                <option value="sections">
+                  {isIndonesian ? "Materi Terbanyak" : "Most Sections"}
+                </option>
+              </select>
+              <ArrowUpDown size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)] pointer-events-none" />
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[var(--muted)]">
+                <ChevronDown size={14} />
+              </div>
             </div>
           </div>
 
-          {/* Category Filter Pills (Responsive Horizontal Scroll) */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {CATEGORY_GROUPS.map((cat) => {
-              const Icon = cat.icon;
-              const count = categoryCounts.get(cat.id) || 0;
-              const isSelected = activeCategory === cat.id;
+          {/* Category Filter Pills (Responsive Horizontal Scroll without clipping corners) */}
+          <div className="relative -mx-2 px-2 py-2 overflow-x-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="flex items-center gap-2 min-w-max">
+              {CATEGORY_GROUPS.map((cat) => {
+                const Icon = cat.icon;
+                const count = categoryCounts.get(cat.id) || 0;
+                const isSelected = activeCategory === cat.id;
 
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => setActiveCategory(cat.id)}
-                  className={`shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer ${
-                    isSelected
-                      ? "bg-[var(--clay)] text-white shadow-xs scale-102"
-                      : "bg-white/80 border border-[var(--line)] text-[var(--muted)] hover:text-[var(--ink-deep)] hover:border-[rgba(23,62,68,.3)] hover:bg-white"
-                  }`}
-                >
-                  <Icon size={14} className={isSelected ? "text-white" : "text-[var(--clay)]"} />
-                  <span>{isIndonesian ? cat.labelId : cat.labelEn}</span>
-                  <span
-                    className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
-                      isSelected ? "bg-white/20 text-white" : "bg-[rgba(23,62,68,.08)] text-[var(--muted)]"
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setActiveCategory(cat.id)}
+                    className={`shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer select-none outline-none focus-visible:ring-2 focus-visible:ring-[var(--clay)]/40 focus-visible:ring-offset-1 ${
+                      isSelected
+                        ? "bg-[var(--clay)] text-white shadow-sm ring-1 ring-[var(--clay)] font-bold"
+                        : "bg-white/90 border border-[var(--line)] text-[var(--muted)] hover:text-[var(--ink-deep)] hover:border-[rgba(23,62,68,.3)] hover:bg-white"
                     }`}
                   >
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
+                    <Icon size={14} className={isSelected ? "text-white" : "text-[var(--clay)]"} />
+                    <span>{isIndonesian ? cat.labelId : cat.labelEn}</span>
+                    <span
+                      className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full transition-colors ${
+                        isSelected ? "bg-white/20 text-white" : "bg-[rgba(23,62,68,.08)] text-[var(--muted)]"
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Results Summary & Master Collapse/Expand Controls */}
           <div className="flex flex-wrap items-center justify-between gap-3 pt-2 text-xs border-t border-[var(--line)]">
-            <div className="flex items-center gap-2 text-[var(--muted)]">
+            <div className="flex flex-wrap items-center gap-2 text-[var(--muted)]">
               <span>
                 {isIndonesian ? "Menampilkan" : "Showing"}{" "}
-                <strong className="text-[var(--ink-deep)]">{filteredTopics.length}</strong>{" "}
+                <strong className="text-[var(--ink-deep)]">{filteredAndSortedTopics.length}</strong>{" "}
                 {isIndonesian ? "topik dari" : "topics of"}{" "}
                 <strong className="text-[var(--ink-deep)]">{normalizedTopics.length}</strong>
               </span>
 
               {searchQuery && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[rgba(178,77,57,.1)] text-[var(--clay)] font-semibold">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[rgba(178,77,57,.1)] text-[var(--clay)] font-semibold">
                   <span>&ldquo;{searchQuery}&rdquo;</span>
-                  <button onClick={() => setSearchQuery("")} aria-label="Clear filter">
+                  <button onClick={() => setSearchQuery("")} aria-label="Clear filter" className="cursor-pointer hover:opacity-80">
                     <X size={12} />
                   </button>
                 </span>
@@ -402,15 +463,24 @@ export default function PustakaPage() {
               {activeCategory !== "all" && (
                 <button
                   onClick={() => setActiveCategory("all")}
-                  className="text-[var(--clay)] hover:underline ml-1 font-semibold"
+                  className="text-[var(--clay)] hover:underline ml-1 font-semibold cursor-pointer"
                 >
-                  {isIndonesian ? "Hapus Filter" : "Clear Filter"}
+                  {isIndonesian ? "Hapus Kategori" : "Clear Category"}
+                </button>
+              )}
+
+              {sortBy !== "default" && (
+                <button
+                  onClick={() => setSortBy("default")}
+                  className="text-[var(--clay)] hover:underline ml-1 font-semibold cursor-pointer"
+                >
+                  {isIndonesian ? "Reset Urutan" : "Reset Sort"}
                 </button>
               )}
             </div>
 
             {/* Master Accordion Buttons */}
-            {filteredTopics.length > 0 && (
+            {filteredAndSortedTopics.length > 0 && (
               <div className="flex items-center gap-2">
                 <button
                   type="button"
@@ -430,7 +500,7 @@ export default function PustakaPage() {
                   </span>
                 </button>
 
-                {(searchQuery || activeCategory !== "all") && (
+                {(searchQuery || activeCategory !== "all" || sortBy !== "default") && (
                   <button
                     type="button"
                     onClick={handleReset}
@@ -449,7 +519,7 @@ export default function PustakaPage() {
         {/* Topics Accordion Grid */}
         {/* ----------------------------------------------------------------- */}
         <div className="space-y-5 min-h-[380px]">
-          {filteredTopics.length === 0 ? (
+          {filteredAndSortedTopics.length === 0 ? (
             /* Empty State */
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -475,7 +545,7 @@ export default function PustakaPage() {
               </button>
             </motion.div>
           ) : (
-            filteredTopics.map((topic, idx) => {
+            filteredAndSortedTopics.map((topic, idx) => {
               const isExpanded = expandedIds.has(topic.id);
               const displayTitle = isIndonesian ? topic.title : topic.titleEn;
               const displaySummary = isIndonesian ? topic.summary : topic.summaryEn;
@@ -556,7 +626,7 @@ export default function PustakaPage() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+                        transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
                         className="overflow-hidden"
                       >
                         <div className="p-5 sm:p-7 pt-3 border-t border-[var(--line)] bg-[rgba(239,229,214,.18)]">

@@ -23,6 +23,7 @@ export default async function RuangBacaPage() {
           if (data && (data.title || data.titleId) && data.chapters) {
             documents.push({
               ...data,
+              id: data.id || path.basename(file, '.json'),
               category: data.category || (dir.includes('knowledge') ? 'Law Database' : 'General'),
               source: dir.includes('knowledge') ? 'Live Knowledge Base' : 'Saku Hukum ULM Archive'
             });

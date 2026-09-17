@@ -29,13 +29,13 @@ export default function Curriculum() {
     <>
       <PageIntro
         label={isIndonesian ? "Kurikulum" : "Curriculum"}
-        title={isIndonesian ? "Hukum Pidana sebagai arah kajian." : "Criminal law as a direction of study."}
+        title={isIndonesian ? "Kajian Hukum Pidana di ULM." : "Criminal Law Studies at ULM."}
         summary={
           isIndonesian
-            ? "Bagian Hukum Pidana adalah fokus akademik paling relevan untuk minat menuju profesi jaksa; ini bukan jaminan atau jalur rekrutmen otomatis."
-            : "The Criminal Law Section is the academic focus most relevant to an interest in prosecution; it is not a guarantee or automatic recruitment route."
+            ? "Peminatan Hukum Pidana adalah jalur belajar paling relevan bagi calon jaksa. Ini adalah fokus akademik, bukan jaminan penerimaan kerja otomatis."
+            : "The Criminal Law specialization is the most relevant academic track for aspiring prosecutors. It is a study path, not an automatic hiring guarantee."
         }
-        sourceCount={isIndonesian ? "Kurikulum 2020 • dokumen resmi" : "Curriculum 2020 • official document"}
+        sourceCount={isIndonesian ? "Kurikulum 2020 • Dokumen Resmi" : "Curriculum 2020 • Official Document"}
       />
 
       <section className="content-width track-callout">
@@ -44,11 +44,11 @@ export default function Curriculum() {
         </div>
         <div>
           <p className="eyebrow">{isIndonesian ? "Peminatan" : "Specialization"}</p>
-          <h2>{isIndonesian ? "Program Kekhususan Hukum Pidana" : "Criminal Law Specialization Programme"}</h2>
+          <h2>{isIndonesian ? "Program Kekhususan Hukum Pidana" : "Criminal Law Specialization Track"}</h2>
           <p>
             {isIndonesian
-              ? "Halaman Bagian Hukum Pidana menyebut penguatan hukum pidana materiil, formil, sumber daya alam dan lingkungan, ekonomi, teknologi, serta perbandingan hukum pidana."
-              : "The Criminal Law Section page highlights substantive and procedural criminal law, natural resources and environmental issues, economics, technology, and comparative criminal law."}
+              ? "Kajian Hukum Pidana FH ULM mencakup hukum pidana materiil, hukum acara, hukum lingkungan dan sumber daya alam, kejahatan ekonomi, siber, hingga perbandingan hukum."
+              : "Criminal Law at FH ULM covers substantive law, criminal procedure, environmental and resource crimes, economic crimes, cybercrime, and comparative law."}
           </p>
         </div>
         <SourceLink href={externalLinks.pidana} label={isIndonesian ? "Bagian Hukum Pidana" : "Criminal Law Section"} />
@@ -56,12 +56,12 @@ export default function Curriculum() {
 
       <section className="content-width split-section">
         <div className="section-heading">
-          <p className="eyebrow">{isIndonesian ? "Lensa kajian" : "Study lenses"}</p>
-          <h2>{isIndonesian ? "Baca daftar mata kuliah bersama konteks Kalimantan." : "Read the course list alongside a Kalimantan context."}</h2>
+          <p className="eyebrow">{isIndonesian ? "Fokus Kajian" : "Study Focus"}</p>
+          <h2>{isIndonesian ? "Mata kuliah hukum yang berakar di Kalimantan." : "Law courses rooted in the Kalimantan context."}</h2>
           <p>
             {isIndonesian
-              ? "Kajian hukum pidana di FH ULM terikat erat dengan dinamika bentang alam lahan basah, industri ekstraktif, dan pembaruan hukum nasional."
-              : "Criminal law studies at FH ULM are closely intertwined with wetland environments, extractive industries, and national legal reform."}
+              ? "Kajian pidana di FH ULM terhubung erat dengan kondisi bentang alam lahan basah, industri sumber daya alam, dan pembaruan hukum pidana nasional."
+              : "Criminal law at FH ULM connects closely with wetland environments, resource industries, and national legal reforms."}
           </p>
         </div>
         <div className="fact-list">
@@ -71,19 +71,19 @@ export default function Curriculum() {
               <strong>{isIndonesian ? "Lingkungan & sumber daya alam" : "Environment & natural resources"}</strong>
               <small>
                 {isIndonesian
-                  ? "Dokumen riset tambahan menautkan kajian pidana FH ULM dengan isu lingkungan dan sumber daya alam. Hal ini selaras dengan mata kuliah Tindak Pidana di Bidang Sumber Daya Alam yang tercantum resmi, bukan jaminan topik atau kelas tertentu."
-                  : "The additional research report connects FH ULM criminal-law study with environmental and natural-resource issues. This is compatible with the officially listed Natural Resources Crime course, not a promise of a particular topic or class."}
+                  ? "Kajian pidana FH ULM memberi perhatian khusus pada isu lingkungan hidup dan kehutanan, termasuk lewat mata kuliah resmi Tindak Pidana di Bidang Sumber Daya Alam."
+                  : "FH ULM emphasizes environmental and forestry law, including the official course Crimes in the Natural Resources Sector."}
               </small>
             </span>
           </div>
           <div>
             <BookOpenCheck size={19} />
             <span>
-              <strong>{isIndonesian ? "Praktik dan pembaruan hukum" : "Practice and legal change"}</strong>
+              <strong>{isIndonesian ? "Praktik persidangan & pembaruan hukum" : "Court practice & legal updates"}</strong>
               <small>
                 {isIndonesian
-                  ? "Hukum Acara Pidana, Praktik Peradilan Pidana, serta pilihan tentang telematika dan hukum pidana internasional memberi titik baca untuk memahami perubahan praktik hukum. Periksa penawaran semester berjalan pada kanal fakultas."
-                  : "Criminal Procedure, Criminal Court Practice, and electives on telematics and international criminal law provide useful points for reading legal-practice change. Check current-semester offerings through faculty channels."}
+                  ? "Mata kuliah Hukum Acara Pidana, Praktik Peradilan Pidana, dan Tindak Pidana Telematika melatih keahlian litigasi mahasiswa. Jadwal kelas mengikuti penawaran semester aktif di fakultas."
+                  : "Courses like Criminal Procedure, Moot Court Practice, and Telematics Crime train students in practical courtroom skills. Class schedules follow current semester offerings."}
               </small>
             </span>
           </div>
@@ -98,12 +98,12 @@ export default function Curriculum() {
       <section className="content-width curriculum-layout">
         <div>
           <div className="section-heading compact">
-            <p className="eyebrow">{isIndonesian ? "Formasi per semester" : "Semester formation"}</p>
-            <h2>{isIndonesian ? "Rute yang dipublikasikan." : "The published route."}</h2>
+            <p className="eyebrow">{isIndonesian ? "Sebaran Semester" : "Semester Breakdown"}</p>
+            <h2>{isIndonesian ? "Alur perkuliahan S1." : "Undergraduate study path."}</h2>
             <p>
               {isIndonesian
-                ? "Distribusi beban studi formal per semester berdasarkan dokumen Kurikulum 2020 Program Studi S1 Hukum."
-                : "Formal study load distribution per semester based on the official 2020 Undergraduate Law Curriculum document."}
+                ? "Sebaran beban studi tiap semester berdasarkan dokumen Kurikulum 2020 S1 Ilmu Hukum."
+                : "Course credit distribution per semester based on the official 2020 Undergraduate Law Curriculum."}
             </p>
           </div>
           <div className="semester-rail">
@@ -121,8 +121,8 @@ export default function Curriculum() {
             <BookOpenCheck size={19} />
             <p>
               {isIndonesian
-                ? "Tabel ini hanya menampilkan titik fokus yang dapat dibaca dari dokumen. Gunakan PDF formasi mata kuliah resmi untuk susunan lengkap, prasyarat, serta penawaran semester berjalan."
-                : "This table shows only focus points readable in the document. Use the official course-formation PDF for the full structure, prerequisites, and current-semester offerings."}
+                ? "Tabel ini merangkum fokus utama tiap semester. Buka PDF resmi untuk melihat daftar mata kuliah lengkap, syarat prasyarat, dan penawaran kelas semester ini."
+                : "This table summarizes each semester's main focus. Download the official PDF for the full course list, prerequisites, and active schedules."}
             </p>
             <a href={externalLinks.curriculumPdf} target="_blank" rel="noreferrer">
               <Download size={16} className="text-inherit" />
@@ -133,11 +133,11 @@ export default function Curriculum() {
         <aside className="curriculum-side-note">
           <ShieldCheck size={21} className="mb-3 block" />
           <p className="eyebrow">{isIndonesian ? "Batas data" : "Data boundary"}</p>
-          <h3>{isIndonesian ? "Dokumen resmi tetap menjadi aturan utama." : "The official document remains the governing record."}</h3>
+          <h3>{isIndonesian ? "Dokumen resmi tetap menjadi rujukan utama." : "The official document remains the main reference."}</h3>
           <p>
             {isIndonesian
-              ? "Dokumen riset tambahan memakai arsitektur kode dan SKS yang tidak sama dengan PDF Kurikulum 2020. Karena itu, kredit tiap mata kuliah, daftar pilihan bebas, jadwal, dosen pengampu, dan penawaran aktual di halaman ini tetap merujuk ke dokumen serta kanal akademik resmi."
-              : "The additional research report uses a course-code and credit structure that does not match the Curriculum 2020 PDF. Course credits, free-elective listings, schedules, assigned lecturers, and current offerings on this page therefore continue to refer to the official document and academic channels."}
+              ? "Untuk jumlah SKS pasti, daftar mata kuliah pilihan bebas, jadwal kuliah, dan dosen pengampu, selalu rujuk dokumen resmi Kurikulum 2020 dan portal SIMARI ULM."
+              : "For exact credits, elective options, class schedules, and instructors, always refer to the official Curriculum 2020 document and the SIMARI portal."}
           </p>
         </aside>
       </section>
@@ -145,44 +145,44 @@ export default function Curriculum() {
       <section className="content-width split-section">
         <div className="section-heading">
           <p className="eyebrow">{isIndonesian ? "Mekanisme Peminatan" : "Specialization Policy"}</p>
-          <h2>{isIndonesian ? "Prosedur dan syarat PK Hukum Pidana." : "Procedures and criteria for Criminal Law."}</h2>
+          <h2>{isIndonesian ? "Syarat memilih PK Hukum Pidana." : "Requirements for Criminal Law."}</h2>
           <p>
             {isIndonesian
-              ? "Panduan teknis pengajuan peminatan program kekhususan dan administrasi berkas akademik di lingkungan FH ULM."
-              : "Technical guidelines for academic specialization track selection and file administration at FH ULM."}
+              ? "Tahapan pemilihan peminatan program kekhususan dan administrasi berkas di FH ULM."
+              : "Steps for selecting a specialization track and handling coursework paperwork at FH ULM."}
           </p>
         </div>
         <div className="fact-list">
           <div>
             <GraduationCap size={19} />
             <span>
-              <strong>{isIndonesian ? "Tahapan Pemilihan Program Kekhususan" : "Specialization Selection Stage"}</strong>
+              <strong>{isIndonesian ? "Waktu Pemilihan Program Kekhususan" : "Specialization Selection Window"}</strong>
               <small>
                 {isIndonesian
-                  ? `Pemilihan peminatan diajukan pada ${specializationPolicy.selectionSemester} setelah mahasiswa menyelesaikan fondasi mata kuliah hukum dasar.`
-                  : `Specialization selection occurs in ${specializationPolicy.selectionSemester} after students complete core foundational law coursework.`}
+                  ? `Pengajuan peminatan dibuka pada ${specializationPolicy.selectionSemester}, setelah mahasiswa menuntaskan mata kuliah dasar hukum.`
+                  : `Students select their specialization in ${specializationPolicy.selectionSemester}, after completing core law courses.`}
               </small>
             </span>
           </div>
           <div>
             <ShieldCheck size={19} />
             <span>
-              <strong>{isIndonesian ? "Evaluator & Kriteria Seleksi" : "Evaluator & Selection Criteria"}</strong>
+              <strong>{isIndonesian ? "Penilai & Kriteria Seleksi" : "Reviewer & Selection Criteria"}</strong>
               <small>
                 {isIndonesian
-                  ? `Ditetapkan oleh ${specializationPolicy.evaluator} dengan pertimbangan: ${specializationPolicy.criteriaId}`
-                  : `Administered by ${specializationPolicy.evaluator} with consideration of: ${specializationPolicy.criteriaEn}`}
+                  ? `Diseleksi oleh ${specializationPolicy.evaluator} berdasarkan: ${specializationPolicy.criteriaId}`
+                  : `Reviewed by ${specializationPolicy.evaluator} based on: ${specializationPolicy.criteriaEn}`}
               </small>
             </span>
           </div>
           <div>
             <FileText size={19} />
             <span>
-              <strong>{isIndonesian ? "Identitas Berkas & Skripsi" : "Administrative Filing & Thesis"}</strong>
+              <strong>{isIndonesian ? "Warna Map Berkas & Skripsi" : "Folder Color & Thesis Submission"}</strong>
               <small>
                 {isIndonesian
-                  ? `${specializationPolicy.folderColor} Membedakan berkas usulan penelitian, seminar proposal, hingga pendaftaran sidang skripsi Bagian Hukum Pidana.`
-                  : `${specializationPolicy.folderColor} Standardizes submission verification for research topic proposals, proposal defense, and thesis examination registries in Criminal Law.`}
+                  ? `${specializationPolicy.folderColor} Digunakan untuk pengajuan judul, seminar proposal, hingga pendaftaran sidang skripsi.`
+                  : `${specializationPolicy.folderColor} Used for thesis topic proposals, proposal defense, and final exam registration.`}
               </small>
             </span>
           </div>
@@ -213,12 +213,12 @@ export default function Curriculum() {
 
       <section className="content-width elective-section">
         <div className="section-heading">
-          <p className="eyebrow">{isIndonesian ? "Pilihan bebas" : "Free electives"}</p>
-          <h2>{isIndonesian ? "Ruang perluasan kajian." : "Room to expand the enquiry."}</h2>
+          <p className="eyebrow">{isIndonesian ? "Pilihan Bebas" : "Free Electives"}</p>
+          <h2>{isIndonesian ? "Pilihan mata kuliah tambahan." : "Additional elective courses."}</h2>
           <p>
             {isIndonesian
-              ? "Daftar berikut muncul di blok Wajib dan Pilihan Bebas PK Hukum Pidana; setiap baris ditampilkan 2 SKS pada PDF."
-              : "The following list appears in the Criminal Law Required and Free-Elective block; each line is shown as 2 credits in the PDF."}
+              ? "Mata kuliah pilihan di bawah bernilai 2 SKS per mata kuliah sesuai dokumen resmi Kurikulum 2020."
+              : "Elective courses below are worth 2 credits each in the official Curriculum 2020 document."}
           </p>
         </div>
         <div className="elective-grid">
@@ -239,11 +239,11 @@ export default function Curriculum() {
       <section className="content-width split-section">
         <div className="section-heading">
           <p className="eyebrow">{isIndonesian ? "Kalender Akademik" : "Academic Calendar"}</p>
-          <h2>{isIndonesian ? "Jadwal Ganjil 2026/2027" : "Odd Semester 2026/2027"}</h2>
+          <h2>{isIndonesian ? "Jadwal Semester Ganjil 2026/2027" : "Odd Semester 2026/2027 Schedule"}</h2>
           <p>
             {isIndonesian
-              ? "Agenda penting perkuliahan, registrasi kartu rencana studi, dan evaluasi semester ganjil tahun akademik 2026/2027."
-              : "Key milestones for coursework, study plan registration, and odd semester evaluation for academic year 2026/2027."}
+              ? "Jadwal penting perkuliahan, registrasi KRS, dan evaluasi semester ganjil tahun akademik 2026/2027."
+              : "Key dates for classes, KRS course registration, and exams for the 2026/2027 odd semester."}
           </p>
         </div>
         <div className="fact-list">

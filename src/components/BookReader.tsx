@@ -67,12 +67,12 @@ export default function BookReader({ book }: BookReaderProps) {
       initial={{ opacity: 0, y: 100 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 100 }}
-      transition={{ type: "spring", damping: 25, stiffness: 200 }}
+      transition={{ type: "spring", damping: 30, stiffness: 300 }}
       className={`relative flex flex-col font-dm-serif theme-${theme} min-h-[calc(100vh-74px)]`}
       style={{
         backgroundColor: theme === 'light' ? '#fcfcfc' : theme === 'sepia' ? '#fdf6e3' : '#121212',
         color: theme === 'light' ? '#1a1a1a' : theme === 'sepia' ? '#4a3c2c' : '#e0e0e0',
-        transition: 'background-color 0.5s ease, color 0.5s ease'
+        transition: 'background-color 0.25s ease, color 0.25s ease'
       }}
     >
       <style>{`
@@ -191,7 +191,7 @@ export default function BookReader({ book }: BookReaderProps) {
               initial={{ x: -300, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -300, opacity: 0 }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
               className="w-full md:w-[300px] lg:w-[350px] shrink-0 h-full overflow-y-auto border-r border-[var(--border-color)] absolute md:relative z-10"
               style={{ 
                 backgroundColor: theme === 'light' ? 'rgba(255, 255, 255, 0.85)' : theme === 'sepia' ? 'rgba(253, 246, 227, 0.85)' : 'rgba(18, 18, 18, 0.85)',
@@ -248,7 +248,7 @@ export default function BookReader({ book }: BookReaderProps) {
               key={activeChapter + (isIndonesian ? 'id' : 'en')}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.2 }}
               className="markdown-reader"
             >
               <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>

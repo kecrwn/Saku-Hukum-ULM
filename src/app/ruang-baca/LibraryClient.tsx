@@ -135,15 +135,20 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
     if (!Array.isArray(initialDocuments)) return [];
 
     const seenIds = new Set<string>();
+    const uniqueDocs: any[] = [];
 
-    return initialDocuments.map((b: any, index: number) => {
-      // Safe unique ID generation preventing React key collisions
-      const rawId = String(b.id || b.slug || `doc-${index}`);
-      let id = rawId;
-      if (seenIds.has(id)) {
-        id = `${rawId}-${index}`;
+    for (const b of initialDocuments) {
+      const rawId = String(b.id || b.slug || "");
+      if (rawId && seenIds.has(rawId)) {
+        continue;
       }
-      seenIds.add(id);
+      if (rawId) seenIds.add(rawId);
+      uniqueDocs.push(b);
+    }
+
+    return uniqueDocs.map((b: any, index: number) => {
+      // Safe ID generation ensuring canonical ID preservation
+      const id = String(b.id || b.slug || `doc-${index}`);
 
       const title = String(b.title || b.titleId || b.titleEn || "Dokumen Pustaka");
       const titleEn = String(b.titleEn || b.title || title);
@@ -462,7 +467,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
   };
 
   return (
-    <div className="w-full min-h-screen bg-[var(--paper)] py-12 md:py-20 transition-colors duration-500 font-sans text-[var(--ink-deep)]">
+    <div className="w-full min-h-screen bg-[var(--paper)] py-12 md:py-20 transition-colors duration-200 font-sans text-[var(--ink-deep)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
 
         {/* ------------------------------------------------------------------- */}
@@ -473,7 +478,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.2 }}
               className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[rgba(178,77,57,.08)] border border-[rgba(178,77,57,.15)] text-[var(--clay)] font-bold tracking-widest uppercase text-[11px]"
             >
               <Library size={14} className="shrink-0" />
@@ -496,7 +501,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
           <motion.h1
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: 0.05 }}
+            transition={{ duration: 0.2, delay: 0.03 }}
             className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[var(--ink-deep)] leading-tight tracking-tight mb-4"
           >
             {isIndonesian ? "Pustaka & Ruang Baca Hukum" : "Legal Library & Reading Room"}
@@ -505,7 +510,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
+            transition={{ duration: 0.2, delay: 0.05 }}
             className="text-base sm:text-lg text-[#66736f] max-w-3xl leading-relaxed"
           >
             {isIndonesian
@@ -517,7 +522,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
         {/* ------------------------------------------------------------------- */}
         {/* Navigation Tabs (Semua Koleksi vs Tersimpan) */}
         {/* ------------------------------------------------------------------- */}
-        <div className="flex items-center gap-2 mb-6 border-b border-[rgba(23,62,68,.1)] pb-2 overflow-x-auto">
+        <div className="flex items-center gap-2 mb-6 border-b border-[rgba(23,62,68,.1)] pb-2 px-1 -mx-1 overflow-x-auto">
           <button
             onClick={() => handleTabChange("all")}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${
@@ -669,7 +674,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
 
           {/* Horizontal Category Filter Pills (Responsive, Smooth Horizontal Scroll) */}
           <div className="relative py-1">
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="flex items-center gap-2 overflow-x-auto px-1.5 py-1.5 -mx-1.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {categories.map((catKey) => {
                 const count = categoryCounts.get(catKey) || 0;
                 const isSelected = activeCategoryKey === catKey;
@@ -681,7 +686,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
                     onClick={() => handleCategoryChange(catKey)}
                     className={`shrink-0 flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer ${
                       isSelected
-                        ? "bg-[var(--clay)] text-white shadow-xs scale-102"
+                        ? "bg-[var(--clay)] text-white shadow-xs"
                         : "bg-white/80 border border-[rgba(23,62,68,.12)] text-[#66736f] hover:text-[var(--ink-deep)] hover:border-[rgba(23,62,68,.25)] hover:bg-white"
                     }`}
                   >
@@ -885,14 +890,14 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
                       initial={{ opacity: 0, y: 15 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{
-                        duration: 0.3,
-                        delay: Math.min(idx * 0.02, 0.08)
+                        duration: 0.2,
+                        delay: Math.min(idx * 0.015, 0.05)
                       }}
                       className="group h-full bg-white border border-[rgba(23,62,68,.12)] rounded-2xl p-6 flex flex-col justify-between cursor-pointer hover:border-[var(--clay)] hover:shadow-[0_12px_36px_rgba(16,45,51,.09)] transition-all duration-200 relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-[var(--clay)]/40 transform-gpu will-change-transform"
                     >
                     {/* Top Spine Accent */}
                     <div
-                      className="absolute top-0 left-0 right-0 h-1.5 transition-all duration-300 group-hover:h-2"
+                      className="absolute top-0 left-0 right-0 h-1.5 transition-all duration-200 group-hover:h-2"
                       style={{ backgroundColor: doc.coverColor || "var(--clay)" }}
                     />
 
@@ -951,7 +956,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
                             initial={{ height: 0, opacity: 0 }}
                             animate={{ height: "auto", opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.25, ease: "easeInOut" }}
+                            transition={{ duration: 0.18, ease: "easeInOut" }}
                             className="overflow-hidden mb-4 border-t border-[rgba(23,62,68,.08)] pt-3 bg-[rgba(239,229,214,.2)] -mx-6 px-6 py-2"
                             onClick={(e) => e.stopPropagation()}
                           >
@@ -1042,8 +1047,8 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{
-                        duration: 0.25,
-                        delay: Math.min(idx * 0.02, 0.06)
+                        duration: 0.18,
+                        delay: Math.min(idx * 0.015, 0.04)
                       }}
                       className="group bg-white border border-[rgba(23,62,68,.12)] rounded-xl p-4 sm:p-5 flex flex-col cursor-pointer hover:border-[var(--clay)] hover:shadow-md transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[var(--clay)]/40 relative overflow-hidden"
                     >
@@ -1139,7 +1144,7 @@ export default function LibraryClient({ initialDocuments }: LibraryClientProps) 
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.25, ease: "easeInOut" }}
+                          transition={{ duration: 0.18, ease: "easeInOut" }}
                           className="overflow-hidden mt-3 pt-3 border-t border-[rgba(23,62,68,.08)] pl-2"
                           onClick={(e) => e.stopPropagation()}
                         >
