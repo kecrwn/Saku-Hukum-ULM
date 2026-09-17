@@ -28,7 +28,7 @@ export default async function RuangBacaPage() {
             });
           }
         } catch (e) {
-          console.error(\`Failed to parse \${file}\`, e);
+          console.error(`Failed to parse ${file}`, e);
         }
       }
     }
