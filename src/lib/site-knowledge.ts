@@ -19,5 +19,11 @@ export const siteKnowledge = [
     path: "/dokumen", 
     title: { id: "Arsip Dokumen & Unduhan", en: "Documents & Downloads" }, 
     summary: "Pusat arsip dan unduhan langsung dokumen akademik, kalender perkuliahan ULM, dan pedoman studi Fakultas Hukum." 
+  },
+  {
+    id: "pasal",
+    path: "/pasal",
+    title: { id: "Kamus Pasal", en: "Article Dictionary" },
+    summary: "Alat pencarian cepat khusus untuk melihat dan mempelajari pasal-pasal KUHP serta peraturan perundang-undangan lainnya."
   }
 ];
