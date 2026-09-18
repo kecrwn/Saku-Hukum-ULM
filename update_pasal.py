@@ -1,19 +1,6 @@
-export interface Pasal {
-  id: string;
-  code: string; // e.g. "KUHP"
-  articleNumber: string; // e.g. "338"
-  chapter: string; // e.g. "Buku Kedua - Kejahatan"
-  chapterEn?: string;
-  officialText: string;
-  officialTextEn?: string;
-  explanation: string;
-  explanationEn?: string;
-  keywords: string[];
-  relatedArticles: string[];
-  imageRef?: string;
-}
+import json
 
-export const pasalData: Pasal[] = [
+pasal_list = [
   {
     "id": "uu1-2023-458",
     "code": "UU 1/2023",
@@ -24,16 +11,8 @@ export const pasalData: Pasal[] = [
     "officialTextEn": "Any person who deliberately takes the life of another person shall be punished for murder with a maximum imprisonment of fifteen years.",
     "explanation": "Pasal ini mengatur tindak pidana pembunuhan biasa berdasarkan UU No 1 Tahun 2023. Unsur utamanya tetap 'dengan sengaja' dan 'merampas nyawa orang lain'. Seseorang harus memiliki niat (dolus) untuk menghilangkan nyawa korban.",
     "explanationEn": "This article regulates the crime of ordinary murder based on Law No 1 of 2023. The main elements remain 'deliberately' and 'taking the life of another person'. A person must have the intention (dolus) to take the victim's life.",
-    "keywords": [
-      "pembunuhan",
-      "nyawa",
-      "sengaja",
-      "penjara"
-    ],
-    "relatedArticles": [
-      "459",
-      "466"
-    ],
+    "keywords": ["pembunuhan", "nyawa", "sengaja", "penjara"],
+    "relatedArticles": ["459", "466"],
     "imageRef": "courtroom"
   },
   {
@@ -46,15 +25,8 @@ export const pasalData: Pasal[] = [
     "officialTextEn": "Any person who with prior calculation takes the life of another person shall be punished for premeditated murder, with death penalty, life imprisonment, or a maximum imprisonment of twenty years.",
     "explanation": "Ini adalah pasal pembunuhan berencana di UU 1/2023 (dahulu Pasal 340 KUHP). Adanya unsur 'rencana terlebih dahulu' membedakannya dari pembunuhan biasa, dengan sanksi terberat mencapai pidana mati.",
     "explanationEn": "This is the premeditated murder article in Law 1/2023 (formerly Article 340 of the Criminal Code). The element of 'prior calculation' distinguishes it from ordinary murder, with the heaviest sanction reaching the death penalty.",
-    "keywords": [
-      "pembunuhan berencana",
-      "nyawa",
-      "pidana mati",
-      "rencana"
-    ],
-    "relatedArticles": [
-      "458"
-    ],
+    "keywords": ["pembunuhan berencana", "nyawa", "pidana mati", "rencana"],
+    "relatedArticles": ["458"],
     "imageRef": "gavel"
   },
   {
@@ -67,14 +39,8 @@ export const pasalData: Pasal[] = [
     "officialTextEn": "(1) Any person who commits maltreatment shall be punished with a maximum imprisonment of two years and six months or a maximum category IV fine. (2) If it results in Severe Injury, they shall be punished with a maximum imprisonment of five years. (3) If it results in death, they shall be punished with a maximum imprisonment of seven years.",
     "explanation": "Ini adalah pasal utama untuk penganiayaan menurut KUHP Baru (dahulu 351). Hukuman penjara maksimal untuk penganiayaan biasa dikurangi menjadi 2,5 tahun (dari sebelumnya 2 tahun 8 bulan), tetapi denda disesuaikan dengan sistem kategori.",
     "explanationEn": "This is the main article for maltreatment under the New Criminal Code (formerly 351). The maximum imprisonment for ordinary maltreatment is reduced to 2.5 years (from 2 years 8 months), but the fine is adjusted to the category system.",
-    "keywords": [
-      "penganiayaan",
-      "luka",
-      "kekerasan fisik"
-    ],
-    "relatedArticles": [
-      "467"
-    ],
+    "keywords": ["penganiayaan", "luka", "kekerasan fisik"],
+    "relatedArticles": ["467"],
     "imageRef": "lawBooks"
   },
   {
@@ -87,15 +53,8 @@ export const pasalData: Pasal[] = [
     "officialTextEn": "Any person who takes any property, which belongs wholly or partly to another person, with the intent to own it unlawfully, shall be punished for theft with a maximum imprisonment of five years or a maximum category V fine.",
     "explanation": "Pasal pokok tindak pidana pencurian dalam KUHP Baru (dahulu 362). Esensinya tetap sama: mengambil barang orang lain dengan maksud memilikinya secara melawan hukum.",
     "explanationEn": "The primary article for theft in the New Criminal Code (formerly 362). The essence remains the same: taking someone else's property with the intent to own it unlawfully.",
-    "keywords": [
-      "pencurian",
-      "mengambil barang",
-      "melawan hukum"
-    ],
-    "relatedArticles": [
-      "477",
-      "479"
-    ],
+    "keywords": ["pencurian", "mengambil barang", "melawan hukum"],
+    "relatedArticles": ["477", "479"],
     "imageRef": "gavel"
   },
   {
@@ -108,15 +67,8 @@ export const pasalData: Pasal[] = [
     "officialTextEn": "Any person who unlawfully owns any property that belongs wholly or partly to another person, which is in his possession not due to a Crime, shall be punished for embezzlement with a maximum imprisonment of four years or a maximum category IV fine.",
     "explanation": "Pasal tentang penggelapan di KUHP Baru (dahulu 372). Menghukum penguasaan melawan hukum atas barang yang sudah berada di tangan pelaku secara sah (misal barang titipan atau sewaan).",
     "explanationEn": "The article on embezzlement in the New Criminal Code (formerly 372). Punishes the unlawful possession of property that is already legally in the hands of the perpetrator (e.g., entrusted or rented goods).",
-    "keywords": [
-      "penggelapan",
-      "barang titipan",
-      "melawan hukum"
-    ],
-    "relatedArticles": [
-      "476",
-      "492"
-    ],
+    "keywords": ["penggelapan", "barang titipan", "melawan hukum"],
+    "relatedArticles": ["476", "492"],
     "imageRef": "lawBooks"
   },
   {
@@ -129,14 +81,8 @@ export const pasalData: Pasal[] = [
     "officialTextEn": "Any person who with the intent to unlawfully benefit himself or another person, by using a false name or false position, using trickery or a web of lies, moves a person to hand over a Property, give a debt, make a debt acknowledgment, or erase a receivable, shall be punished for fraud with a maximum imprisonment of four years or a maximum category V fine.",
     "explanation": "Ini adalah delik pokok penipuan di UU 1/2023 (dahulu 378). Mengatur tindak pidana memperdaya orang dengan kebohongan atau kedudukan palsu agar orang tersebut menyerahkan hartanya.",
     "explanationEn": "This is the primary fraud offense in Law 1/2023 (formerly 378). It regulates the crime of deceiving people with lies or false positions so that the person hands over their property.",
-    "keywords": [
-      "penipuan",
-      "tipu muslihat",
-      "kebohongan"
-    ],
-    "relatedArticles": [
-      "486"
-    ],
+    "keywords": ["penipuan", "tipu muslihat", "kebohongan"],
+    "relatedArticles": ["486"],
     "imageRef": "courtroom"
   },
   {
@@ -149,15 +95,8 @@ export const pasalData: Pasal[] = [
     "officialTextEn": "Any person who by Violence or Threat of Violence forces someone to have sexual intercourse with them, shall be punished for committing rape with a maximum imprisonment of twelve years.",
     "explanation": "Pasal Perkosaan menurut KUHP Baru (dahulu 285). Kini menggunakan terminologi netral gender ('seseorang' bersetubuh 'dengannya'), memperluas cakupan dari KUHP lama yang hanya membatasi pelaku laki-laki terhadap korban perempuan.",
     "explanationEn": "The Rape Article under the New Criminal Code (formerly 285). It now uses gender-neutral terminology ('someone' having sexual intercourse 'with them'), expanding the scope from the old Criminal Code which only limited male perpetrators against female victims.",
-    "keywords": [
-      "pemerkosaan",
-      "kekerasan",
-      "kesusilaan",
-      "persetubuhan"
-    ],
-    "relatedArticles": [
-      "415"
-    ],
+    "keywords": ["pemerkosaan", "kekerasan", "kesusilaan", "persetubuhan"],
+    "relatedArticles": ["415"],
     "imageRef": "gavel"
   },
   {
@@ -170,11 +109,7 @@ export const pasalData: Pasal[] = [
     "officialTextEn": "Any person who without permission offers or provides an opportunity for gambling and makes it a profession, shall be punished with a maximum imprisonment of nine years or a maximum category VI fine.",
     "explanation": "Larangan perjudian dalam KUHP Baru (dahulu 303). Terdapat penyesuaian ancaman hukuman penjara menjadi maksimal 9 tahun dengan sistem denda kategori VI.",
     "explanationEn": "The prohibition of gambling in the New Criminal Code (formerly 303). There is an adjustment of the maximum imprisonment threat to 9 years with a category VI fine system.",
-    "keywords": [
-      "perjudian",
-      "judi",
-      "untung-untungan"
-    ],
+    "keywords": ["perjudian", "judi", "untung-untungan"],
     "relatedArticles": [],
     "imageRef": "lawBooks"
   },
@@ -188,16 +123,8 @@ export const pasalData: Pasal[] = [
     "officialTextEn": "(1) Any person who openly or in public and jointly commits violence against a person or Property, shall be punished with a maximum imprisonment of five years or a maximum category V fine.",
     "explanation": "Tindak pidana pengeroyokan di KUHP Baru (dahulu 170). Ancaman pidana untuk bentuk standarnya disesuaikan menjadi 5 tahun, dari sebelumnya 5 tahun 6 bulan.",
     "explanationEn": "The crime of mob violence in the New Criminal Code (formerly 170). The criminal threat for the standard form is adjusted to 5 years, from previously 5 years 6 months.",
-    "keywords": [
-      "pengeroyokan",
-      "kekerasan bersama",
-      "ketertiban umum"
-    ],
-    "relatedArticles": [
-      "466",
-      "458",
-      "521"
-    ],
+    "keywords": ["pengeroyokan", "kekerasan bersama", "ketertiban umum"],
+    "relatedArticles": ["466", "458", "521"],
     "imageRef": "courtroom"
   },
   {
@@ -210,15 +137,8 @@ export const pasalData: Pasal[] = [
     "officialTextEn": "Any person who by Violence or Threat of Violence forces another person to commit or endure an Obscene Act, shall be punished for committing molestation, with a maximum imprisonment of nine years.",
     "explanation": "Pasal pencabulan dengan kekerasan menurut KUHP Baru (dahulu 289). Ancaman hukumannya tetap maksimal 9 tahun penjara.",
     "explanationEn": "The article on violent molestation under the New Criminal Code (formerly 289). The maximum penalty remains 9 years in prison.",
-    "keywords": [
-      "pencabulan",
-      "kekerasan",
-      "ancaman",
-      "cabul"
-    ],
-    "relatedArticles": [
-      "414"
-    ],
+    "keywords": ["pencabulan", "kekerasan", "ancaman", "cabul"],
+    "relatedArticles": ["414"],
     "imageRef": "lawBooks"
   },
   {
@@ -231,14 +151,8 @@ export const pasalData: Pasal[] = [
     "officialTextEn": "(1) Any person who verbally attacks the honor or reputation of someone by accusing them of a matter, with the clear intention that it be known to the public, shall be punished for defamation with a maximum imprisonment of nine months or a maximum category II fine. (2) If it is done in writing or drawing... punished for written defamation with a maximum imprisonment of one year and six months or a maximum category III fine.",
     "explanation": "Pencemaran nama baik di UU 1/2023 (dahulu 310). Delik ini tetap delik aduan absolut (hanya bisa diproses jika diadukan oleh korban).",
     "explanationEn": "Defamation in Law 1/2023 (formerly 310). This offense remains an absolute complaint offense (can only be processed if complained by the victim).",
-    "keywords": [
-      "pencemaran nama baik",
-      "penghinaan",
-      "fitnah"
-    ],
-    "relatedArticles": [
-      "436"
-    ],
+    "keywords": ["pencemaran nama baik", "penghinaan", "fitnah"],
+    "relatedArticles": ["436"],
     "imageRef": "gavel"
   },
   {
@@ -251,14 +165,8 @@ export const pasalData: Pasal[] = [
     "officialTextEn": "Any person who unlawfully destroys, damages, renders unusable, or causes the loss of Property that belongs wholly or partly to another person, shall be punished with a maximum imprisonment of two years and six months or a maximum category IV fine.",
     "explanation": "Ini merupakan tindak pidana perusakan barang di KUHP Baru (dahulu 406). Ancaman kurungan maksimal menjadi 2 tahun 6 bulan (dari sebelumnya 2 tahun 8 bulan).",
     "explanationEn": "This is the crime of property destruction in the New Criminal Code (formerly 406). The maximum confinement threat is 2 years and 6 months (from previously 2 years and 8 months).",
-    "keywords": [
-      "perusakan",
-      "barang",
-      "menghancurkan"
-    ],
-    "relatedArticles": [
-      "262"
-    ],
+    "keywords": ["perusakan", "barang", "menghancurkan"],
+    "relatedArticles": ["262"],
     "imageRef": "courtroom"
   },
   {
@@ -271,14 +179,8 @@ export const pasalData: Pasal[] = [
     "officialTextEn": "Punished as a perpetrator of a Crime, Any Person who: a. commits the Crime themselves; b. commits the Crime through an instrument or ordering another person who cannot be held accountable; c. participates in committing the Crime; or d. incites another person to commit the Crime.",
     "explanation": "Pasal Deelneming (Penyertaan) pada KUHP Baru kini diatur dalam Pasal 20 Buku I (dahulu 55). Rumusannya diperjelas untuk membedakan orang yang melakukan (pleger), yang menyuruh (doenpleger), turut serta (medepleger), dan yang menggerakkan (uitlokker).",
     "explanationEn": "The Deelneming (Participation) article in the New Criminal Code is now regulated in Article 20 of Book I (formerly 55). The formulation is clarified to distinguish the person who commits (pleger), orders (doenpleger), participates (medepleger), and incites (uitlokker).",
-    "keywords": [
-      "penyertaan",
-      "pelaku",
-      "turut serta"
-    ],
-    "relatedArticles": [
-      "21"
-    ],
+    "keywords": ["penyertaan", "pelaku", "turut serta"],
+    "relatedArticles": ["21"],
     "imageRef": "lawBooks"
   },
   {
@@ -291,14 +193,8 @@ export const pasalData: Pasal[] = [
     "officialTextEn": "Punished as an accomplice to a Crime, Any Person who: a. provides the opportunity, means, or information to commit the Crime; or b. provides assistance at the time the Crime is committed.",
     "explanation": "Ini adalah pengaturan 'Medeplichtigheid' atau perbantuan dalam KUHP Baru (dahulu 56). Ancaman pidana bagi pembantu maksimalnya adalah dua pertiga dari ancaman pidana maksimal bagi pelaku utama (Pasal 22).",
     "explanationEn": "This is the regulation of 'Medeplichtigheid' or complicity in the New Criminal Code (formerly 56). The maximum criminal threat for an accomplice is two-thirds of the maximum criminal threat for the main perpetrator (Article 22).",
-    "keywords": [
-      "pembantuan",
-      "bantuan",
-      "sarana"
-    ],
-    "relatedArticles": [
-      "20"
-    ],
+    "keywords": ["pembantuan", "bantuan", "sarana"],
+    "relatedArticles": ["20"],
     "imageRef": "gavel"
   },
   {
@@ -311,16 +207,8 @@ export const pasalData: Pasal[] = [
     "officialTextEn": "Any person who due to their negligence causes the death of a person, shall be punished with a maximum imprisonment of five years or a maximum category V fine.",
     "explanation": "Ini adalah delik kealpaan (culpa) yang mengakibatkan matinya orang, disesuaikan dari Pasal 359 KUHP lama ke Pasal 474 KUHP Baru. Tidak ada niat membunuh, melainkan murni ketidakhati-hatian.",
     "explanationEn": "This is the offense of negligence (culpa) resulting in the death of a person, adjusted from Article 359 of the old Criminal Code to Article 474 of the New Criminal Code. There is no intent to kill, rather purely carelessness.",
-    "keywords": [
-      "kelalaian",
-      "kealpaan",
-      "mati",
-      "culpa"
-    ],
-    "relatedArticles": [
-      "475",
-      "458"
-    ],
+    "keywords": ["kelalaian", "kealpaan", "mati", "culpa"],
+    "relatedArticles": ["475", "458"],
     "imageRef": "courtroom"
   },
   {
@@ -333,14 +221,8 @@ export const pasalData: Pasal[] = [
     "officialTextEn": "(1) Any person who due to their negligence causes another person to suffer Severe Injury, shall be punished with a maximum imprisonment of five years or a maximum category V fine. (2) Any person who due to their negligence causes another person injuries such that illness arises or it hinders them from performing their official duties or profession for a certain period, shall be punished with a maximum imprisonment of one year or a maximum category II fine.",
     "explanation": "Pasal kelalaian yang menyebabkan orang lain luka di UU 1/2023 (dahulu 360). Menggantikan pasal 360 KUHP lama, dengan menyesuaikan sistem denda menggunakan format kategori.",
     "explanationEn": "The negligence article that causes another person injury in Law 1/2023 (formerly 360). Replacing article 360 of the old Criminal Code, adjusting the fine system using a category format.",
-    "keywords": [
-      "kelalaian",
-      "kealpaan",
-      "luka berat"
-    ],
-    "relatedArticles": [
-      "474"
-    ],
+    "keywords": ["kelalaian", "kealpaan", "luka berat"],
+    "relatedArticles": ["474"],
     "imageRef": "lawBooks"
   },
   {
@@ -353,15 +235,8 @@ export const pasalData: Pasal[] = [
     "officialTextEn": "Punished with a maximum imprisonment of nine years, Any Person who commits theft preceded, accompanied, or followed by Violence or Threat of Violence against a person, with the intent to prepare or facilitate the theft, or in the case of being caught in the act, to enable oneself or other participants to escape, or to retain control of the stolen property.",
     "explanation": "Tindak pidana pencurian dengan kekerasan (begal/perampokan) menurut KUHP Baru (dahulu 365). Hukuman dan unsur deliknya sejalan dengan KUHP lama.",
     "explanationEn": "The crime of theft with violence (mugging/robbery) according to the New Criminal Code (formerly 365). The punishment and elements of the offense are in line with the old Criminal Code.",
-    "keywords": [
-      "pencurian dengan kekerasan",
-      "perampokan",
-      "begal"
-    ],
-    "relatedArticles": [
-      "476",
-      "458"
-    ],
+    "keywords": ["pencurian dengan kekerasan", "perampokan", "begal"],
+    "relatedArticles": ["476", "458"],
     "imageRef": "gavel"
   },
   {
@@ -374,14 +249,8 @@ export const pasalData: Pasal[] = [
     "officialTextEn": "Any person who with the intent to unlawfully benefit himself or another person, forces someone with Violence or Threat of Violence to give a Property... shall be punished for extortion, with a maximum imprisonment of nine years.",
     "explanation": "Pemerasan menurut KUHP Baru (dahulu 368). Mirip pencurian dengan kekerasan, namun bedanya korban sendiri yang terpaksa menyerahkan hartanya karena berada di bawah tekanan psikologis/fisik dari pelaku.",
     "explanationEn": "Extortion according to the New Criminal Code (formerly 368). Similar to theft with violence, but the difference is the victim themselves is forced to hand over their property because they are under psychological/physical pressure from the perpetrator.",
-    "keywords": [
-      "pemerasan",
-      "ancaman kekerasan",
-      "pemalakan"
-    ],
-    "relatedArticles": [
-      "479"
-    ],
+    "keywords": ["pemerasan", "ancaman kekerasan", "pemalakan"],
+    "relatedArticles": ["479"],
     "imageRef": "courtroom"
   },
   {
@@ -394,14 +263,8 @@ export const pasalData: Pasal[] = [
     "officialTextEn": "Punished with a maximum imprisonment of one year or a maximum category III fine, Any Person who: a. violates decency in public; or b. violates decency in front of another person present there against their will.",
     "explanation": "Pasal ini mengatur tindak pidana melanggar kesusilaan atau kesopanan umum di KUHP Baru (dahulu 281). Hukuman penjara maksimal lebih singkat dibanding KUHP lama (menjadi 1 tahun, sebelumnya 2 tahun 8 bulan), namun denda disesuaikan.",
     "explanationEn": "This article regulates the crime of violating decency or public modesty in the New Criminal Code (formerly 281). The maximum imprisonment is shorter compared to the old Criminal Code (becomes 1 year, previously 2 years 8 months), but the fine is adjusted.",
-    "keywords": [
-      "kesusilaan",
-      "di muka umum",
-      "melanggar kesopanan"
-    ],
-    "relatedArticles": [
-      "407"
-    ],
+    "keywords": ["kesusilaan", "di muka umum", "melanggar kesopanan"],
+    "relatedArticles": ["407"],
     "imageRef": "lawBooks"
   },
   {
@@ -414,14 +277,23 @@ export const pasalData: Pasal[] = [
     "officialTextEn": "Insult that is not of the nature of defamation or written defamation committed against another person... punished for minor insult with a maximum imprisonment of six months or a maximum category II fine.",
     "explanation": "Penghinaan ringan menurut KUHP Baru (dahulu 315). Tetap menjadi delik aduan absolut, menghukum ujaran caci maki kasar langsung tanpa menuduhkan perbuatan spesifik (berbeda dari pencemaran/defamasi).",
     "explanationEn": "Minor insult under the New Criminal Code (formerly 315). Remains an absolute complaint offense, punishing direct abusive slurs without accusing a specific act (different from defamation).",
-    "keywords": [
-      "penghinaan ringan",
-      "makian",
-      "caci maki"
-    ],
-    "relatedArticles": [
-      "433"
-    ],
+    "keywords": ["penghinaan ringan", "makian", "caci maki"],
+    "relatedArticles": ["433"],
     "imageRef": "gavel"
   }
-];
+]
+
+with open('src/lib/pasal-data.ts', 'r', encoding='utf-8') as f:
+    content = f.read()
+
+# Replace everything from "export const pasalData: Pasal[] = [" to the end of the file.
+import re
+
+header = content.split('export const pasalData: Pasal[] = [')[0]
+
+new_content = header + 'export const pasalData: Pasal[] = ' + json.dumps(pasal_list, indent=2) + ';\n'
+
+with open('src/lib/pasal-data.ts', 'w', encoding='utf-8') as f:
+    f.write(new_content)
+
+print("Updated src/lib/pasal-data.ts successfully.")
