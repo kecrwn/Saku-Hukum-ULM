@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { X, Moon, Sun, Type, Coffee, List, ChevronRight, ChevronLeft, Minus, Plus, ArrowUp, ArrowDown } from "lucide-react";
+import { X, Moon, Sun, Type, Coffee, List, ChevronRight, ChevronLeft, Minus, Plus } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
@@ -338,18 +338,6 @@ export default function BookReader({ book }: BookReaderProps) {
               </div>
             )}
 
-            <div className="flex justify-center mb-12">
-              <button 
-                onClick={() => {
-                  const area = document.getElementById('reader-scroll-area');
-                  if (area) area.scrollTo({ top: area.scrollHeight, behavior: 'smooth' });
-                }}
-                className="control-btn bg-[var(--hover-bg)]"
-                title={isIndonesian ? "Gulir ke Bawah" : "Scroll to Bottom"}
-              >
-                <ArrowDown size={16} /> {isIndonesian ? "Ke Bawah" : "Scroll to Bottom"}
-              </button>
-            </div>
 
             <motion.div 
               key={activeChapter + (isIndonesian ? 'id' : 'en')}
@@ -366,41 +354,24 @@ export default function BookReader({ book }: BookReaderProps) {
             </motion.div>
             
             {/* Chapter Navigation Footer */}
-            <div className="mt-20 pt-8 border-t border-[var(--border-color)] flex justify-between items-center font-manrope">
-              <div className="flex-1 flex justify-start">
-                {activeChapter > 0 && (
-                  <button 
-                    onClick={() => setActiveChapter(activeChapter - 1)}
-                    className="control-btn"
-                  >
-                    <ChevronLeft size={16} /> <span className="hidden sm:inline">{isIndonesian ? "Bab Sebelumnya" : "Previous Chapter"}</span>
-                  </button>
-                )}
-              </div>
-              
-              <div className="flex-1 flex justify-center">
+            <div className="mt-20 pt-8 border-t border-[var(--border-color)] flex justify-between font-manrope">
+              {activeChapter > 0 ? (
                 <button 
-                  onClick={() => {
-                    const area = document.getElementById('reader-scroll-area');
-                    if (area) area.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className="control-btn bg-[var(--hover-bg)]"
-                  title={isIndonesian ? "Gulir ke Atas" : "Scroll to Top"}
+                  onClick={() => setActiveChapter(activeChapter - 1)}
+                  className="control-btn"
                 >
-                  <ArrowUp size={16} /> {isIndonesian ? "Ke Atas" : "Scroll to Top"}
+                  <ChevronLeft size={16} /> {isIndonesian ? "Bab Sebelumnya" : "Previous Chapter"}
                 </button>
-              </div>
-
-              <div className="flex-1 flex justify-end">
-                {activeChapter < book.chapters.length - 1 && (
-                  <button 
-                    onClick={() => setActiveChapter(activeChapter + 1)}
-                    className="control-btn"
-                  >
-                    <span className="hidden sm:inline">{isIndonesian ? "Bab Selanjutnya" : "Next Chapter"}</span> <ChevronRight size={16} />
-                  </button>
-                )}
-              </div>
+              ) : <div/>}
+              
+              {activeChapter < book.chapters.length - 1 && (
+                <button 
+                  onClick={() => setActiveChapter(activeChapter + 1)}
+                  className="control-btn"
+                >
+                  {isIndonesian ? "Bab Selanjutnya" : "Next Chapter"} <ChevronRight size={16} />
+                </button>
+              )}
             </div>
           </div>
         </div>
