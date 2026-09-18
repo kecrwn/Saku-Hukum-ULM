@@ -77,9 +77,30 @@ This project strictly adheres to a predefined design system. When adding new com
 - Maintain existing spacing, typography, and color usage rules.
 - Test changes on mobile to ensure responsiveness and a native-app-like feel.
 
+## Recent Updates: 15th Pass Reading Room & Typography Optimizations
+
+The 15th pass focuses on refining the **Digital Reading Room (`/ruang-baca/[id]`)** and study reading flow into a first-class, distraction-free environment tailored for first-year law students:
+
+### 1. Enhanced Reading Flow & Accessible Phrasing
+- **1st-Year Friendly Clarity**: Simplified sentence structures across law book chapters for approachability while rigorously preserving factual, statutory, and legal substance.
+- **Natural Left-Aligned Typography**: Standardized body text to left alignment (`text-align: left`) to prevent awkward spacing gaps ("rivers") and awkward narrow line-wraps on mobile viewports.
+- **Isolated Horizontal Overflow**: Horizontal scrolling is strictly scoped only to wide data tables (`.markdown-reader table`), ensuring main paragraphs use full viewport width without horizontal drift.
+
+### 2. Reading Controls & Navigation
+- **Dynamic Text-Size Controls**: 3-step font size toggle (Kecil / Small: 16px, Sedang / Medium: 19px, Besar / Large: 24px) located directly in the reader header.
+- **Reading Themes**: Instant toggle between Light (Terang), Sepia (Warm Paper), and Night (Malam / Dark Mode) with customized contrast tokens.
+- **Smooth Scroll & Chapter Controls**: Automatic smooth scrolling to the top on chapter switch, smooth Table of Contents navigation, and dedicated "Bab Sebelumnya" (Previous Chapter) and "Bab Selanjutnya" (Next Chapter) footer controls.
+
+### 3. Typography & Rich Legal Formatting
+- **Lora Reading Serif**: Long-form body text rendered in Google Font `Lora` with true bold (`700`) and italic cuts (no faux-bold or synthetic oblique).
+- **Custom `<cite>` Legal Tags**: Distinctive styling for statutory articles and law citations (e.g., `<cite>Pasal 338 KUHP</cite>`) with accent borders and high-readability tags.
+- **Styled Blockquotes & Lists**: Accent-bordered blockquotes for legal definitions and doctrine, paired with styled list markers.
+
+### 4. AI Assistant (Jaksa) Knowledge Update
+- Updated `Jaksa` system prompt and `siteKnowledge` base so the chatbot is fully conversant with the Reading Room interface, font-size controls, themes, navigation buttons, and rich markdown legal citation tags.
+
 ---
 *Maintained for ULM Faculty of Law, Prosecutor Track.*
-
 
 ## Data Sources (Updated 14 Sep 2026)
 - IDN Times Kaltim (Accreditation news)

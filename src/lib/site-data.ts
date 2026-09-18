@@ -3,29 +3,29 @@ export const externalLinks = {
   ulm: "https://ulm.ac.id/id/", ulmHistory: "https://ulm.ac.id/id/history/", ulmLeadership: "https://ulm.ac.id/id/10148-2/", faculty: "https://fh.ulm.ac.id/", facultyHistory: "https://fh.ulm.ac.id/sejarah-fakultas/", facultyLeadership: "https://fh.ulm.ac.id/profil/organisasi-fakultas/pimpinan/", facultyStaff: "https://fh.ulm.ac.id/profil/organisasi-fakultas/tenaga-pendidik-dosen/", pidana: "https://fh.ulm.ac.id/bagian-hukum/pidana/", curriculum: "https://fh.ulm.ac.id/formasi-mata-kuliah-kurikulum/", curriculumPdf: "https://fh.ulm.ac.id/wp-content/uploads/2023/04/SKS.pdf", facilities: "https://fh.ulm.ac.id/sarana-prasarana/", mootCourtPhoto: "https://fh.ulm.ac.id/img_8181edt/", hukumonlineCorner: "https://ulm.ac.id/id/2024/08/01/ulm-miliki-hukumonline-corner-pertama-di-kalimantan-permudah-akses-literasi-dan-referensi-hukum-terpercaya/", library: "https://lib.ulm.ac.id/id/", alumni: "https://fh.ulm.ac.id/pusat-layanan-alumni/", accreditation: "https://fh.ulm.ac.id/profil/akreditasi-dan-sertifikasi/", accreditationNews: "https://fh.ulm.ac.id/2026/06/05/prodi-s1-hukum-fh-ulm-raih-akreditasi-baik-sekali-dari-ban-pt/", instagram: "https://www.instagram.com/fh.ulm/", linkedIn: "https://www.linkedin.com/school/universitas-lambung-mangkurat/", kejaksaan: "https://rekrutmen.kejaksaan.go.id/", kejaksaanNews: "https://rekrutmen.kejaksaan.go.id/pengumuman", pppj: "https://badiklat.kejaksaan.go.id/berita/s/jaksa-agung-lantik-503-jaksa-baru-burhanuddin-saya-butuh-jaksa-4c2d6", repository: "https://github.com/kecrwn/Saku-Hukum-ULM",
 };
 export const imagery = { 
-  hero: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=1200", 
-  materials: "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?auto=format&fit=crop&q=80&w=1200", 
-  riverCampus: "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&q=80&w=1200", 
-  mootIllustration: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Historic_Courtroom.JPG", 
+  hero: "/images/indo_gavel_1789710852987.jpg", 
+  materials: "/images/indo_books_1789710828206.jpg", 
+  riverCampus: "/images/indo_campus_1789710792677.jpg", 
+  mootIllustration: "/images/indo_courtroom_1789710779487.jpg", 
   mark: "https://upload.wikimedia.org/wikipedia/en/f/f4/Lambung_Mangkurat_University_emblem.png", 
-  officialMoot: "https://images.unsplash.com/photo-1593115057322-e94b77572f20?auto=format&fit=crop&q=80&w=1200",
-  adhyaksaChamber: "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=1200",
-  studentOrgImage: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=1200",
-  mootCourtRoom: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=1200",
+  officialMoot: "/images/indo_courtroom_1789710779487.jpg",
+  adhyaksaChamber: "/images/indo_books_1789710828206.jpg",
+  studentOrgImage: "/images/indo_campus_1789710792677.jpg",
+  mootCourtRoom: "/images/indo_courtroom_1789710779487.jpg",
   ulmEmblem: "https://upload.wikimedia.org/wikipedia/en/f/f4/Lambung_Mangkurat_University_emblem.png",
-  rektorat: "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&q=80&w=1200",
-  gerbang: "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&q=80&w=1200"
+  rektorat: "/images/indo_campus_1789710792677.jpg",
+  gerbang: "/images/indo_campus_1789710792677.jpg"
 };
 export const carouselImages = [
-  "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=1200",
-  "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?auto=format&fit=crop&q=80&w=1200",
-  "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&q=80&w=1200",
-  "https://upload.wikimedia.org/wikipedia/commons/d/d6/Historic_Courtroom.JPG",
-  "https://images.unsplash.com/photo-1593115057322-e94b77572f20?auto=format&fit=crop&q=80&w=1200",
-  "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=1200",
-  "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=1200",
-  "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&q=80&w=1200",
-  "https://upload.wikimedia.org/wikipedia/commons/2/27/Courtroom_%284055605570%29.jpg"
+  "/images/indo_gavel_1789710852987.jpg",
+  "/images/indo_books_1789710828206.jpg",
+  "/images/indo_campus_1789710792677.jpg",
+  "/images/indo_courtroom_1789710779487.jpg",
+  "/images/indo_books_1789710828206.jpg",
+  "/images/indo_campus_1789710792677.jpg",
+  "/images/indo_campus_1789710792677.jpg",
+  "/images/indo_gavel_1789710852987.jpg",
+  "/images/indo_courtroom_1789710779487.jpg"
 ];
 export const criminalRequiredCourses = [
   { code: "BPHPI3701", id: "Sistem Peradilan Pidana", en: "Criminal Justice System" }, { code: "BPHPI3707", id: "Tindak Pidana di Bidang Sumber Daya Alam", en: "Crimes in the Natural Resources Sector" }, { code: "BPHPI3703", id: "Viktimologi", en: "Victimology" }, { code: "BPHPI3704", id: "Perbandingan Hukum Pidana", en: "Comparative Criminal Law" }, { code: "BPHPI3705", id: "Tindak Pidana di Bidang Ekonomi", en: "Crimes in the Economic Sector" }, { code: "BPHPI3706", id: "Hukum Penitensier", en: "Penitentiary Law" },
