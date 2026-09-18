@@ -377,25 +377,29 @@ export default function BookReader({ book }: BookReaderProps) {
         
       </div>
 
-      <div className="absolute bottom-6 right-6 md:bottom-8 md:right-8 flex flex-col gap-2 z-40">
-        <button 
-          onClick={() => document.getElementById('reader-scroll-area')?.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="p-3 bg-[var(--hover-bg)] backdrop-blur-md border border-[var(--border-color)] rounded-full shadow-lg hover:bg-[var(--border-color)] transition-colors text-[inherit]"
-          title={isIndonesian ? "Gulir ke Atas" : "Scroll to Top"}
-        >
-          <ArrowUp size={20} />
-        </button>
-        <button 
-          onClick={() => {
-            const area = document.getElementById('reader-scroll-area');
-            area?.scrollTo({ top: area.scrollHeight, behavior: 'smooth' });
-          }}
-          className="p-3 bg-[var(--hover-bg)] backdrop-blur-md border border-[var(--border-color)] rounded-full shadow-lg hover:bg-[var(--border-color)] transition-colors text-[inherit]"
-          title={isIndonesian ? "Gulir ke Bawah" : "Scroll to Bottom"}
-        >
-          <ArrowDown size={20} />
-        </button>
-      </div>
+      {/* Scroll to Bottom Button - Fixed at the Top Right */}
+      <button 
+        onClick={() => {
+          const area = document.getElementById('reader-scroll-area');
+          if (area) area.scrollTo({ top: area.scrollHeight, behavior: 'smooth' });
+        }}
+        className="fixed top-[100px] right-6 md:top-[120px] md:right-8 z-50 p-3 bg-[var(--hover-bg)] backdrop-blur-md border border-[var(--border-color)] rounded-full shadow-lg hover:bg-[var(--border-color)] transition-colors text-[inherit]"
+        title={isIndonesian ? "Gulir ke Bawah" : "Scroll to Bottom"}
+      >
+        <ArrowDown size={20} />
+      </button>
+
+      {/* Scroll to Top Button - Fixed at the Bottom Right */}
+      <button 
+        onClick={() => {
+          const area = document.getElementById('reader-scroll-area');
+          if (area) area.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50 p-3 bg-[var(--hover-bg)] backdrop-blur-md border border-[var(--border-color)] rounded-full shadow-lg hover:bg-[var(--border-color)] transition-colors text-[inherit]"
+        title={isIndonesian ? "Gulir ke Atas" : "Scroll to Top"}
+      >
+        <ArrowUp size={20} />
+      </button>
     </motion.div>
   );
 }
