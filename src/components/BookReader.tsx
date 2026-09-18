@@ -33,13 +33,19 @@ export default function BookReader({ book }: BookReaderProps) {
 
   useEffect(() => {
     setIsMounted(true);
+    window.scrollTo(0, 0);
+    setTimeout(() => window.scrollTo(0, 0), 10);
     document.body.style.overflow = "hidden";
     
+    let lastWidth = window.innerWidth;
     const handleResize = () => {
-      if (window.innerWidth < 1024) setSidebarOpen(false);
-      else setSidebarOpen(true);
+      if (window.innerWidth !== lastWidth) {
+        lastWidth = window.innerWidth;
+        if (window.innerWidth < 1024) setSidebarOpen(false);
+        else setSidebarOpen(true);
+      }
     };
-    handleResize();
+    if (window.innerWidth < 1024) setSidebarOpen(false);
     window.addEventListener('resize', handleResize);
     
     return () => {
@@ -81,14 +87,14 @@ export default function BookReader({ book }: BookReaderProps) {
       className={`relative flex flex-col font-dm-serif theme-${theme} min-h-[calc(100vh-74px)]`}
       style={{
         backgroundColor: theme === 'light' ? '#fcfcfc' : theme === 'sepia' ? '#fdf6e3' : '#121212',
-        color: theme === 'light' ? '#1a1a1a' : theme === 'sepia' ? '#4a3c2c' : '#e0e0e0',
+        color: 'var(--text-primary)',
         transition: 'background-color 0.25s ease, color 0.25s ease'
       }}
     >
       <style>{`
-        .theme-light { --border-color: rgba(0,0,0,0.1); --hover-bg: rgba(0,0,0,0.05); }
-        .theme-sepia { --border-color: rgba(92,75,55,0.15); --hover-bg: rgba(92,75,55,0.08); }
-        .theme-night { --border-color: rgba(255,255,255,0.1); --hover-bg: rgba(255,255,255,0.05); }
+        .theme-light { --border-color: rgba(0,0,0,0.1); --hover-bg: rgba(0,0,0,0.05); --text-primary: #1a1a1a; --text-heading: #102d33; }
+        .theme-sepia { --border-color: rgba(92,75,55,0.15); --hover-bg: rgba(92,75,55,0.08); --text-primary: #4a3c2c; --text-heading: #3a2a18; }
+        .theme-night { --border-color: rgba(255,255,255,0.1); --hover-bg: rgba(255,255,255,0.05); --text-primary: #e0e0e0; --text-heading: #ffffff; }
 
         .reader-controls {
           border-bottom: 1px solid var(--border-color);
@@ -141,7 +147,7 @@ export default function BookReader({ book }: BookReaderProps) {
         }
         .markdown-reader h1, .markdown-reader h2, .markdown-reader h3, .markdown-reader h4 {
           font-family: var(--font-dm-serif), serif;
-          color: var(--ink-deep, inherit);
+          color: var(--text-heading, inherit);
         }
         .markdown-reader h1 { font-size: 2.5em; margin-bottom: 1em; line-height: 1.2; }
         .markdown-reader h2 { font-size: 1.8em; margin-top: 1.8em; margin-bottom: 0.8em; }
