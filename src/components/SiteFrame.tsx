@@ -80,35 +80,37 @@ export function SiteFrame({ children }: PropsWithChildren) {
         )}
       </header>
       <main>{children}</main>
-      <footer className="site-footer">
-        <div className="footer-grid">
-          <div className="footer-brand-col">
-            <Link href="/" className="footer-wordmark"><span>Saku</span> <strong>Hukum</strong> <span className="wordmark-ulm">ULM</span></Link>
-            <p>{copy.footerNote}</p>
-            <p className="footer-disclaimer">{copy.personalNotice}</p>
+      {!(location.startsWith('/ruang-baca/') && location !== '/ruang-baca') && (
+        <footer className="site-footer">
+          <div className="footer-grid">
+            <div className="footer-brand-col">
+              <Link href="/" className="footer-wordmark"><span>Saku</span> <strong>Hukum</strong> <span className="wordmark-ulm">ULM</span></Link>
+              <p>{copy.footerNote}</p>
+              <p className="footer-disclaimer">{copy.personalNotice}</p>
+            </div>
+            <div className="footer-nav-col">
+              <p className="footer-heading">{isIndonesian ? "Navigasi" : "Navigation"}</p>
+              {navItems.slice(0, Math.ceil(navItems.length / 2)).map(([label, href]) => <Link key={href} href={href} className="footer-nav-link">{label}</Link>)}
+            </div>
+            <div className="footer-nav-col">
+              <p className="footer-heading">{isIndonesian ? "Lainnya" : "More"}</p>
+              {navItems.slice(Math.ceil(navItems.length / 2)).map(([label, href]) => <Link key={href} href={href} className="footer-nav-link">{label}</Link>)}
+            </div>
+            <div className="footer-nav-col">
+              <p className="footer-heading">{isIndonesian ? "Tautan Resmi" : "Official Links"}</p>
+              <a href={externalLinks.faculty} target="_blank" rel="noopener noreferrer" className="footer-nav-link">FH ULM <ArrowUpRight size={12} /></a>
+              <a href={externalLinks.instagram} target="_blank" rel="noopener noreferrer" className="footer-nav-link">Instagram <ArrowUpRight size={12} /></a>
+              <a href={externalLinks.repository} target="_blank" rel="noopener noreferrer" className="footer-nav-link">GitHub <ArrowUpRight size={12} /></a>
+            </div>
           </div>
-          <div className="footer-nav-col">
-            <p className="footer-heading">{isIndonesian ? "Navigasi" : "Navigation"}</p>
-            {navItems.slice(0, Math.ceil(navItems.length / 2)).map(([label, href]) => <Link key={href} href={href} className="footer-nav-link">{label}</Link>)}
+          <div className="footer-bottom">
+            <p>© {new Date().getFullYear()} Saku Hukum ULM · v{packageJson.version}</p>
+            <button type="button" className="back-to-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} aria-label={isIndonesian ? 'Kembali ke atas' : 'Back to top'}>
+              <ArrowUpRight size={12} />{isIndonesian ? 'Ke atas' : 'Top'}
+            </button>
           </div>
-          <div className="footer-nav-col">
-            <p className="footer-heading">{isIndonesian ? "Lainnya" : "More"}</p>
-            {navItems.slice(Math.ceil(navItems.length / 2)).map(([label, href]) => <Link key={href} href={href} className="footer-nav-link">{label}</Link>)}
-          </div>
-          <div className="footer-nav-col">
-            <p className="footer-heading">{isIndonesian ? "Tautan Resmi" : "Official Links"}</p>
-            <a href={externalLinks.faculty} target="_blank" rel="noopener noreferrer" className="footer-nav-link">FH ULM <ArrowUpRight size={12} /></a>
-            <a href={externalLinks.instagram} target="_blank" rel="noopener noreferrer" className="footer-nav-link">Instagram <ArrowUpRight size={12} /></a>
-            <a href={externalLinks.repository} target="_blank" rel="noopener noreferrer" className="footer-nav-link">GitHub <ArrowUpRight size={12} /></a>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} Saku Hukum ULM · v{packageJson.version}</p>
-          <button type="button" className="back-to-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} aria-label={isIndonesian ? 'Kembali ke atas' : 'Back to top'}>
-            <ArrowUpRight size={12} />{isIndonesian ? 'Ke atas' : 'Top'}
-          </button>
-        </div>
-      </footer>
+        </footer>
+      )}
       {location !== "/chat" && <Chatbot />}
     </div>
   );

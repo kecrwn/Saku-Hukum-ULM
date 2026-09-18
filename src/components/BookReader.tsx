@@ -26,7 +26,7 @@ export default function BookReader({ book }: BookReaderProps) {
   const [theme, setTheme] = useState<Theme>("sepia");
   const fontSizes = ["x-small", "small", "medium", "large", "x-large", "2x-large"] as const;
   type FontSize = typeof fontSizes[number];
-  const [fontSize, setFontSize] = useState<FontSize>("medium");
+  const [fontSize, setFontSize] = useState<FontSize>("x-small");
   const [isMounted, setIsMounted] = useState(false);
   const [activeChapter, setActiveChapter] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -338,6 +338,19 @@ export default function BookReader({ book }: BookReaderProps) {
               </div>
             )}
 
+            <div className="flex justify-center mb-12">
+              <button 
+                onClick={() => {
+                  const area = document.getElementById('reader-scroll-area');
+                  if (area) area.scrollTo({ top: area.scrollHeight, behavior: 'smooth' });
+                }}
+                className="control-btn bg-[var(--hover-bg)]"
+                title={isIndonesian ? "Gulir ke Bawah" : "Scroll to Bottom"}
+              >
+                <ArrowDown size={16} /> {isIndonesian ? "Ke Bawah" : "Scroll to Bottom"}
+              </button>
+            </div>
+
             <motion.div 
               key={activeChapter + (isIndonesian ? 'id' : 'en')}
               initial={{ opacity: 0, y: 20 }}
@@ -353,53 +366,46 @@ export default function BookReader({ book }: BookReaderProps) {
             </motion.div>
             
             {/* Chapter Navigation Footer */}
-            <div className="mt-20 pt-8 border-t border-[var(--border-color)] flex justify-between font-manrope">
-              {activeChapter > 0 ? (
-                <button 
-                  onClick={() => setActiveChapter(activeChapter - 1)}
-                  className="control-btn"
-                >
-                  <ChevronLeft size={16} /> {isIndonesian ? "Bab Sebelumnya" : "Previous Chapter"}
-                </button>
-              ) : <div/>}
+            <div className="mt-20 pt-8 border-t border-[var(--border-color)] flex justify-between items-center font-manrope">
+              <div className="flex-1 flex justify-start">
+                {activeChapter > 0 && (
+                  <button 
+                    onClick={() => setActiveChapter(activeChapter - 1)}
+                    className="control-btn"
+                  >
+                    <ChevronLeft size={16} /> <span className="hidden sm:inline">{isIndonesian ? "Bab Sebelumnya" : "Previous Chapter"}</span>
+                  </button>
+                )}
+              </div>
               
-              {activeChapter < book.chapters.length - 1 && (
+              <div className="flex-1 flex justify-center">
                 <button 
-                  onClick={() => setActiveChapter(activeChapter + 1)}
-                  className="control-btn"
+                  onClick={() => {
+                    const area = document.getElementById('reader-scroll-area');
+                    if (area) area.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="control-btn bg-[var(--hover-bg)]"
+                  title={isIndonesian ? "Gulir ke Atas" : "Scroll to Top"}
                 >
-                  {isIndonesian ? "Bab Selanjutnya" : "Next Chapter"} <ChevronRight size={16} />
+                  <ArrowUp size={16} /> {isIndonesian ? "Ke Atas" : "Scroll to Top"}
                 </button>
-              )}
+              </div>
+
+              <div className="flex-1 flex justify-end">
+                {activeChapter < book.chapters.length - 1 && (
+                  <button 
+                    onClick={() => setActiveChapter(activeChapter + 1)}
+                    className="control-btn"
+                  >
+                    <span className="hidden sm:inline">{isIndonesian ? "Bab Selanjutnya" : "Next Chapter"}</span> <ChevronRight size={16} />
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
         
       </div>
-
-      {/* Scroll to Bottom Button - Fixed at the Top Right */}
-      <button 
-        onClick={() => {
-          const area = document.getElementById('reader-scroll-area');
-          if (area) area.scrollTo({ top: area.scrollHeight, behavior: 'smooth' });
-        }}
-        className="fixed top-[100px] right-6 md:top-[120px] md:right-8 z-50 p-3 bg-[var(--hover-bg)] backdrop-blur-md border border-[var(--border-color)] rounded-full shadow-lg hover:bg-[var(--border-color)] transition-colors text-[inherit]"
-        title={isIndonesian ? "Gulir ke Bawah" : "Scroll to Bottom"}
-      >
-        <ArrowDown size={20} />
-      </button>
-
-      {/* Scroll to Top Button - Fixed at the Bottom Right */}
-      <button 
-        onClick={() => {
-          const area = document.getElementById('reader-scroll-area');
-          if (area) area.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50 p-3 bg-[var(--hover-bg)] backdrop-blur-md border border-[var(--border-color)] rounded-full shadow-lg hover:bg-[var(--border-color)] transition-colors text-[inherit]"
-        title={isIndonesian ? "Gulir ke Atas" : "Scroll to Top"}
-      >
-        <ArrowUp size={20} />
-      </button>
     </motion.div>
   );
 }

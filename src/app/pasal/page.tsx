@@ -4,8 +4,10 @@ import React, { useState, useMemo } from 'react';
 import { pasalData, Pasal } from '@/lib/pasal-data';
 import { imagery } from '@/lib/site-data';
 import Link from 'next/link';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function KamusPasal() {
+  const { isIndonesian } = useLanguage();
   const [query, setQuery] = useState('');
   const [scope, setScope] = useState('ALL');
   const [viewMode, setViewMode] = useState<'SEARCH' | 'BROWSE'>('SEARCH');
@@ -24,7 +26,10 @@ export default function KamusPasal() {
         p.chapter.toLowerCase().includes(q) ||
         p.officialText.toLowerCase().includes(q) ||
         p.explanation.toLowerCase().includes(q) ||
-        p.keywords.some(k => k.toLowerCase().includes(q))
+        p.keywords.some(k => k.toLowerCase().includes(q)) ||
+        (p.chapterEn && p.chapterEn.toLowerCase().includes(q)) ||
+        (p.officialTextEn && p.officialTextEn.toLowerCase().includes(q)) ||
+        (p.explanationEn && p.explanationEn.toLowerCase().includes(q))
       );
     }
     return data;
@@ -33,11 +38,12 @@ export default function KamusPasal() {
   const groupedData = useMemo(() => {
     const groups: Record<string, Pasal[]> = {};
     filteredData.forEach(p => {
-      if (!groups[p.chapter]) groups[p.chapter] = [];
-      groups[p.chapter].push(p);
+      const chapter = !isIndonesian && p.chapterEn ? p.chapterEn : p.chapter;
+      if (!groups[chapter]) groups[chapter] = [];
+      groups[chapter].push(p);
     });
     return groups;
-  }, [filteredData]);
+  }, [filteredData, isIndonesian]);
 
   return (
     <div className="min-h-screen bg-[var(--ink-deep)] text-white font-sans p-6 md:p-12 relative overflow-hidden">
@@ -53,13 +59,15 @@ export default function KamusPasal() {
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            Kembali
+            {isIndonesian ? "Kembali" : "Back"}
           </Link>
           <h1 className="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400">
-            Kamus <span className="text-[var(--clay)]">Pasal</span>
+            {isIndonesian ? "Kamus " : "Article "}<span className="text-[var(--clay)]">{isIndonesian ? "Pasal" : "Dictionary"}</span>
           </h1>
           <p className="text-gray-400 text-lg md:text-xl max-w-2xl">
-            Akses cepat ke repositori hukum. Cari nomor pasal, kata kunci, atau jelajahi berdasarkan bab dan kategori hukum.
+            {isIndonesian 
+              ? "Akses cepat ke repositori hukum. Cari nomor pasal, kata kunci, atau jelajahi berdasarkan bab dan kategori hukum."
+              : "Quick access to legal repository. Search by article number, keywords, or browse by chapter and legal category."}
           </p>
         </header>
 
@@ -70,13 +78,13 @@ export default function KamusPasal() {
               onClick={() => setViewMode('SEARCH')}
               className={`flex-1 md:flex-none px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${viewMode === 'SEARCH' ? 'bg-[var(--clay)] text-white shadow-lg' : 'bg-transparent text-gray-400 hover:text-white'}`}
             >
-              Cari Pasal
+              {isIndonesian ? "Cari Pasal" : "Search Article"}
             </button>
             <button 
               onClick={() => setViewMode('BROWSE')}
               className={`flex-1 md:flex-none px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${viewMode === 'BROWSE' ? 'bg-[var(--clay)] text-white shadow-lg' : 'bg-transparent text-gray-400 hover:text-white'}`}
             >
-              Mode Jelajah
+              {isIndonesian ? "Mode Jelajah" : "Browse Mode"}
             </button>
           </div>
           
@@ -86,7 +94,7 @@ export default function KamusPasal() {
               onChange={e => setScope(e.target.value)}
               className="bg-black/20 border border-white/10 rounded-2xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[var(--clay)] focus:ring-1 focus:ring-[var(--clay)] transition-all w-full md:w-48 appearance-none cursor-pointer"
             >
-              {scopes.map(s => <option key={s} value={s} className="bg-[var(--ink-deep)]">{s === 'ALL' ? 'Semua Kategori' : s}</option>)}
+              {scopes.map(s => <option key={s} value={s} className="bg-[var(--ink-deep)]">{s === 'ALL' ? (isIndonesian ? 'Semua Kategori' : 'All Categories') : s}</option>)}
             </select>
 
             <div className="relative w-full md:w-80">
@@ -95,7 +103,7 @@ export default function KamusPasal() {
               </svg>
               <input 
                 type="text" 
-                placeholder="Cari nomor atau kata kunci..."
+                placeholder={isIndonesian ? "Cari nomor atau kata kunci..." : "Search number or keyword..."}
                 value={query}
                 onChange={e => setQuery(e.target.value)}
                 className="w-full bg-black/20 border border-white/10 rounded-2xl pl-12 pr-4 py-3 text-white text-sm focus:outline-none focus:border-[var(--clay)] focus:ring-1 focus:ring-[var(--clay)] transition-all"
@@ -115,8 +123,8 @@ export default function KamusPasal() {
                   <svg className="w-16 h-16 mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <p className="text-lg font-medium text-gray-400">Pencarian tidak ditemukan.</p>
-                  <p className="text-sm mt-1">Coba gunakan kata kunci atau nomor pasal lain.</p>
+                  <p className="text-lg font-medium text-gray-400">{isIndonesian ? "Pencarian tidak ditemukan." : "Search not found."}</p>
+                  <p className="text-sm mt-1">{isIndonesian ? "Coba gunakan kata kunci atau nomor pasal lain." : "Try using other keywords or article numbers."}</p>
                 </div>
               )}
             </div>
@@ -126,7 +134,7 @@ export default function KamusPasal() {
                 <div key={chapter} className="space-y-6">
                   <div className="flex items-center gap-4">
                     <div className="h-px bg-gradient-to-r from-[var(--clay)] to-transparent flex-1 opacity-50" />
-                    <h2 className="text-2xl font-bold text-[var(--clay)] tracking-tight whitespace-nowrap">{chapter}</h2>
+                    <h2 className="text-2xl font-bold text-[var(--clay)] tracking-tight whitespace-normal break-words text-center max-w-[80%]">{chapter}</h2>
                     <div className="h-px bg-gradient-to-l from-[var(--clay)] to-transparent flex-1 opacity-50" />
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -137,7 +145,7 @@ export default function KamusPasal() {
                 </div>
               )) : (
                 <div className="text-center py-20">
-                  <p className="text-lg font-medium text-gray-400">Tidak ada data untuk kategori terpilih.</p>
+                  <p className="text-lg font-medium text-gray-400">{isIndonesian ? "Tidak ada data untuk kategori terpilih." : "No data for selected category."}</p>
                 </div>
               )}
             </div>
@@ -150,15 +158,26 @@ export default function KamusPasal() {
 }
 
 function PasalCard({ pasal }: { pasal: Pasal }) {
+  const { isIndonesian } = useLanguage();
   const imageUrl = pasal.imageRef === 'courtroom' ? imagery.mootCourtRoom : pasal.imageRef === 'gavel' ? imagery.hero : pasal.imageRef === 'lawBooks' ? imagery.materials : undefined;
   
+  const displayChapter = !isIndonesian && pasal.chapterEn ? pasal.chapterEn : pasal.chapter;
+  const displayOfficialText = !isIndonesian && pasal.officialTextEn ? pasal.officialTextEn : pasal.officialText;
+  const displayExplanation = !isIndonesian && pasal.explanationEn ? pasal.explanationEn : pasal.explanation;
+  const pendingTranslation = !isIndonesian && (!pasal.chapterEn || !pasal.officialTextEn || !pasal.explanationEn);
+
   return (
     <div className="group bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 hover:border-white/20 transition-all duration-500 rounded-3xl overflow-hidden flex flex-col shadow-2xl backdrop-blur-md relative h-full">
+      {pendingTranslation && (
+        <div className="absolute top-0 right-0 bg-yellow-500/80 text-black text-[10px] font-bold px-3 py-1.5 rounded-bl-xl z-20 backdrop-blur-md max-w-[80%] text-right shadow-md break-words">
+          Translation Pending
+        </div>
+      )}
       {imageUrl && (
         <div className="h-48 w-full overflow-hidden relative">
           <img 
             src={imageUrl} 
-            alt={pasal.chapter} 
+            alt={displayChapter} 
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--ink-deep)] via-[var(--ink-deep)]/60 to-transparent" />
@@ -167,43 +186,43 @@ function PasalCard({ pasal }: { pasal: Pasal }) {
       
       <div className={`p-6 md:p-8 flex-1 flex flex-col ${imageUrl ? '-mt-20 relative z-10' : ''}`}>
         <div className="flex justify-between items-start mb-6">
-          <div className="space-y-2">
-            <span className="inline-flex items-center px-3 py-1 bg-[var(--clay)]/20 text-[var(--clay)] text-xs font-bold uppercase tracking-wider rounded-full border border-[var(--clay)]/30 backdrop-blur-sm">
+          <div className="space-y-2 max-w-full">
+            <span className="inline-flex items-center px-3 py-1 bg-[var(--clay)]/20 text-[var(--clay)] text-xs font-bold uppercase tracking-wider rounded-full border border-[var(--clay)]/30 backdrop-blur-sm break-words whitespace-normal">
               {pasal.code}
             </span>
-            <h3 className="text-3xl font-black text-white tracking-tight">
-              Pasal {pasal.articleNumber.replace('Pasal ', '')}
+            <h3 className="text-3xl font-black text-white tracking-tight break-words whitespace-normal">
+              {isIndonesian ? 'Pasal' : 'Article'} {pasal.articleNumber.replace('Pasal ', '')}
             </h3>
-            <p className="text-gray-300 text-sm font-medium">{pasal.chapter}</p>
+            <p className="text-gray-300 text-sm font-medium break-words whitespace-normal">{displayChapter}</p>
           </div>
         </div>
         
-        <div className="space-y-6 mb-8 flex-1">
+        <div className="space-y-6 mb-8 flex-1 min-w-0">
           <div className="relative">
             <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-[var(--clay)] to-orange-500 rounded-full" />
-            <p className="text-sm text-gray-300/90 italic leading-relaxed font-serif">
-              "{pasal.officialText}"
+            <p className="text-sm text-gray-300/90 italic leading-relaxed font-serif break-words whitespace-normal">
+              "{displayOfficialText}"
             </p>
           </div>
           
-          <div className="bg-black/20 p-4 rounded-2xl border border-white/5">
+          <div className="bg-black/20 p-4 rounded-2xl border border-white/5 overflow-hidden">
             <div className="flex items-center gap-2 mb-2">
-              <svg className="w-4 h-4 text-[var(--clay)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-[var(--clay)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest">Penjelasan</h4>
+              <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest truncate">{isIndonesian ? "Penjelasan" : "Explanation"}</h4>
             </div>
-            <p className="text-sm text-white/80 leading-relaxed">{pasal.explanation}</p>
+            <p className="text-sm text-white/80 leading-relaxed break-words whitespace-normal">{displayExplanation}</p>
           </div>
         </div>
 
         {pasal.relatedArticles && pasal.relatedArticles.length > 0 && (
           <div className="mt-auto pt-6 border-t border-white/5">
             <div className="flex flex-wrap gap-2 items-center">
-              <span className="text-xs font-medium text-gray-500 mr-2">Terkait:</span>
+              <span className="text-xs font-medium text-gray-500 mr-2">{isIndonesian ? "Terkait:" : "Related:"}</span>
               {pasal.relatedArticles.map(rel => (
                 <span key={rel} className="px-3 py-1.5 bg-white/5 text-gray-300 text-xs rounded-xl hover:bg-[var(--clay)] hover:text-white cursor-pointer transition-all duration-300 border border-white/10 hover:border-[var(--clay)]">
-                  Pasal {rel.replace('Pasal ', '')}
+                  {isIndonesian ? 'Pasal' : 'Article'} {rel.replace('Pasal ', '')}
                 </span>
               ))}
             </div>
