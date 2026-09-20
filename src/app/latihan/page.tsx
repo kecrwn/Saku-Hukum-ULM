@@ -97,7 +97,7 @@ export default function LatihanPage() {
                 id="analysis"
                 value={analysis}
                 onChange={(e) => setAnalysis(e.target.value)}
-                placeholder=isIndonesian ? "Identifikasi pasal yang relevan dan analisis unsur-unsurnya..." : "Identify relevant articles and analyze their elements..."
+                placeholder={isIndonesian ? "Identifikasi pasal yang relevan dan analisis unsur-unsurnya..." : "Identify relevant articles and analyze their elements..."}
                 className="w-full min-h-[200px] p-5 rounded-2xl outline-none transition-all resize-y"
                 style={{ background: 'var(--card)', border: '1px solid var(--line)', color: 'var(--ink)' }}
                 disabled={loading}
