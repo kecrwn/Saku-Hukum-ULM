@@ -18,6 +18,7 @@ const firaCode = Fira_Code({ subsets: ["latin"], variable: "--font-fira-code" })
 
 export const metadata: Metadata = {
   title: "Saku Hukum ULM | Panduan Studi Pribadi Fakultas Hukum ULM",
+  manifest: "/manifest.json",
   description: "Buku Saku Digital Mahasiswa Fakultas Hukum Universitas Lambung Mangkurat. Informasi akademik, kurikulum, fasilitas, dan panduan studi lengkap untuk mahasiswa FH ULM.",
   keywords: ["Saku Hukum ULM", "Buku Saku Hukum ULM", "Fakultas Hukum ULM", "Universitas Lambung Mangkurat", "Mahasiswa Hukum ULM", "Panduan Studi Hukum ULM", "Kurikulum Hukum ULM"],
   authors: [{ name: "Fakultas Hukum Universitas Lambung Mangkurat" }],

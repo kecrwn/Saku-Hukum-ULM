@@ -111,6 +111,7 @@ function ExpandableMessage({ content, isIndonesian }: { content: string, isIndon
 
 export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
   const [isOpen, setIsOpen] = useState(fullScreen ? true : false);
+  const [isOffline, setIsOffline] = useState(false);
   const { isIndonesian } = useLanguage();
   const router = useRouter();
   const endRef = useRef<HTMLDivElement>(null);
@@ -283,6 +284,20 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
 
+  useEffect(() => {
+    if (typeof navigator !== 'undefined') {
+      setIsOffline(!navigator.onLine);
+    }
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
   const chips = isIndonesian
     ? ["Peminatan di FH ULM?", "Jalur menjadi jaksa?", "Berapa SKS Pidana?"]
     : ["FH ULM specializations?", "Path to become prosecutor?", "Criminal Law credits?"];
@@ -454,6 +469,11 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
             </div>
           </div>
           <div className="chat-body">
+            {isOffline && (
+              <div className="bg-[#d93838] text-white p-3 text-center text-sm font-medium z-50 rounded-xl mb-4 shadow-sm animate-pulse">
+                {isIndonesian ? "Anda sedang offline. Fitur chat tidak tersedia saat ini." : "You're offline. Live chat is unavailable."}
+              </div>
+            )}
             {messages.map(m => {
               if (m.role === 'assistant' && !m.content && (!m.toolInvocations || m.toolInvocations.length === 0)) {
                 return null;
@@ -542,7 +562,7 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
                 onKeyDown={handleKeyDown}
                 placeholder={isIndonesian ? "Tulis pesan..." : "Type a message..."}
                 rows={1}
-                disabled={isLoading}
+                disabled={isLoading || isOffline}
               />
               {isLoading ? (
                 <button 
@@ -555,7 +575,7 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
                   <div className="chat-stop-spinner"></div>
                 </button>
               ) : (
-                <button type="submit" className="chat-send" disabled={!input.trim()}>
+                <button type="submit" className="chat-send" disabled={!input.trim() || isOffline}>
                   <Send size={14} style={{ marginLeft: '-1px' }} />
                 </button>
               )}
