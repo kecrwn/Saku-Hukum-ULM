@@ -154,11 +154,11 @@ export default function AlurPerkaraPage() {
                 </div>
 
                 {/* Card Content */}
-                <div className="flex-1 paper-panel group-hover:shadow-[0_12px_32px_rgba(30,48,43,0.12)] transition-all duration-300 group-hover:-translate-y-1">
-                  <h2 className="text-2xl md:text-3xl font-[var(--serif)] text-[var(--ink-deep)] mb-3 tracking-tight">
+                <div className="flex-1 min-w-0 paper-panel group-hover:shadow-[0_12px_32px_rgba(30,48,43,0.12)] transition-all duration-300 group-hover:-translate-y-1">
+                  <h2 className="text-2xl md:text-3xl font-[var(--serif)] text-[var(--ink-deep)] mb-3 tracking-tight break-words">
                     {isIndonesian ? step.title : step.titleEn}
                   </h2>
-                  <p className="text-[#435651] text-sm md:text-[15px] leading-relaxed mb-6">
+                  <p className="text-[#435651] text-sm md:text-[15px] leading-relaxed mb-6 break-words whitespace-normal">
                     {isIndonesian ? step.description : step.descriptionEn}
                   </p>
                   
@@ -167,11 +167,11 @@ export default function AlurPerkaraPage() {
                     <div className="mt-0.5 shrink-0 w-7 h-7 rounded-full bg-[var(--ink)] flex items-center justify-center text-[var(--paper)]">
                       <span className="text-[12px] font-bold">J</span>
                     </div>
-                    <div>
-                      <span className="block text-[10px] font-extrabold text-[var(--ink)] uppercase tracking-widest mb-1.5 opacity-80">
+                    <div className="min-w-0 flex-1">
+                      <span className="block text-[10px] font-extrabold text-[var(--ink)] uppercase tracking-widest mb-1.5 opacity-80 break-words">
                         {isIndonesian ? "Peran Institusi (Fokus Jaksa)" : "Institutional Role (Prosecutor Focus)"}
                       </span>
-                      <p className="text-sm md:text-[14px] text-[var(--ink-deep)] m-0 leading-snug font-medium">
+                      <p className="text-sm md:text-[14px] text-[var(--ink-deep)] m-0 leading-snug font-medium break-words whitespace-normal">
                         {isIndonesian ? step.role : step.roleEn}
                       </p>
                     </div>

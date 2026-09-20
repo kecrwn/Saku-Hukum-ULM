@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from "react";
 import { glossaryTerms } from "@/lib/glossary-data";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Search, BookA } from "lucide-react";
+import { Search, BookOpen } from "lucide-react";
 
 export default function GlosariumPage() {
   const { language, isIndonesian } = useLanguage();
@@ -28,7 +28,7 @@ export default function GlosariumPage() {
         <header className="space-y-4 text-center">
           <div className="flex justify-center mb-6">
             <div className="w-16 h-16 rounded-2xl bg-[var(--card)] shadow-[0_18px_44px_rgba(30,48,43,.09)] flex items-center justify-center text-[var(--clay)] border border-[var(--line)]">
-              <BookA className="w-8 h-8" />
+              <BookOpen className="w-8 h-8" />
             </div>
           </div>
           <h1 className="font-serif text-4xl md:text-5xl text-[var(--ink-deep)] font-bold">
