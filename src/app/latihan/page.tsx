@@ -3,19 +3,54 @@
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import Link from 'next/link';
-import { ArrowLeft, Send, AlertCircle, FileText, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Send, AlertCircle, FileText, CheckCircle, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { latihanScenarios } from '@/lib/latihan-data';
+import ReactMarkdown from 'react-markdown';
 
-const SCENARIO_ID = "Budi sedang berjalan di pasar dan melihat sebuah dompet tergeletak di atas meja seorang pedagang buah. Saat pedagang sedang sibuk melayani pembeli lain, Budi dengan cepat mengambil dompet tersebut dan memasukkannya ke dalam saku celananya. Budi kemudian segera meninggalkan pasar tanpa berniat mengembalikan dompet itu. Analisislah tindak pidana yang dilakukan Budi berdasarkan KUHP Baru.";
-const SCENARIO_EN = "Budi is walking in the market and sees a wallet lying on a fruit vendor's table. While the vendor is busy serving another customer, Budi quickly grabs the wallet and puts it in his pants pocket. Budi then immediately leaves the market with no intention of returning the wallet. Analyze the criminal act committed by Budi based on the New KUHP.";
+const markdownComponents = {
+  p: ({node, ...props}: any) => <p className="mb-2" {...props} />,
+  strong: ({node, ...props}: any) => <strong className="font-bold" style={{ color: 'var(--ink-deep)' }} {...props} />,
+  ul: ({node, ...props}: any) => <ul className="list-disc pl-5 mb-2 space-y-1" {...props} />,
+  ol: ({node, ...props}: any) => <ol className="list-decimal pl-5 mb-2 space-y-1" {...props} />,
+  li: ({node, ...props}: any) => <li className="" {...props} />
+};
+
+const loadingMessagesId = ["Menganalisis fakta...", "Mencari referensi KUHP...", "Menyusun umpan balik...", "Memeriksa elemen hukum..."];
+const loadingMessagesEn = ["Analyzing facts...", "Searching KUHP references...", "Drafting feedback...", "Checking legal elements..."];
 
 export default function LatihanPage() {
   const { isIndonesian } = useLanguage();
+  const [selectedScenario, setSelectedScenario] = useState(latihanScenarios[0]);
+  const [completed, setCompleted] = useState<string[]>([]);
   const [analysis, setAnalysis] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
   const [feedback, setFeedback] = useState<any>(null);
   const [error, setError] = useState('');
   const [offline, setOffline] = useState(false);
+  
+  const [provider, setProvider] = useState('Nemotron 30B');
+  const providers = ['DeepSeek Flash', 'Llama 3.1 8B', 'Nemotron 30B'];
+
+  useEffect(() => {
+    const stored = localStorage.getItem('completed_cases');
+    if (stored) {
+      try { setCompleted(JSON.parse(stored)); } catch(e) {}
+    }
+  }, []);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (loading) {
+      interval = setInterval(() => {
+        setLoadingMessageIndex(prev => (prev + 1) % 4);
+      }, 2000);
+    } else {
+      setLoadingMessageIndex(0);
+    }
+    return () => clearInterval(interval);
+  }, [loading]);
 
   useEffect(() => {
     const handleOnline = () => setOffline(false);
@@ -49,12 +84,22 @@ export default function LatihanPage() {
       const res = await fetch('/api/practice', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ analysis, scenario: isIndonesian ? SCENARIO_ID : SCENARIO_EN })
+        body: JSON.stringify({ 
+          analysis, 
+          scenario: isIndonesian ? selectedScenario.scenario : selectedScenario.scenarioEn,
+          provider 
+        })
       });
       
       if (!res.ok) throw new Error('Gagal mendapatkan umpan balik. Silakan coba lagi.');
       const data = await res.json();
       setFeedback(data);
+      
+      if (!completed.includes(selectedScenario.id)) {
+        const newCompleted = [...completed, selectedScenario.id];
+        setCompleted(newCompleted);
+        localStorage.setItem('completed_cases', JSON.stringify(newCompleted));
+      }
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -83,18 +128,72 @@ export default function LatihanPage() {
           </p>
         </div>
 
+        {/* Selection Menu Grid */}
+        <div className="mb-12">
+          <h2 className="text-2xl mb-6 font-serif break-words whitespace-normal" style={{ fontFamily: 'DM Serif Display, serif', color: 'var(--ink-deep)' }}>
+            {isIndonesian ? "Pilih Skenario Kasus" : "Select Case Scenario"}
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+            {latihanScenarios.map((scenario, index) => {
+              const isCompleted = completed.includes(scenario.id);
+              const isSelected = selectedScenario.id === scenario.id;
+              return (
+                <button
+                  key={scenario.id}
+                  onClick={() => { setSelectedScenario(scenario); setAnalysis(''); setFeedback(null); }}
+                  className="p-4 rounded-2xl text-left transition-all relative flex flex-col gap-2"
+                  style={{
+                    background: isSelected ? 'var(--ink-deep)' : 'var(--card)',
+                    border: `1px solid ${isSelected ? 'var(--ink-deep)' : 'var(--line)'}`,
+                    color: isSelected ? 'var(--card)' : 'var(--ink)',
+                    boxShadow: isSelected ? 'var(--shadow)' : 'none'
+                  }}
+                >
+                  <div className="flex justify-between items-start w-full">
+                    <span className="text-xs font-bold tracking-wider" style={{ color: isSelected ? 'var(--card)' : 'var(--clay)' }}>
+                      {isIndonesian ? "KASUS" : "CASE"} {index + 1}
+                    </span>
+                    {isCompleted && (
+                      <CheckCircle size={16} style={{ color: isSelected ? 'var(--card)' : 'var(--reed)' }} />
+                    )}
+                  </div>
+                  <span className="text-sm font-medium leading-snug line-clamp-2">
+                    {isIndonesian ? scenario.title : scenario.titleEn}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         <div className="grid md:grid-cols-2 gap-8 md:gap-12">
           {/* Kasus & Form */}
           <section className="w-full overflow-hidden">
             <div className="p-6 md:p-8 rounded-2xl mb-8 break-words whitespace-normal" style={{ background: 'rgba(255, 253, 250, 0.7)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255, 255, 255, 0.8)', boxShadow: 'var(--shadow)' }}>
               <div className="flex items-center gap-2 mb-4">
                 <FileText size={20} style={{ color: 'var(--reed)' }} />
-                <h2 className="text-xl font-bold break-words whitespace-normal" style={{ color: 'var(--ink-deep)', fontFamily: 'DM Serif Display, serif' }}>{isIndonesian ? "Skenario: Pencurian" : "Scenario: Theft"}</h2>
+                <h2 className="text-xl font-bold break-words whitespace-normal" style={{ color: 'var(--ink-deep)', fontFamily: 'DM Serif Display, serif' }}>
+                  {isIndonesian ? selectedScenario.title : selectedScenario.titleEn}
+                </h2>
               </div>
-              <p className="leading-relaxed mb-0 break-words whitespace-normal">{isIndonesian ? SCENARIO_ID : SCENARIO_EN}</p>
+              <p className="leading-relaxed mb-0 break-words whitespace-normal">{isIndonesian ? selectedScenario.scenario : selectedScenario.scenarioEn}</p>
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
+              <div className="flex flex-col gap-2">
+                <label className="font-semibold break-words whitespace-normal text-sm uppercase tracking-wider" style={{ color: 'var(--ink-deep)' }}>
+                  {isIndonesian ? "Pilih AI Model" : "Select AI Model"}
+                </label>
+                <select
+                  value={provider}
+                  onChange={(e) => setProvider(e.target.value)}
+                  className="p-3 rounded-xl outline-none"
+                  style={{ background: 'var(--card)', border: '1px solid var(--line)', color: 'var(--ink)' }}
+                  disabled={loading}
+                >
+                  {providers.map(p => <option key={p} value={p}>{p}</option>)}
+                </select>
+              </div>
               <label htmlFor="analysis" className="font-semibold break-words whitespace-normal" style={{ color: 'var(--ink-deep)' }}>{isIndonesian ? "Analisis Anda" : "Your Analysis"}</label>
               <textarea
                 id="analysis"
@@ -123,11 +222,20 @@ export default function LatihanPage() {
               <button
                 type="submit"
                 disabled={loading || !analysis.trim()}
-                className="px-6 py-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all disabled:opacity-50 break-words whitespace-normal"
+                className="px-6 py-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all disabled:opacity-70 break-words whitespace-normal"
                 style={{ backgroundColor: 'var(--ink-deep)', color: 'var(--card)' }}
               >
-                {loading ? (isIndonesian ? 'Menganalisis...' : 'Analyzing...') : (isIndonesian ? 'Kirim Analisis' : 'Submit Analysis')}
-                {!loading && <Send size={18} />}
+                {loading ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" style={{ color: 'var(--clay)' }} />
+                    <span>{isIndonesian ? loadingMessagesId[loadingMessageIndex] : loadingMessagesEn[loadingMessageIndex]}</span>
+                  </>
+                ) : (
+                  <>
+                    <span>{isIndonesian ? 'Kirim Analisis' : 'Submit Analysis'}</span>
+                    <Send size={18} />
+                  </>
+                )}
               </button>
             </form>
           </section>
@@ -154,7 +262,9 @@ export default function LatihanPage() {
                         {isIndonesian ? "Identifikasi Isu" : "Issue Identification"}
                       </h3>
                     </div>
-                    <p className="text-sm leading-relaxed break-words whitespace-normal" style={{ color: 'var(--muted)' }}>{feedback.issueFeedback}</p>
+                    <div className="text-sm leading-relaxed break-words whitespace-normal" style={{ color: 'var(--muted)' }}>
+                      <ReactMarkdown components={markdownComponents}>{feedback.issueFeedback}</ReactMarkdown>
+                    </div>
                   </div>
 
                   <div>
@@ -164,7 +274,9 @@ export default function LatihanPage() {
                         {isIndonesian ? "Penggunaan Pasal & Kutipan" : "Article Usage & Citations"}
                       </h3>
                     </div>
-                    <p className="text-sm leading-relaxed break-words whitespace-normal" style={{ color: 'var(--muted)' }}>{feedback.citationFeedback}</p>
+                    <div className="text-sm leading-relaxed break-words whitespace-normal" style={{ color: 'var(--muted)' }}>
+                      <ReactMarkdown components={markdownComponents}>{feedback.citationFeedback}</ReactMarkdown>
+                    </div>
                   </div>
 
                   <div>
@@ -174,7 +286,9 @@ export default function LatihanPage() {
                         {isIndonesian ? "Penerapan Hukum" : "Legal Application"}
                       </h3>
                     </div>
-                    <p className="text-sm leading-relaxed break-words whitespace-normal" style={{ color: 'var(--muted)' }}>{feedback.applicationFeedback}</p>
+                    <div className="text-sm leading-relaxed break-words whitespace-normal" style={{ color: 'var(--muted)' }}>
+                      <ReactMarkdown components={markdownComponents}>{feedback.applicationFeedback}</ReactMarkdown>
+                    </div>
                   </div>
 
                   {feedback.missedElements && (
@@ -182,7 +296,9 @@ export default function LatihanPage() {
                       <h3 className="font-semibold text-sm tracking-wider uppercase mb-2 break-words whitespace-normal" style={{ color: 'var(--ink-deep)' }}>
                         {isIndonesian ? "Elemen yang Terlewat" : "Missed Elements"}
                       </h3>
-                      <p className="text-sm leading-relaxed break-words whitespace-normal" style={{ color: 'var(--muted)' }}>{feedback.missedElements}</p>
+                      <div className="text-sm leading-relaxed break-words whitespace-normal" style={{ color: 'var(--muted)' }}>
+                        <ReactMarkdown components={markdownComponents}>{feedback.missedElements}</ReactMarkdown>
+                      </div>
                     </div>
                   )}
                 </div>
