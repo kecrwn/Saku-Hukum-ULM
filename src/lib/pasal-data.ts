@@ -11,6 +11,7 @@ export interface Pasal {
   keywords: string[];
   relatedArticles: string[];
   imageRef?: string;
+  caseLaw?: { citation: string; summary: string; summaryEn?: string }[];
 }
 
 export const pasalData: Pasal[] = [

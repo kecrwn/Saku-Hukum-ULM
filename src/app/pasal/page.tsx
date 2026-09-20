@@ -2,6 +2,8 @@
 
 import React, { useState, useMemo } from 'react';
 import { pasalData, Pasal } from '@/lib/pasal-data';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ChevronDown, BookOpen } from 'lucide-react';
 import { imagery } from '@/lib/site-data';
 import Link from 'next/link';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -159,6 +161,7 @@ export default function KamusPasal() {
 
 function PasalCard({ pasal }: { pasal: Pasal }) {
   const { isIndonesian } = useLanguage();
+  const [showCaseLaw, setShowCaseLaw] = useState(false);
   const imageUrl = pasal.imageRef === 'courtroom' ? imagery.mootCourtRoom : pasal.imageRef === 'gavel' ? imagery.hero : pasal.imageRef === 'lawBooks' ? imagery.materials : undefined;
   
   const displayChapter = !isIndonesian && pasal.chapterEn ? pasal.chapterEn : pasal.chapter;
@@ -216,18 +219,70 @@ function PasalCard({ pasal }: { pasal: Pasal }) {
           </div>
         </div>
 
-        {pasal.relatedArticles && pasal.relatedArticles.length > 0 && (
-          <div className="mt-auto pt-6 border-t border-white/5">
-            <div className="flex flex-wrap gap-2 items-center">
-              <span className="text-xs font-medium text-gray-500 mr-2">{isIndonesian ? "Terkait:" : "Related:"}</span>
-              {pasal.relatedArticles.map(rel => (
-                <span key={rel} className="px-3 py-1.5 bg-white/5 text-gray-300 text-xs rounded-xl hover:bg-[var(--clay)] hover:text-white cursor-pointer transition-all duration-300 border border-white/10 hover:border-[var(--clay)]">
-                  {isIndonesian ? 'Pasal' : 'Article'} {rel.replace('Pasal ', '')}
-                </span>
-              ))}
-            </div>
+        {(pasal.relatedArticles?.length || pasal.caseLaw?.length) ? (
+          <div className="mt-auto pt-6 border-t border-white/5 space-y-4">
+            
+            {pasal.relatedArticles && pasal.relatedArticles.length > 0 && (
+              <div className="flex flex-wrap gap-2 items-center">
+                <span className="text-xs font-medium text-gray-500 mr-2">{isIndonesian ? "Terkait:" : "Related:"}</span>
+                {pasal.relatedArticles.map(rel => (
+                  <span key={rel} className="px-3 py-1.5 bg-white/5 text-gray-300 text-xs rounded-xl hover:bg-[var(--clay)] hover:text-white cursor-pointer transition-all duration-300 border border-white/10 hover:border-[var(--clay)]">
+                    {isIndonesian ? 'Pasal' : 'Article'} {rel.replace('Pasal ', '')}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {pasal.caseLaw && pasal.caseLaw.length > 0 && (
+              <div className={pasal.relatedArticles && pasal.relatedArticles.length > 0 ? "pt-4 border-t border-white/5" : ""}>
+                <button
+                  onClick={() => setShowCaseLaw(!showCaseLaw)}
+                  className="flex items-center justify-between w-full p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors border border-white/5 hover:border-[var(--clay)]/50 group/btn"
+                >
+                  <div className="flex items-center gap-2">
+                    <BookOpen className="w-4 h-4 text-[var(--clay)] group-hover/btn:text-orange-400 transition-colors" />
+                    <span className="text-sm font-semibold text-white/90 group-hover/btn:text-white transition-colors">
+                      {isIndonesian ? "Yurisprudensi" : "Case Law"}
+                    </span>
+                    <span className="bg-[var(--clay)]/20 text-[var(--clay)] text-[10px] font-bold px-2 py-0.5 rounded-full ml-1">
+                      {pasal.caseLaw.length}
+                    </span>
+                  </div>
+                  <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${showCaseLaw ? 'rotate-180' : ''}`} />
+                </button>
+                
+                <AnimatePresence>
+                  {showCaseLaw && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <div className="pt-4 space-y-3">
+                        {pasal.caseLaw.map((caseItem, idx) => (
+                          <div key={idx} className="bg-black/30 p-4 rounded-xl border border-white/5 space-y-2">
+                            <div className="flex items-start justify-between gap-4">
+                              <h5 className="text-sm font-bold text-[var(--clay)] break-words whitespace-normal">{caseItem.citation}</h5>
+                              {caseItem.year && (
+                                <span className="text-xs font-medium text-gray-400 shrink-0">{caseItem.year}</span>
+                              )}
+                            </div>
+                            <p className="text-xs text-gray-300 leading-relaxed break-words whitespace-normal">
+                              {!isIndonesian && caseItem.summaryEn ? caseItem.summaryEn : caseItem.summary}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
+
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );
