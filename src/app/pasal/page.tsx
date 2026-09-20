@@ -173,7 +173,7 @@ function PasalCard({ pasal }: { pasal: Pasal }) {
     <div className="group bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 hover:border-white/20 transition-all duration-500 rounded-3xl overflow-hidden flex flex-col shadow-2xl backdrop-blur-md relative h-full">
       {pendingTranslation && (
         <div className="absolute top-0 right-0 bg-yellow-500/80 text-black text-[10px] font-bold px-3 py-1.5 rounded-bl-xl z-20 backdrop-blur-md max-w-[80%] text-right shadow-md break-words">
-          Translation Pending
+          {isIndonesian ? "Menunggu Terjemahan" : "Translation Pending"}
         </div>
       )}
       {imageUrl && (
@@ -188,34 +188,34 @@ function PasalCard({ pasal }: { pasal: Pasal }) {
       )}
       
       <div className={`p-6 md:p-8 flex-1 flex flex-col ${imageUrl ? '-mt-20 relative z-10' : ''}`}>
-        <div className="flex justify-between items-start mb-6">
-          <div className="space-y-2 max-w-full">
+        <div className="flex justify-between items-start mb-6 min-w-0">
+          <div className="space-y-2 min-w-0 flex-1">
             <span className="inline-flex items-center px-3 py-1 bg-[var(--clay)]/20 text-[var(--clay)] text-xs font-bold uppercase tracking-wider rounded-full border border-[var(--clay)]/30 backdrop-blur-sm break-words whitespace-normal">
               {pasal.code}
             </span>
-            <h3 className="text-3xl font-black text-white tracking-tight break-words whitespace-normal">
+            <h3 className="text-3xl font-black text-white tracking-tight break-words whitespace-normal min-w-0">
               {isIndonesian ? 'Pasal' : 'Article'} {pasal.articleNumber.replace('Pasal ', '')}
             </h3>
-            <p className="text-gray-300 text-sm font-medium break-words whitespace-normal">{displayChapter}</p>
+            <p className="text-gray-300 text-sm font-medium break-words whitespace-normal min-w-0">{displayChapter}</p>
           </div>
         </div>
         
         <div className="space-y-6 mb-8 flex-1 min-w-0">
-          <div className="relative">
+          <div className="relative min-w-0">
             <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-[var(--clay)] to-orange-500 rounded-full" />
-            <p className="text-sm text-gray-300/90 italic leading-relaxed font-serif break-words whitespace-normal">
+            <p className="text-sm text-gray-300/90 italic leading-relaxed font-serif break-words whitespace-normal min-w-0">
               "{displayOfficialText}"
             </p>
           </div>
           
-          <div className="bg-black/20 p-4 rounded-2xl border border-white/5 overflow-hidden">
-            <div className="flex items-center gap-2 mb-2">
+          <div className="bg-black/20 p-4 rounded-2xl border border-white/5 overflow-hidden min-w-0">
+            <div className="flex items-center gap-2 mb-2 min-w-0">
               <svg className="w-4 h-4 text-[var(--clay)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest truncate">{isIndonesian ? "Penjelasan" : "Explanation"}</h4>
             </div>
-            <p className="text-sm text-white/80 leading-relaxed break-words whitespace-normal">{displayExplanation}</p>
+            <p className="text-sm text-white/80 leading-relaxed break-words whitespace-normal min-w-0">{displayExplanation}</p>
           </div>
         </div>
 
@@ -234,21 +234,23 @@ function PasalCard({ pasal }: { pasal: Pasal }) {
             )}
 
             {pasal.caseLaw && pasal.caseLaw.length > 0 && (
-              <div className={pasal.relatedArticles && pasal.relatedArticles.length > 0 ? "pt-4 border-t border-white/5" : ""}>
+              <div className={`min-w-0 ${pasal.relatedArticles && pasal.relatedArticles.length > 0 ? "pt-4 border-t border-white/5" : ""}`}>
                 <button
                   onClick={() => setShowCaseLaw(!showCaseLaw)}
-                  className="flex items-center justify-between w-full p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors border border-white/5 hover:border-[var(--clay)]/50 group/btn"
+                  className="flex items-center justify-between w-full p-3.5 rounded-2xl bg-gradient-to-r from-white/5 to-white/[0.02] hover:from-white/10 hover:to-white/5 transition-all duration-300 border border-white/10 hover:border-[var(--clay)]/50 group/btn shadow-sm backdrop-blur-md"
                 >
-                  <div className="flex items-center gap-2">
-                    <BookOpen className="w-4 h-4 text-[var(--clay)] group-hover/btn:text-orange-400 transition-colors" />
-                    <span className="text-sm font-semibold text-white/90 group-hover/btn:text-white transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div className="p-1.5 bg-[var(--clay)]/10 rounded-lg group-hover/btn:bg-[var(--clay)]/20 transition-colors">
+                      <BookOpen className="w-4 h-4 text-[var(--clay)]" />
+                    </div>
+                    <span className="text-sm font-bold text-white/90 group-hover/btn:text-white transition-colors tracking-wide">
                       {isIndonesian ? "Yurisprudensi" : "Case Law"}
                     </span>
-                    <span className="bg-[var(--clay)]/20 text-[var(--clay)] text-[10px] font-bold px-2 py-0.5 rounded-full ml-1">
+                    <span className="bg-[var(--clay)]/20 text-[var(--clay)] text-[11px] font-bold px-2.5 py-0.5 rounded-full ml-1 border border-[var(--clay)]/30 shadow-inner">
                       {pasal.caseLaw.length}
                     </span>
                   </div>
-                  <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${showCaseLaw ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-5 h-5 text-gray-400 group-hover/btn:text-white transition-transform duration-300 ${showCaseLaw ? 'rotate-180' : ''}`} />
                 </button>
                 
                 <AnimatePresence>
@@ -257,22 +259,28 @@ function PasalCard({ pasal }: { pasal: Pasal }) {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="overflow-hidden"
+                      transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
+                      className="overflow-hidden min-w-0"
                     >
-                      <div className="pt-4 space-y-3">
+                      <div className="pt-4 space-y-3 min-w-0">
                         {pasal.caseLaw.map((caseItem, idx) => (
-                          <div key={idx} className="bg-black/30 p-4 rounded-xl border border-white/5 space-y-2">
-                            <div className="flex items-start justify-between gap-4">
-                              <h5 className="text-sm font-bold text-[var(--clay)] break-words whitespace-normal">{caseItem.citation}</h5>
+                          <motion.div 
+                            key={idx} 
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: idx * 0.1, duration: 0.3 }}
+                            className="bg-black/40 backdrop-blur-xl p-5 rounded-2xl border border-white/10 shadow-inner space-y-2 min-w-0"
+                          >
+                            <div className="flex items-start justify-between gap-4 min-w-0">
+                              <h5 className="text-sm font-bold text-[var(--clay)] break-words whitespace-normal min-w-0 flex-1 leading-snug">{caseItem.citation}</h5>
                               {caseItem.year && (
-                                <span className="text-xs font-medium text-gray-400 shrink-0">{caseItem.year}</span>
+                                <span className="text-xs font-semibold px-2 py-1 bg-white/5 rounded-md text-gray-400 shrink-0 border border-white/5">{caseItem.year}</span>
                               )}
                             </div>
-                            <p className="text-xs text-gray-300 leading-relaxed break-words whitespace-normal">
+                            <p className="text-sm text-gray-300 leading-relaxed break-words whitespace-normal min-w-0">
                               {!isIndonesian && caseItem.summaryEn ? caseItem.summaryEn : caseItem.summary}
                             </p>
-                          </div>
+                          </motion.div>
                         ))}
                       </div>
                     </motion.div>

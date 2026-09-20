@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { motion } from "framer-motion";
 
 export default function AlurPerkaraPage() {
   const { isIndonesian } = useLanguage();
@@ -129,55 +130,59 @@ export default function AlurPerkaraPage() {
       </div>
 
       {/* Flowchart Container */}
-      <div className="max-w-4xl mx-auto mt-12 relative">
+      <div className="max-w-4xl mx-auto mt-16 relative">
         
         {/* Vertical Line Connector */}
-        <div className="absolute left-[29px] md:left-[48px] top-6 bottom-16 w-[2px] bg-[var(--line)]"></div>
+        <div className="absolute left-[29px] md:left-[48px] top-6 bottom-16 w-[2px] md:w-[3px] bg-gradient-to-b from-[var(--clay)] via-[var(--ink)] to-transparent opacity-20 md:opacity-30 rounded-full"></div>
 
         {/* Steps */}
-        <div className="flex flex-col gap-10 relative z-10">
-          {steps.map((step) => {
+        <div className="flex flex-col gap-12 md:gap-16 relative z-10">
+          {steps.map((step, index) => {
             const Icon = step.icon;
             return (
-              <div 
+              <motion.div 
                 key={step.id} 
-                className="flex gap-4 md:gap-8 items-start relative group"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.7, delay: index * 0.15, ease: [0.21, 0.47, 0.32, 0.98] }}
+                className="flex gap-5 md:gap-10 items-start relative group"
               >
                 {/* Circle Number / Icon */}
-                <div className={`shrink-0 w-[60px] h-[60px] md:w-[96px] md:h-[96px] rounded-full flex flex-col items-center justify-center border-[4px] border-[var(--paper)] shadow-sm transition-transform duration-300 group-hover:scale-105 z-10 ${
+                <div className={`shrink-0 w-[60px] h-[60px] md:w-[96px] md:h-[96px] rounded-full flex flex-col items-center justify-center shadow-[0_8px_20px_rgba(0,0,0,0.08)] transition-all duration-500 group-hover:scale-110 group-hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] z-10 ${
                   step.highlight 
-                    ? 'bg-[var(--clay)] text-[var(--paper)]' 
-                    : 'bg-[var(--card)] text-[var(--ink)] border-[var(--line)]'
+                    ? 'bg-gradient-to-br from-[var(--clay)] to-[#9e3a22] text-white border-[3px] md:border-[4px] border-white/90' 
+                    : 'bg-white text-[var(--ink-deep)] border-[3px] md:border-[4px] border-[var(--sand)]'
                 }`}>
-                  <Icon className="w-6 h-6 md:w-8 md:h-8 mb-0.5 md:mb-1" strokeWidth={1.5} />
-                  <span className="text-[9px] md:text-xs font-bold font-sans tracking-widest">{isIndonesian ? "TAHAP" : "STEP"} {step.id}</span>
+                  <Icon className="w-6 h-6 md:w-8 md:h-8 mb-0.5 md:mb-1" strokeWidth={step.highlight ? 2 : 1.5} />
+                  <span className="text-[9px] md:text-xs font-bold font-sans tracking-widest opacity-90">{isIndonesian ? "TAHAP" : "STEP"} {step.id}</span>
                 </div>
 
                 {/* Card Content */}
-                <div className="flex-1 min-w-0 paper-panel group-hover:shadow-[0_12px_32px_rgba(30,48,43,0.12)] transition-all duration-300 group-hover:-translate-y-1">
+                <div className="flex-1 min-w-0 bg-white rounded-3xl p-6 md:p-8 border border-[var(--line)] shadow-[0_4px_20px_rgba(0,0,0,0.03)] group-hover:shadow-[0_16px_40px_rgba(30,48,43,0.08)] group-hover:border-[var(--sand)] transition-all duration-500 group-hover:-translate-y-1">
                   <h2 className="text-2xl md:text-3xl font-[var(--serif)] text-[var(--ink-deep)] mb-3 tracking-tight break-words">
                     {isIndonesian ? step.title : step.titleEn}
                   </h2>
-                  <p className="text-[#435651] text-sm md:text-[15px] leading-relaxed mb-6 break-words whitespace-normal">
+                  <p className="text-[var(--muted)] text-[15px] md:text-[16px] leading-relaxed mb-6 break-words whitespace-normal">
                     {isIndonesian ? step.description : step.descriptionEn}
                   </p>
                   
                   {/* Role Box */}
-                  <div className="mt-4 p-4 md:p-5 rounded-xl bg-[#e7ece4] border-l-2 border-[var(--reed)] flex items-start gap-4">
-                    <div className="mt-0.5 shrink-0 w-7 h-7 rounded-full bg-[var(--ink)] flex items-center justify-center text-[var(--paper)]">
-                      <span className="text-[12px] font-bold">J</span>
+                  <div className="mt-2 p-5 md:p-6 rounded-2xl bg-gradient-to-br from-[#f9faf8] to-[#f0f3ee] border border-[#e2e8df] flex items-start gap-4 md:gap-5 shadow-inner">
+                    <div className="mt-0.5 shrink-0 w-8 h-8 md:w-9 md:h-9 rounded-full bg-gradient-to-br from-[var(--ink)] to-[#1a2723] shadow-md flex items-center justify-center text-white">
+                      <span className="text-[12px] md:text-[14px] font-bold font-[var(--serif)]">J</span>
                     </div>
                     <div className="min-w-0 flex-1">
-                      <span className="block text-[10px] font-extrabold text-[var(--ink)] uppercase tracking-widest mb-1.5 opacity-80 break-words">
+                      <span className="block text-[10px] md:text-[11px] font-bold text-[var(--ink)] uppercase tracking-[0.2em] mb-2 opacity-70 break-words">
                         {isIndonesian ? "Peran Institusi (Fokus Jaksa)" : "Institutional Role (Prosecutor Focus)"}
                       </span>
-                      <p className="text-sm md:text-[14px] text-[var(--ink-deep)] m-0 leading-snug font-medium break-words whitespace-normal">
+                      <p className="text-[14px] md:text-[15px] text-[var(--ink-deep)] m-0 leading-relaxed font-medium break-words whitespace-normal">
                         {isIndonesian ? step.role : step.roleEn}
                       </p>
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>

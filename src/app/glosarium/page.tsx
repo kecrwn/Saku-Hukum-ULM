@@ -4,6 +4,7 @@ import React, { useState, useMemo } from "react";
 import { glossaryTerms } from "@/lib/glossary-data";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Search, BookOpen } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function GlosariumPage() {
   const { language, isIndonesian } = useLanguage();
@@ -22,6 +23,21 @@ export default function GlosariumPage() {
       .sort((a, b) => a.term.localeCompare(b.term));
   }, [searchQuery, language]);
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.05,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
+  };
+
   return (
     <div className="min-h-screen bg-[var(--paper)] pt-24 pb-12 px-6">
       <div className="max-w-4xl mx-auto space-y-12">
@@ -33,7 +49,7 @@ export default function GlosariumPage() {
           </div>
           <h1 className="font-serif text-4xl md:text-5xl text-[var(--ink-deep)] font-bold">
             {isIndonesian ? "Glosarium " : "Glossary "}
-            <span className="italic text-[var(--clay)]">Hukum</span>
+            <span className="italic text-[var(--clay)]">{isIndonesian ? "Hukum" : "Law"}</span>
           </h1>
           <p className="text-[var(--muted)] text-lg max-w-xl mx-auto">
             {isIndonesian
@@ -55,26 +71,32 @@ export default function GlosariumPage() {
         </div>
 
         {/* List */}
-        <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+          className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto"
+        >
           {filteredGlossary.length > 0 ? (
             filteredGlossary.map((item) => {
               const term = language === "en" ? item.termEn : item.term;
               const definition = language === "en" ? item.definitionEn : item.definition;
 
               return (
-                <div
+                <motion.div
+                  variants={itemVariants}
                   key={item.id}
-                  className="bg-[var(--card)] border border-[var(--line)] p-6 rounded-xl shadow-[0_4px_12px_rgba(30,48,43,.03)] hover:shadow-[0_18px_44px_rgba(30,48,43,.09)] transition-shadow duration-300 flex flex-col gap-2 group relative overflow-hidden"
+                  className="bg-[var(--card)] border border-[var(--line)] p-6 rounded-xl shadow-[0_4px_12px_rgba(30,48,43,.03)] hover:shadow-[0_18px_44px_rgba(30,48,43,.15)] transition-all duration-300 flex flex-col gap-2 group relative overflow-hidden hover:-translate-y-1 hover:ring-2 hover:ring-[var(--clay)]/30 min-w-0"
                 >
                   <div className="absolute top-0 left-0 w-1 h-full bg-[var(--clay)] opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <h3 className="font-serif text-2xl text-[var(--ink-deep)]">
+                  <h3 className="font-serif text-2xl text-[var(--ink-deep)] break-words">
                     {term}
                   </h3>
-                  <div className="h-px w-12 bg-[var(--line)] my-1" />
-                  <p className="text-[var(--ink)] leading-relaxed text-sm md:text-base">
+                  <div className="h-px w-12 bg-[var(--line)] my-1 shrink-0" />
+                  <p className="text-[var(--ink)] leading-relaxed text-sm md:text-base break-words">
                     {definition}
                   </p>
-                </div>
+                </motion.div>
               );
             })
           ) : (
@@ -87,7 +109,7 @@ export default function GlosariumPage() {
               </p>
             </div>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
