@@ -9,11 +9,13 @@ import { latihanScenarios } from '@/lib/latihan-data';
 import ReactMarkdown from 'react-markdown';
 
 const markdownComponents = {
-  p: ({node, ...props}: any) => <p className="mb-2" {...props} />,
-  strong: ({node, ...props}: any) => <strong className="font-bold" style={{ color: 'var(--ink-deep)' }} {...props} />,
-  ul: ({node, ...props}: any) => <ul className="list-disc pl-5 mb-2 space-y-1" {...props} />,
-  ol: ({node, ...props}: any) => <ol className="list-decimal pl-5 mb-2 space-y-1" {...props} />,
-  li: ({node, ...props}: any) => <li className="" {...props} />
+  p: ({node, ...props}: any) => <p className="mb-3 leading-relaxed" {...props} />,
+  strong: ({node, ...props}: any) => <strong className="font-extrabold" style={{ color: 'var(--ink-deep)' }} {...props} />,
+  em: ({node, ...props}: any) => <em className="italic" style={{ color: 'var(--slate, #64748b)' }} {...props} />,
+  ul: ({node, ...props}: any) => <ul className="list-disc pl-5 mb-3 space-y-1.5" {...props} />,
+  ol: ({node, ...props}: any) => <ol className="list-decimal pl-5 mb-3 space-y-1.5" {...props} />,
+  li: ({node, ...props}: any) => <li className="pl-1" {...props} />,
+  a: ({node, ...props}: any) => <a className="underline decoration-2 underline-offset-2" style={{ color: 'var(--reed, #71826E)' }} {...props} />
 };
 
 const loadingMessagesId = ["Menganalisis fakta...", "Mencari referensi...", "Menyusun argumen...", "Memeriksa elemen..."];

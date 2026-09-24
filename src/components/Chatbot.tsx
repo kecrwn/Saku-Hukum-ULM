@@ -94,27 +94,35 @@ const cleanOutput = (text: string) => {
   return cleaned;
 };
 
+const markdownComponents = {
+  p: ({node, ...props}: any) => <p className="mb-3 leading-relaxed" {...props} />,
+  strong: ({node, ...props}: any) => <strong className="font-extrabold" style={{ color: 'var(--ink-deep)' }} {...props} />,
+  em: ({node, ...props}: any) => <em className="italic" style={{ color: 'var(--slate)' }} {...props} />,
+  ul: ({node, ...props}: any) => <ul className="list-disc pl-5 mb-3 space-y-1.5" {...props} />,
+  ol: ({node, ...props}: any) => <ol className="list-decimal pl-5 mb-3 space-y-1.5" {...props} />,
+  li: ({node, ...props}: any) => <li className="pl-1" {...props} />,
+  a: ({node, ...props}: any) => <a className="underline decoration-2 underline-offset-2" style={{ color: 'var(--reed)' }} {...props} />,
+  code: CodeBlock,
+  table: ({ children }: any) => (
+    <div className="overflow-x-auto my-3 w-full border border-[var(--line)] rounded-lg">
+      <table className="w-full text-sm text-left border-collapse min-w-[400px]">
+        {children}
+      </table>
+    </div>
+  ),
+  th: ({ children }: any) => <th className="px-4 py-2 bg-[var(--paper-strong)] border-b border-[var(--line)] font-bold text-[var(--ink-deep)]">{children}</th>,
+  td: ({ children }: any) => <td className="px-4 py-2 border-b border-[var(--line)] last:border-0">{children}</td>,
+  blockquote: ({ children }: any) => <blockquote className="border-l-4 border-[var(--clay)] pl-4 italic my-2 text-[#66736f] bg-[rgba(247,242,233,.5)] py-1">{children}</blockquote>,
+  hr: () => <hr className="my-4 border-t border-[var(--line)]" />
+};
+
 function ExpandableMessage({ content, isIndonesian }: { content: string, isIndonesian: boolean }) {
   return (
     <div className="markdown-body">
       <ReactMarkdown 
         remarkPlugins={[remarkGfm]} 
         rehypePlugins={[rehypeRaw]}
-        components={{
-          code: CodeBlock,
-          a: CustomLink,
-          table: ({ children }) => (
-            <div className="overflow-x-auto my-3 w-full border border-[var(--line)] rounded-lg">
-              <table className="w-full text-sm text-left border-collapse min-w-[400px]">
-                {children}
-              </table>
-            </div>
-          ),
-          th: ({ children }) => <th className="px-4 py-2 bg-[var(--paper-strong)] border-b border-[var(--line)] font-bold text-[var(--ink-deep)]">{children}</th>,
-          td: ({ children }) => <td className="px-4 py-2 border-b border-[var(--line)] last:border-0">{children}</td>,
-          blockquote: ({ children }) => <blockquote className="border-l-4 border-[var(--clay)] pl-4 italic my-2 text-[#66736f] bg-[rgba(247,242,233,.5)] py-1">{children}</blockquote>,
-          hr: () => <hr className="my-4 border-t border-[var(--line)]" />
-        }}
+        components={markdownComponents as any}
       >
         {cleanOutput(content)}
       </ReactMarkdown>
