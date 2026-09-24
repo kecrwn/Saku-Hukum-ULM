@@ -142,6 +142,19 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
 
   const [selectedModel, setSelectedModel] = useState("nvidia/nemotron-3-ultra-550b-a55b");
   const [isModelMenuOpen, setIsModelMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const savedModel = localStorage.getItem('shulm-chatbot-model');
+    if (savedModel) {
+      setSelectedModel(savedModel);
+    }
+  }, []);
+
+  const handleModelSelect = (modelId: string) => {
+    setSelectedModel(modelId);
+    localStorage.setItem('shulm-chatbot-model', modelId);
+    setIsModelMenuOpen(false);
+  };
   const [processingTime, setProcessingTime] = useState(0);
   const [generationTimes, setGenerationTimes] = useState<Record<string, number>>({});
   const [totalTokensUsed, setTotalTokensUsed] = useState(0);
@@ -468,10 +481,7 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
                             key={m.id}
                             type="button"
                           className={`glass-model-btn ${selectedModel === m.id ? 'active' : ''}`}
-                          onClick={() => {
-                            setSelectedModel(m.id);
-                            setIsModelMenuOpen(false);
-                          }}
+                          onClick={() => handleModelSelect(m.id)}
                         >
                           <span className="flex items-center gap-2">
                             <span className="opacity-80">{m.icon}</span>
