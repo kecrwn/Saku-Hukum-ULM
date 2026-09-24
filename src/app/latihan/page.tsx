@@ -249,7 +249,7 @@ export default function LatihanPage() {
                       <h3 className="text-lg font-bold" style={{ color: 'var(--ink-deep)' }}>
                         {isIndonesian ? group.name : group.nameEn}
                       </h3>
-                      <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ background: 'rgba(113,130,110,0.1)', color: 'var(--reed)' }}>
+                      <span className="text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap shrink-0" style={{ background: 'rgba(113,130,110,0.1)', color: 'var(--reed)' }}>
                         {completedInGroup} / {group.scenarios.length}
                       </span>
                     </div>
