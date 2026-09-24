@@ -1,5 +1,5 @@
 export const siteKnowledge = [
-  { id: "home", path: "/", title: { id: "Beranda", en: "Home" }, summary: "Panduan studi, ilustrasi editorial, informasi dasar tentang Saku Hukum ULM." },
+  { id: "home", path: "/", title: { id: "Beranda", en: "Home" }, summary: "Panduan studi, ilustrasi editorial, informasi dasar tentang Saku Hukum ULM. Saku Hukum ULM (shULM) adalah platform hukum berbasis AI untuk mahasiswa Universitas Lambung Mangkurat, menyediakan alat KUHP, alur perkara, glosarium, dan latihan kasus." },
   { id: "about", path: "/tentang", title: { id: "Tentang ULM", en: "About ULM" }, summary: "Sejarah ULM, status S1 Hukum, konteks fakultas, dan visi misi institusi." },
   { id: "curriculum", path: "/kurikulum", title: { id: "Kurikulum Pidana", en: "Criminal Law Curriculum" }, summary: "Daftar mata kuliah wajib dan pilihan, kode, beserta SKS untuk peminatan hukum pidana." },
   { id: "facilities", path: "/fasilitas", title: { id: "Ruang Praktik", en: "Practice Spaces" }, summary: "Fasilitas mahasiswa termasuk Peradilan Semu (Moot Court), Perpustakaan Hukum, dan LKBH." },

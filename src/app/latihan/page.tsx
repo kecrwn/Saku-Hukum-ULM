@@ -60,7 +60,7 @@ export default function LatihanPage() {
   const [offline, setOffline] = useState(false);
   
   const [provider, setProvider] = useState('Nemotron 30B');
-  const providers = ['DeepSeek Flash', 'Llama 3.1 8B', 'Nemotron 30B'];
+  const providers = ['DeepSeek Flash', 'Llama 3.1 8B', 'Nemotron 30B', 'Qwen 3.8 Flash Next'];
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 

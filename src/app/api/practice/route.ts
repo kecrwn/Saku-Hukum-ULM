@@ -8,6 +8,7 @@ const PROVIDER_TO_MODEL: Record<string, string> = {
   'DeepSeek Flash': 'deepseek-ai/deepseek-v4-flash-0731',
   'Llama 3.1 8B': 'groq/llama-3.1-8b-instant',
   'Nemotron 30B': 'nvidia/nemotron-3-super-120b-a12b',
+  'Qwen 3.8 Flash Next': 'Qwen/Qwen3.8-Flash-Next',
 };
 
 const MODEL_TIMEOUT_MS = 30_000; // 30 seconds per model attempt
@@ -30,12 +31,20 @@ const deepseekProvider = createOpenAI({
   apiKey: process.env.DEEPSEEK_API_KEY || '',
 });
 
+const huggingfaceProvider = createOpenAI({
+  baseURL: 'https://api-inference.huggingface.co/v1/',
+  apiKey: process.env.HUGGINGFACE_API_KEY || '',
+});
+
 function getApiKeyForModel(modelName: string): string {
   if (modelName.startsWith('groq/') || modelName === 'llama-3.1-8b-instant') {
     return process.env.GROQ_API_KEY || '';
   }
   if (modelName === 'deepseek-chat' || modelName.startsWith('deepseek/')) {
     return process.env.DEEPSEEK_API_KEY || '';
+  }
+  if (modelName.startsWith('Qwen/')) {
+    return process.env.HUGGINGFACE_API_KEY || '';
   }
   return API_KEYS[modelName] || process.env.NVIDIA_API_KEY || '';
 }
@@ -44,6 +53,7 @@ function getClient(modelName: string) {
   if (modelName.startsWith('groq/')) return groqProvider(modelName.replace('groq/', ''));
   if (modelName === 'llama-3.1-8b-instant') return groqProvider('llama-3.1-8b-instant');
   if (modelName === 'deepseek-chat' || modelName.startsWith('deepseek/')) return deepseekProvider(modelName.replace('deepseek/', ''));
+  if (modelName.startsWith('Qwen/')) return huggingfaceProvider(modelName);
   const apiKey = getApiKeyForModel(modelName);
   return createOpenAI({
     baseURL: 'https://integrate.api.nvidia.com/v1',
@@ -79,7 +89,7 @@ AVAILABLE PASAL DATA (KUHP Baru):
 ${JSON.stringify(pasalData.map(p => ({ article: p.articleNumber, text: p.officialText, explanation: p.explanation })))}
 `;
 
-  const fallbackModels = ['deepseek-ai/deepseek-v4-flash-0731', 'groq/llama-3.1-8b-instant', 'nvidia/nemotron-3-super-120b-a12b'];
+  const fallbackModels = ['deepseek-ai/deepseek-v4-flash-0731', 'groq/llama-3.1-8b-instant', 'nvidia/nemotron-3-super-120b-a12b', 'Qwen/Qwen3.8-Flash-Next'];
   const modelsToTry = [model, ...fallbackModels.filter(m => m !== model)];
   const errors: { model: string; error: string }[] = [];
 

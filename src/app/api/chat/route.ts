@@ -59,12 +59,20 @@ const deepseekProvider = createOpenAI({
   apiKey: process.env.DEEPSEEK_API_KEY || '',
 });
 
+const huggingfaceProvider = createOpenAI({
+  baseURL: 'https://api-inference.huggingface.co/v1/',
+  apiKey: process.env.HUGGINGFACE_API_KEY || '',
+});
+
 function getApiKeyForModel(modelName: string): string {
   if (modelName.startsWith('groq/') || modelName === 'llama-3.1-8b-instant') {
     return process.env.GROQ_API_KEY || '';
   }
   if (modelName === 'deepseek-chat' || modelName.startsWith('deepseek/')) {
     return process.env.DEEPSEEK_API_KEY || '';
+  }
+  if (modelName.startsWith('Qwen/')) {
+    return process.env.HUGGINGFACE_API_KEY || '';
   }
   return API_KEYS[modelName] || process.env.NVIDIA_API_KEY || '';
 }
@@ -78,6 +86,9 @@ function getClient(modelName: string) {
   }
   if (modelName === 'deepseek-chat' || modelName.startsWith('deepseek/')) {
     return deepseekProvider(modelName.replace('deepseek/', ''));
+  }
+  if (modelName.startsWith('Qwen/')) {
+    return huggingfaceProvider(modelName);
   }
   const apiKey = getApiKeyForModel(modelName);
   return createOpenAI({
@@ -114,7 +125,7 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify({ error: 'Invalid messages array' }), { status: 400 });
   }
 
-const systemPrompt = `You are Jaksa, a warm, helpful, and simple bilingual study assistant for Saku Hukum ULM (Universitas Lambung Mangkurat's unofficial Prosecutor track guide).
+const systemPrompt = `You are Jaksa, the AI assistant for Saku Hukum ULM (shULM), a warm, helpful, and simple bilingual study assistant. Saku Hukum ULM is an AI-powered legal platform for students at Universitas Lambung Mangkurat, providing KUHP tools, case flowcharts, glossary, and case practice. You must utilize this knowledge to assist students.
 You are extremely POLYGLOT. You must seamlessly reply in the EXACT language the user speaks. Keep your tone warm, simple, and jargon-free.
 
 CRITICAL RULES (FOLLOW EXACTLY):
@@ -149,7 +160,9 @@ KNOWLEDGE BASE:
 - Saku Hukum ULM is a personal study guide, NOT the official ULM website.
 - Quick Facts: ${JSON.stringify(quickFacts)}
 - Campus Highlights: ${JSON.stringify(campusHighlights)}
-- External Links: ${JSON.stringify(externalLinks)}`;
+- External Links: ${JSON.stringify(externalLinks)}
+- Site Knowledge: ${JSON.stringify(siteKnowledge)}
+- Law Knowledge Base: ${JSON.stringify(lawKnowledgeBase)}`;
 
   const tools = {
     web_search: tool({
@@ -258,7 +271,8 @@ KNOWLEDGE BASE:
     fallbackFastModel,
     'nvidia/nemotron-3-super-120b-a12b',
     'moonshotai/kimi-k3',
-    'deepseek-ai/deepseek-v4-flash-0731'
+    'deepseek-ai/deepseek-v4-flash-0731',
+    'Qwen/Qwen3.8-Flash-Next'
   ];
 
   let FALLBACK_CHAIN: string[];
