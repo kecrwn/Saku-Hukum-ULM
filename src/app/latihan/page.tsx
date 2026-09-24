@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import Link from 'next/link';
-import { ArrowLeft, Send, AlertCircle, FileText, CheckCircle, Loader2, ChevronDown, BookOpen, Scale, Sparkles, ChevronLeft, ChevronRight, Trash } from 'lucide-react';
+import { ArrowLeft, Send, AlertCircle, FileText, CheckCircle, Loader2, ChevronDown, BookOpen, Scale, Sparkles, ChevronLeft, ChevronRight, Trash, Bot } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { latihanScenarios } from '@/lib/latihan-data';
 import ReactMarkdown from 'react-markdown';
@@ -16,8 +16,8 @@ const markdownComponents = {
   li: ({node, ...props}: any) => <li className="" {...props} />
 };
 
-const loadingMessagesId = ["Menganalisis fakta...", "Mencari referensi KUHP...", "Menyusun umpan balik...", "Memeriksa elemen hukum..."];
-const loadingMessagesEn = ["Analyzing facts...", "Searching KUHP references...", "Drafting feedback...", "Checking legal elements..."];
+const loadingMessagesId = ["Menganalisis fakta...", "Mencari referensi...", "Menyusun argumen...", "Memeriksa elemen..."];
+const loadingMessagesEn = ["Analyzing facts...", "Searching references...", "Drafting feedback...", "Checking elements..."];
 
 const CHAR_LIMIT = 3000;
 
@@ -36,7 +36,6 @@ export default function LatihanPage() {
   const { isIndonesian } = useLanguage();
   const [selectedScenario, setSelectedScenario] = useState(latihanScenarios[0]);
   const [expandedCategory, setExpandedCategory] = useState<string | null>((latihanScenarios[0] as any)?.category || 'Umum');
-  const [isScenarioExpanded, setIsScenarioExpanded] = useState(false);
   const [completed, setCompleted] = useState<string[]>([]);
   const [analysis, setAnalysis] = useState('');
   const [loading, setLoading] = useState(false);
@@ -44,7 +43,7 @@ export default function LatihanPage() {
   const [feedback, setFeedback] = useState<any>(null);
   const [error, setError] = useState('');
   const [offline, setOffline] = useState(false);
-  const [submissionHistory, setSubmissionHistory] = useState<Record<string, Array<{ analysis: string, feedback: any, timestamp: number }>>>({});
+  const [submissionHistory, setSubmissionHistory] = useState<Record<string, Array<{ analysis: string, feedback: any, timestamp: number, provider: string }>>>({});
   const [currentAttemptIndex, setCurrentAttemptIndex] = useState(0);
 
   const handleClearHistory = () => {
@@ -134,11 +133,11 @@ export default function LatihanPage() {
         })
       });
       
-      if (!res.ok) throw new Error('Gagal mendapatkan umpan balik. Silakan coba lagi.');
+      if (!res.ok) throw new Error(isIndonesian ? 'Gagal mendapatkan umpan balik. Silakan coba lagi.' : 'Failed to get feedback. Please try again.');
       const data = await res.json();
       setFeedback(data);
       
-      const newAttempt = { analysis, feedback: data, timestamp: Date.now() };
+      const newAttempt = { analysis, feedback: data, timestamp: Date.now(), provider };
       setSubmissionHistory(prev => {
         const updated = { ...prev };
         if (!updated[selectedScenario.id]) {
@@ -289,7 +288,6 @@ export default function LatihanPage() {
                                     } else {
                                       setCurrentAttemptIndex(0);
                                     }
-                                    setIsScenarioExpanded(false); 
                                   }}
                                   className="w-full p-4 rounded-xl text-left relative flex flex-col gap-2"
                                   style={{
@@ -372,11 +370,8 @@ export default function LatihanPage() {
                   }}
                 />
                 <div className="flex-1 min-w-0">
-                  <button
-                    type="button"
-                    onClick={() => setIsScenarioExpanded(!isScenarioExpanded)}
-                    className="w-full text-left p-5 md:p-6 flex items-start justify-between outline-none"
-                    style={{ cursor: 'pointer' }}
+                  <div
+                    className="w-full text-left p-5 md:p-6 flex flex-col items-start justify-between outline-none"
                   >
                     <div>
                       {/* Eyebrow */}
@@ -405,34 +400,14 @@ export default function LatihanPage() {
                         </h2>
                       </div>
                     </div>
-                    <ChevronDown
-                      size={20}
-                      className="mt-1 shrink-0"
-                      style={{
-                        color: 'var(--muted)',
-                        transform: isScenarioExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-                        transition: 'transform 0.3s ease'
-                      }}
-                    />
-                  </button>
-                  
-                  <AnimatePresence>
-                    {isScenarioExpanded && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: 'easeInOut' }}
-                      >
-                        <div className="px-5 pb-5 md:px-6 md:pb-6 pt-0 border-t" style={{ borderColor: 'rgba(0,0,0,0.05)' }}>
-                          {/* Scenario body */}
-                          <p className="leading-relaxed mb-0 mt-4 break-words whitespace-normal text-[14.5px]" style={{ color: 'var(--muted)' }}>
-                            {isIndonesian ? selectedScenario.scenario : selectedScenario.scenarioEn}
-                          </p>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                    
+                    <div className="w-full pt-4 mt-4 border-t" style={{ borderColor: 'rgba(0,0,0,0.05)' }}>
+                      {/* Scenario body */}
+                      <p className="leading-relaxed mb-0 break-words whitespace-normal text-[14.5px]" style={{ color: 'var(--muted)' }}>
+                        {isIndonesian ? selectedScenario.scenario : selectedScenario.scenarioEn}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -680,7 +655,7 @@ export default function LatihanPage() {
                             animate={{ y: 0, opacity: 1 }}
                             exit={{ y: -25, opacity: 0 }}
                             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-                            className="absolute left-0 right-0 text-left font-medium tracking-wide text-white"
+                            className="absolute left-0 right-0 font-medium tracking-wide text-white text-sm md:text-base text-center leading-tight max-w-[200px]"
                           >
                             {isIndonesian ? loadingMessagesId[loadingMessageIndex] : loadingMessagesEn[loadingMessageIndex]}
                           </motion.span>
@@ -718,9 +693,17 @@ export default function LatihanPage() {
                 }}
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 pb-4 gap-4" style={{ borderBottom: '1px solid var(--line)' }}>
-                  <h2 className="text-2xl break-words whitespace-normal" style={{ fontFamily: 'DM Serif Display, serif', color: 'var(--ink-deep)' }}>
-                    {isIndonesian ? "Hasil Tinjauan AI" : "AI Review Results"}
-                  </h2>
+                  <div className="flex flex-col gap-2">
+                    <h2 className="text-2xl break-words whitespace-normal" style={{ fontFamily: 'DM Serif Display, serif', color: 'var(--ink-deep)' }}>
+                      {isIndonesian ? "Hasil Tinjauan AI" : "AI Review Results"}
+                    </h2>
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md w-fit" style={{ background: 'rgba(178,77,57,0.08)', color: 'var(--clay)' }}>
+                      <Bot size={14} />
+                      <span className="text-xs font-semibold">
+                        {isIndonesian ? "Dinilai oleh:" : "Graded by:"} {(currentHistory.length > 0 ? currentHistory[currentAttemptIndex]?.provider : provider) || 'Unknown AI'}
+                      </span>
+                    </div>
+                  </div>
                   <button 
                     onClick={handleClearHistory}
                     className="p-2 sm:px-3 sm:py-2 rounded-lg flex items-center justify-center transition-colors outline-none"

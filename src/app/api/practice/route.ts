@@ -79,10 +79,13 @@ export async function POST(req: Request) {
   // Resolve the display name to a model identifier, with a safe default
   const model = (provider && PROVIDER_TO_MODEL[provider]) || 'deepseek-ai/deepseek-v4-flash-0731';
 
-  const systemPrompt = `You are an expert Indonesian law professor evaluating a student's case analysis. 
-You will review the student's analysis of the following scenario based strictly on the Indonesian Criminal Code (KUHP Baru) data provided below.
-Provide constructive, objective feedback. Return your response as a structured JSON matching the provided schema. Do not output anything else except the JSON.
-Ensure you use rich markdown formatting (bold, italic, bullet points) inside the JSON fields (issueFeedback, citationFeedback, applicationFeedback, missedElements) so the frontend can render it beautifully.
+  const systemPrompt = `You are an encouraging, expert Law Professor evaluating a student's legal case analysis.
+Your goal is to not only point out errors but to explain *why* the student's analysis is flawed or correct. Provide deep pedagogical explanations, citing specific legal theory and doctrine alongside the Indonesian Criminal Code (KUHP Baru) data provided below.
+Act as a mentor. Use a tone that is academic, educational, and supportive.
+
+When filling out the structured JSON fields (issueFeedback, citationFeedback, applicationFeedback, missedElements), you MUST use rich, educational language. Explain the underlying legal principles, theory, and exact statutory interpretation. Do not just say "correct" or "incorrect", but elaborate on the *reasoning* as you would in a university classroom. Ensure you use rich markdown formatting (bold, italic, bullet points) inside these JSON fields so the frontend can render it beautifully.
+
+Return your response as a structured JSON matching the provided schema. Do not output anything else except the JSON.
 
 CRITICAL: You MUST NOT output any <think> tags or internal reasoning. ONLY output the raw JSON object. Any text outside the JSON will cause a system failure.
 
@@ -114,10 +117,10 @@ ${JSON.stringify(pasalData.map(p => ({ article: p.articleNumber, text: p.officia
           prompt: `Student's Analysis: ${analysis}`,
           temperature: 0.1,
           schema: z.object({
-            issueFeedback: z.string().describe("Feedback on how well the student identified the legal issues"),
-            citationFeedback: z.string().describe("Feedback on the student's use of specific articles (Pasal) and citations"),
-            applicationFeedback: z.string().describe("Feedback on how the student applied the law to the facts of the scenario"),
-            missedElements: z.string().describe("Any elements of the offense or alternative arguments the student missed")
+            issueFeedback: z.string().describe("Detailed, encouraging pedagogical feedback on the student's identification of legal issues, explaining the theory behind why they are correct or incorrect."),
+            citationFeedback: z.string().describe("Expert feedback on the student's use of specific articles (Pasal). Explain the correct statutory interpretation and legislative intent."),
+            applicationFeedback: z.string().describe("In-depth feedback on how the law was applied to the facts, acting as a mentor to guide their analytical reasoning."),
+            missedElements: z.string().describe("Thorough explanation of any missed elements or alternative arguments, citing legal theory to broaden the student's understanding.")
           })
         }).then(res => { clearTimeout(timer); return res; }),
         new Promise<never>((_, reject) => {
