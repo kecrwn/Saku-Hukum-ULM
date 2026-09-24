@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import Link from 'next/link';
-import { ArrowLeft, Send, AlertCircle, FileText, CheckCircle, Loader2, ChevronDown, BookOpen, Scale, Sparkles } from 'lucide-react';
+import { ArrowLeft, Send, AlertCircle, FileText, CheckCircle, Loader2, ChevronDown, BookOpen, Scale, Sparkles, ChevronLeft, ChevronRight, Trash } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { latihanScenarios } from '@/lib/latihan-data';
 import ReactMarkdown from 'react-markdown';
@@ -44,6 +44,17 @@ export default function LatihanPage() {
   const [feedback, setFeedback] = useState<any>(null);
   const [error, setError] = useState('');
   const [offline, setOffline] = useState(false);
+  const [submissionHistory, setSubmissionHistory] = useState<Record<string, Array<{ analysis: string, feedback: any, timestamp: number }>>>({});
+  const [currentAttemptIndex, setCurrentAttemptIndex] = useState(0);
+
+  const handleClearHistory = () => {
+    const updatedHistory = { ...submissionHistory };
+    delete updatedHistory[selectedScenario.id];
+    setSubmissionHistory(updatedHistory);
+    localStorage.setItem('shulm-practice-history', JSON.stringify(updatedHistory));
+    setFeedback(null);
+    setCurrentAttemptIndex(0);
+  };
   
   const [provider, setProvider] = useState('Nemotron 30B');
   const providers = ['DeepSeek Flash', 'Llama 3.1 8B', 'Nemotron 30B', 'Qwen 3.8 Flash Next'];
@@ -54,6 +65,10 @@ export default function LatihanPage() {
     const stored = localStorage.getItem('completed_cases');
     if (stored) {
       try { setCompleted(JSON.parse(stored)); } catch(e) {}
+    }
+    const storedHistory = localStorage.getItem('shulm-practice-history');
+    if (storedHistory) {
+      try { setSubmissionHistory(JSON.parse(storedHistory)); } catch(e) {}
     }
   }, []);
 
@@ -123,6 +138,18 @@ export default function LatihanPage() {
       const data = await res.json();
       setFeedback(data);
       
+      const newAttempt = { analysis, feedback: data, timestamp: Date.now() };
+      setSubmissionHistory(prev => {
+        const updated = { ...prev };
+        if (!updated[selectedScenario.id]) {
+          updated[selectedScenario.id] = [];
+        }
+        updated[selectedScenario.id].push(newAttempt);
+        localStorage.setItem('shulm-practice-history', JSON.stringify(updated));
+        setCurrentAttemptIndex(updated[selectedScenario.id].length - 1);
+        return updated;
+      });
+
       if (!completed.includes(selectedScenario.id)) {
         const newCompleted = [...completed, selectedScenario.id];
         setCompleted(newCompleted);
@@ -147,6 +174,9 @@ export default function LatihanPage() {
     acc[catId].scenarios.push(scenario);
     return acc;
   }, {} as Record<string, { name: string, nameEn: string, scenarios: typeof latihanScenarios }>);
+
+  const currentHistory = submissionHistory[selectedScenario.id] || [];
+  const displayedFeedback = currentHistory.length > 0 ? currentHistory[currentAttemptIndex]?.feedback : feedback;
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--paper)', color: 'var(--ink)', fontFamily: 'Manrope, sans-serif' }}>
@@ -249,7 +279,18 @@ export default function LatihanPage() {
                               return (
                                 <button
                                   key={scenario.id}
-                                  onClick={() => { setSelectedScenario(scenario); setAnalysis(''); setFeedback(null); setIsScenarioExpanded(false); }}
+                                  onClick={() => { 
+                                    setSelectedScenario(scenario); 
+                                    setAnalysis(''); 
+                                    setFeedback(null);
+                                    const history = submissionHistory[scenario.id] || [];
+                                    if (history.length > 0) {
+                                      setCurrentAttemptIndex(history.length - 1);
+                                    } else {
+                                      setCurrentAttemptIndex(0);
+                                    }
+                                    setIsScenarioExpanded(false); 
+                                  }}
                                   className="w-full p-4 rounded-xl text-left relative flex flex-col gap-2"
                                   style={{
                                     background: isSelected ? 'var(--ink-deep)' : 'var(--card)',
@@ -663,7 +704,7 @@ export default function LatihanPage() {
             {/* ═══════════════════════════════════════
                 4. FEEDBACK SECTION
             ═══════════════════════════════════════ */}
-            {feedback ? (
+            {displayedFeedback ? (
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -676,9 +717,42 @@ export default function LatihanPage() {
                   boxShadow: 'var(--shadow)',
                 }}
               >
-                <h2 className="text-2xl mb-6 pb-4 break-words whitespace-normal" style={{ fontFamily: 'DM Serif Display, serif', color: 'var(--ink-deep)', borderBottom: '1px solid var(--line)' }}>
-                  {isIndonesian ? "Hasil Tinjauan AI" : "AI Review Results"}
-                </h2>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 pb-4 gap-4" style={{ borderBottom: '1px solid var(--line)' }}>
+                  <h2 className="text-2xl break-words whitespace-normal" style={{ fontFamily: 'DM Serif Display, serif', color: 'var(--ink-deep)' }}>
+                    {isIndonesian ? "Hasil Tinjauan AI" : "AI Review Results"}
+                  </h2>
+                  <button 
+                    onClick={handleClearHistory}
+                    className="p-2 sm:px-3 sm:py-2 rounded-lg flex items-center justify-center transition-colors outline-none"
+                    style={{ color: 'var(--clay)', background: 'rgba(178,77,57,0.08)' }}
+                    title={isIndonesian ? "Hapus Riwayat" : "Clear History"}
+                  >
+                    <Trash size={18} />
+                    <span className="text-sm font-semibold ml-2 hidden sm:inline">{isIndonesian ? "Hapus Riwayat" : "Clear History"}</span>
+                  </button>
+                </div>
+
+                {currentHistory.length > 1 && (
+                  <div className="flex items-center justify-between mb-4 bg-white/50 p-2 rounded-xl" style={{ border: '1px solid var(--line)' }}>
+                    <button 
+                      onClick={() => setCurrentAttemptIndex(prev => Math.max(0, prev - 1))}
+                      disabled={currentAttemptIndex === 0}
+                      className="p-1.5 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed hover:bg-black/5 transition-colors"
+                    >
+                      <ChevronLeft size={20} style={{ color: 'var(--ink-deep)' }} />
+                    </button>
+                    <span className="text-sm font-semibold" style={{ color: 'var(--ink-deep)' }}>
+                      {isIndonesian ? `Percobaan ${currentAttemptIndex + 1} dari ${currentHistory.length}` : `Attempt ${currentAttemptIndex + 1} of ${currentHistory.length}`}
+                    </span>
+                    <button 
+                      onClick={() => setCurrentAttemptIndex(prev => Math.min(currentHistory.length - 1, prev + 1))}
+                      disabled={currentAttemptIndex === currentHistory.length - 1}
+                      className="p-1.5 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed hover:bg-black/5 transition-colors"
+                    >
+                      <ChevronRight size={20} style={{ color: 'var(--ink-deep)' }} />
+                    </button>
+                  </div>
+                )}
                 
                 <div className="flex flex-col">
 
@@ -691,7 +765,7 @@ export default function LatihanPage() {
                       </h3>
                     </div>
                     <div className="text-sm leading-relaxed break-words whitespace-normal pl-5" style={{ color: 'var(--muted)' }}>
-                      <ReactMarkdown components={markdownComponents}>{stripThinkTags(feedback.issueFeedback)}</ReactMarkdown>
+                      <ReactMarkdown components={markdownComponents}>{stripThinkTags(displayedFeedback.issueFeedback)}</ReactMarkdown>
                     </div>
                   </div>
 
@@ -704,12 +778,12 @@ export default function LatihanPage() {
                       </h3>
                     </div>
                     <div className="text-sm leading-relaxed break-words whitespace-normal pl-5" style={{ color: 'var(--muted)' }}>
-                      <ReactMarkdown components={markdownComponents}>{stripThinkTags(feedback.citationFeedback)}</ReactMarkdown>
+                      <ReactMarkdown components={markdownComponents}>{stripThinkTags(displayedFeedback.citationFeedback)}</ReactMarkdown>
                     </div>
                   </div>
 
                   {/* Application — purple */}
-                  <div className="py-5" style={{ borderBottom: feedback.missedElements ? '1px solid var(--line)' : 'none' }}>
+                  <div className="py-5" style={{ borderBottom: displayedFeedback.missedElements ? '1px solid var(--line)' : 'none' }}>
                     <div className="flex items-center gap-2.5 mb-2.5">
                       <span className="shrink-0 rounded-full" style={{ width: 8, height: 8, background: categoryAccents.application.color, boxShadow: `0 0 8px ${categoryAccents.application.color}40` }} />
                       <h3 className="font-extrabold text-[10px] tracking-[0.14em] uppercase break-words whitespace-normal" style={{ color: 'var(--ink-deep)' }}>
@@ -717,12 +791,12 @@ export default function LatihanPage() {
                       </h3>
                     </div>
                     <div className="text-sm leading-relaxed break-words whitespace-normal pl-5" style={{ color: 'var(--muted)' }}>
-                      <ReactMarkdown components={markdownComponents}>{stripThinkTags(feedback.applicationFeedback)}</ReactMarkdown>
+                      <ReactMarkdown components={markdownComponents}>{stripThinkTags(displayedFeedback.applicationFeedback)}</ReactMarkdown>
                     </div>
                   </div>
 
                   {/* Missed Elements — orange */}
-                  {feedback.missedElements && (
+                  {displayedFeedback.missedElements && (
                     <div className="py-5">
                       <div className="flex items-center gap-2.5 mb-2.5">
                         <span className="shrink-0 rounded-full" style={{ width: 8, height: 8, background: categoryAccents.missed.color, boxShadow: `0 0 8px ${categoryAccents.missed.color}40` }} />
@@ -738,7 +812,7 @@ export default function LatihanPage() {
                           border: '1px solid rgba(251,146,60,0.12)',
                         }}
                       >
-                        <ReactMarkdown components={markdownComponents}>{stripThinkTags(feedback.missedElements)}</ReactMarkdown>
+                        <ReactMarkdown components={markdownComponents}>{stripThinkTags(displayedFeedback.missedElements)}</ReactMarkdown>
                       </div>
                     </div>
                   )}

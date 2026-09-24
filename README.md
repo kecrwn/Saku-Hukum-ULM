@@ -1,111 +1,53 @@
-# Saku Hukum ULM
-
-A bilingual (Bahasa Indonesia / English) cheat-sheet and informational website for **Universitas Lambung Mangkurat (ULM), Faculty of Law, Prosecutor Track**. 
-
-This project is built to serve as a fast, accessible, and user-friendly portal for prospective and current students looking for information on admissions, curriculum, faculty/staff, campus life, schedules, and events related to the Prosecutor track.
-
-## Tech Stack
-- **Frontend Framework**: React 19 + Vite
-- **Styling**: Tailwind CSS v4 + Radix UI (for accessible components) + Framer Motion (for animations)
-- **Routing**: Wouter
-- **Language Setup**: React Context-based bilingual toggle (ID as default, EN as secondary)
-- **Package Manager**: pnpm (or npm)
-
-## Folder Structure
-```
-SakuHukumULM/
-├── client/
-│   ├── public/         # Static assets (images, icons)
-│   └── src/
-│       ├── components/ # Reusable UI components (buttons, search bar, chatbot UI)
-│       ├── contexts/   # React contexts (e.g., Language Context)
-│       ├── hooks/      # Custom React hooks
-│       ├── lib/        # Utilities and helpers
-│       ├── pages/      # Route components (Home, About, Curriculum, etc.)
-│       ├── App.tsx     # Main application layout and routing
-│       └── index.css   # Global Tailwind styles and design system variables
-├── server/             # Backend (Express API, if integrated)
-├── shared/             # Shared types/schemas (Zod) between client and server
-└── ...
-```
-
-## How to Run Locally
-
-1. **Install Dependencies**:
-   ```bash
-   pnpm install
-   # or
-   npm install
-   ```
-
-2. **Start the Development Server**:
-   ```bash
-   npm run dev
-   ```
-   This will start the Vite dev server, typically accessible at `http://localhost:5173`.
-
-3. **Build for Production**:
-   ```bash
-   npm run build
-   ```
-
-4. **Preview Production Build**:
-   ```bash
-   npm run start
-   ```
-
-## How to Add New Content / Pages
-
-### 1. Adding/Modifying Text (Bilingual)
-If you need to update text on an existing page (like `Curriculum.tsx`), open the component and look for the translation logic. Text is usually handled dynamically based on the active language (`id` or `en`) provided by the language context.
-- Keep the language simple, practical, and non-academic.
-
-### 2. Creating a New Page
-1. Create a new `.tsx` file in `client/src/pages/` (e.g., `NewPage.tsx`).
-2. Follow the existing UI patterns (use components from `@/components`).
-3. Add bilingual support for all text elements.
-4. Open `client/src/App.tsx` and add a new Wouter `<Route>` pointing to your new page.
-5. Update navigation links in the Sidebar/Header component to include your new route.
-
-### 3. Adding Images
-- Place new images in `client/public/` or an appropriate subfolder.
-- **Crucial**: Always optimize and compress images (WebP format preferred) and use appropriate sizing and lazy loading (`loading="lazy"`) in `<img>` tags to maintain fast load times.
-
-## Design System & Consistency
-This project strictly adheres to a predefined design system. When adding new components:
-- Rely on Tailwind utility classes combined with the `index.css` CSS variables.
-- Maintain existing spacing, typography, and color usage rules.
-- Test changes on mobile to ensure responsiveness and a native-app-like feel.
-
-## Recent Updates: 15th Pass Reading Room & Typography Optimizations
-
-The 15th pass focuses on refining the **Digital Reading Room (`/ruang-baca/[id]`)** and study reading flow into a first-class, distraction-free environment tailored for first-year law students:
-
-### 1. Enhanced Reading Flow & Accessible Phrasing
-- **1st-Year Friendly Clarity**: Simplified sentence structures across law book chapters for approachability while rigorously preserving factual, statutory, and legal substance.
-- **Natural Left-Aligned Typography**: Standardized body text to left alignment (`text-align: left`) to prevent awkward spacing gaps ("rivers") and awkward narrow line-wraps on mobile viewports.
-- **Isolated Horizontal Overflow**: Horizontal scrolling is strictly scoped only to wide data tables (`.markdown-reader table`), ensuring main paragraphs use full viewport width without horizontal drift.
-
-### 2. Reading Controls & Navigation
-- **Dynamic Text-Size Controls**: 3-step font size toggle (Kecil / Small: 16px, Sedang / Medium: 19px, Besar / Large: 24px) located directly in the reader header.
-- **Reading Themes**: Instant toggle between Light (Terang), Sepia (Warm Paper), and Night (Malam / Dark Mode) with customized contrast tokens.
-- **Smooth Scroll & Chapter Controls**: Automatic smooth scrolling to the top on chapter switch, smooth Table of Contents navigation, and dedicated "Bab Sebelumnya" (Previous Chapter) and "Bab Selanjutnya" (Next Chapter) footer controls.
-
-### 3. Typography & Rich Legal Formatting
-- **Lora Reading Serif**: Long-form body text rendered in Google Font `Lora` with true bold (`700`) and italic cuts (no faux-bold or synthetic oblique).
-- **Custom `<cite>` Legal Tags**: Distinctive styling for statutory articles and law citations (e.g., `<cite>Pasal 338 KUHP</cite>`) with accent borders and high-readability tags.
-- **Styled Blockquotes & Lists**: Accent-bordered blockquotes for legal definitions and doctrine, paired with styled list markers.
-
-### 4. AI Assistant (Jaksa) Knowledge Update
-- Updated `Jaksa` system prompt and `siteKnowledge` base so the chatbot is fully conversant with the Reading Room interface, font-size controls, themes, navigation buttons, and rich markdown legal citation tags.
+<div align="center">
+  <h1>⚖️ Saku Hukum ULM</h1>
+  <p><strong>Platform Inovasi Pembelajaran & Literasi Hukum Digital</strong></p>
+  <p><em>Digital Legal Literacy & Learning Innovation Platform</em></p>
+</div>
 
 ---
-*Maintained for ULM Faculty of Law, Prosecutor Track.*
 
-## Data Sources (Updated 14 Sep 2026)
-- IDN Times Kaltim (Accreditation news)
-- Jejakrekam.com (Alumni response)
-- Blogspot (Student review 2019)
-- LinkedIn (Fresh graduate testimonial)
-- ULM Official SK Rektor No. 274/UN8/HK.06/2026 (Academic Calendar)
-- Kejaksaan RI & FH ULM News (Adhyaksa Chamber)
+## 🌟 Tentang Kami / About Us
+
+**Saku Hukum ULM** adalah platform revolusioner yang dirancang untuk mempermudah akses literasi dan pembelajaran hukum bagi mahasiswa, akademisi, dan masyarakat umum. Dengan dukungan kecerdasan buatan, kami menghadirkan pengalaman belajar yang interaktif dan komprehensif.
+
+*Saku Hukum ULM is a revolutionary platform designed to facilitate access to legal literacy and learning for students, academics, and the general public. Powered by artificial intelligence, we deliver an interactive and comprehensive learning experience.*
+
+---
+
+## 🚀 Fitur Utama / Core Features
+
+### 🤖 AI Chatbot (Jaksa)
+Asisten hukum virtual cerdas yang siap menjawab pertanyaan dan mendiskusikan berbagai topik hukum secara real-time.  
+*An intelligent virtual legal assistant ready to answer questions and discuss various legal topics in real-time.*
+
+### 📖 Kamus Pasal (Article Dictionary)
+Akses cepat dan mudah ke berbagai pasal hukum dalam perundang-undangan dengan penjelasan yang mudah dipahami.  
+*Quick and easy access to various legal articles in legislation with easy-to-understand explanations.*
+
+### 📚 Glosarium (Legal Glossary)
+Pusat definisi dan istilah hukum komprehensif untuk membantu Anda memahami bahasa hukum yang rumit.  
+*A comprehensive center for legal definitions and terminology to help you understand complex legal language.*
+
+### 🔀 Alur Perkara (Case Flowcharts)
+Visualisasi proses dan prosedur hukum yang interaktif dan jelas, dari tahap awal hingga putusan.  
+*Clear and interactive visualization of legal processes and procedures, from initial stages to the final verdict.*
+
+### 🎯 Pusat Latihan (AI Practice Center)
+Wadah simulasi kasus dan latihan berbasis AI untuk menguji dan mengasah kemampuan analisis hukum Anda.  
+*An AI-based simulation and practice center to test and sharpen your legal analysis skills.*
+
+---
+
+## 📄 Lisensi / License
+
+Proyek ini dilisensikan di bawah **Lisensi MIT** (MIT License).  
+Silakan merujuk ke file `LICENSE` untuk informasi lebih lanjut mengenai hak cipta dan ketentuan penggunaan.
+
+*This project is licensed under the **MIT License**.*  
+*Please refer to the `LICENSE` file for further information regarding copyright and terms of use.*
+
+---
+
+<div align="center">
+  <p>© 2026 Saku Hukum ULM. All rights reserved.</p>
+</div>
