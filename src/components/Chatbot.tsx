@@ -156,7 +156,8 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
     { id: "fast-tier", name: "Fast Tier (Lightning/Groq)", short: "Fast Tier" },
     { id: "nvidia/nemotron-3-super-120b-a12b", name: "Super 120B", short: "Super 120B" },
     { id: "moonshotai/kimi-k3", name: "Kimi K3 (Deep)", short: "Kimi K3" },
-    { id: "deepseek-ai/deepseek-v4-flash-0731", name: "DeepSeek V4", short: "DeepSeek" }
+    { id: "deepseek-ai/deepseek-v4-flash-0731", name: "DeepSeek V4", short: "DeepSeek" },
+    { id: "Qwen/Qwen3.8-Flash-Next", name: "Qwen 3.8 Flash Next", short: "Qwen 3.8" }
   ];
 
   const currentModel = models.find(m => m.id === selectedModel) || models[0];

@@ -82,6 +82,8 @@ You will review the student's analysis of the following scenario based strictly 
 Provide constructive, objective feedback. Return your response as a structured JSON matching the provided schema. Do not output anything else except the JSON.
 Ensure you use rich markdown formatting (bold, italic, bullet points) inside the JSON fields (issueFeedback, citationFeedback, applicationFeedback, missedElements) so the frontend can render it beautifully.
 
+CRITICAL: You MUST NOT output any <think> tags or internal reasoning. ONLY output the raw JSON object. Any text outside the JSON will cause a system failure.
+
 SCENARIO:
 ${scenario}
 

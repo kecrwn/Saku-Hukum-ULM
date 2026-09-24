@@ -21,6 +21,8 @@ const loadingMessagesEn = ["Analyzing facts...", "Searching KUHP references...",
 
 const CHAR_LIMIT = 3000;
 
+const stripThinkTags = (text: string) => text ? text.replace(/<think>[\s\S]*?<\/think>/g, '') : '';
+
 /* Feedback category color accents */
 const categoryAccents = {
   issue:       { color: '#4ade80', label: 'green' },
@@ -491,16 +493,16 @@ export default function LatihanPage() {
               <button
                 type="submit"
                 disabled={loading || !analysis.trim()}
-                className="px-6 py-4 rounded-xl font-bold flex items-center justify-center gap-2.5 break-words whitespace-normal"
+                className="relative px-6 py-4 rounded-xl font-bold flex items-center justify-center gap-2.5 break-words whitespace-normal overflow-hidden"
                 style={{
-                  background: loading || !analysis.trim()
-                    ? 'var(--muted)'
-                    : 'linear-gradient(135deg, var(--ink-deep) 0%, #1a4a52 100%)',
+                  background: loading 
+                    ? 'var(--ink-deep)'
+                    : (!analysis.trim() ? 'var(--muted)' : 'linear-gradient(135deg, var(--ink-deep) 0%, #1a4a52 100%)'),
                   color: 'var(--card)',
                   boxShadow: loading || !analysis.trim() ? 'none' : '0 8px 24px rgba(16,45,51,0.18)',
                   transition: 'transform 180ms cubic-bezier(.23,1,.32,1), box-shadow 180ms ease, opacity 180ms ease',
-                  opacity: loading || !analysis.trim() ? 0.6 : 1,
-                  cursor: loading || !analysis.trim() ? 'not-allowed' : 'pointer',
+                  opacity: loading ? 1 : (!analysis.trim() ? 0.6 : 1),
+                  cursor: loading ? 'wait' : (!analysis.trim() ? 'not-allowed' : 'pointer'),
                 }}
                 onMouseEnter={(e) => {
                   if (!loading && analysis.trim()) {
@@ -513,17 +515,89 @@ export default function LatihanPage() {
                   (e.currentTarget as HTMLElement).style.boxShadow = loading || !analysis.trim() ? 'none' : '0 8px 24px rgba(16,45,51,0.18)';
                 }}
               >
-                {loading ? (
-                  <>
-                    <Loader2 size={18} className="animate-spin" style={{ color: 'var(--clay)' }} />
-                    <span>{isIndonesian ? loadingMessagesId[loadingMessageIndex] : loadingMessagesEn[loadingMessageIndex]}</span>
-                  </>
-                ) : (
-                  <>
-                    <span>{isIndonesian ? 'Kirim Analisis' : 'Submit Analysis'}</span>
-                    <Send size={18} />
-                  </>
-                )}
+                <AnimatePresence>
+                  {loading && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="absolute inset-0 z-0 overflow-hidden rounded-xl"
+                    >
+                      <motion.div 
+                        className="absolute inset-0"
+                        animate={{ 
+                          background: [
+                            'linear-gradient(135deg, var(--ink-deep) 0%, #1a4a52 100%)',
+                            'linear-gradient(135deg, #1a4a52 0%, var(--clay) 100%)',
+                            'linear-gradient(135deg, var(--ink-deep) 0%, #1a4a52 100%)'
+                          ]
+                        }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                      />
+                      {[...Array(3)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className="absolute rounded-full"
+                          style={{
+                            background: 'radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%)',
+                            width: Math.random() * 80 + 40,
+                            height: Math.random() * 80 + 40,
+                            left: `${Math.random() * 100}%`,
+                            top: `${Math.random() * 100}%`,
+                          }}
+                          animate={{
+                            y: [0, -20, 0],
+                            x: [0, Math.random() * 20 - 10, 0],
+                            opacity: [0, 0.8, 0],
+                            scale: [0.8, 1.2, 0.8],
+                          }}
+                          transition={{
+                            duration: Math.random() * 2 + 2,
+                            repeat: Infinity,
+                            delay: Math.random() * 1.5,
+                          }}
+                        />
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <div className="relative z-10 flex items-center justify-center w-full">
+                  {loading ? (
+                    <div className="flex items-center gap-3">
+                      <motion.div
+                        animate={{ rotate: 360, scale: [1, 1.2, 1] }}
+                        transition={{ 
+                          rotate: { duration: 3, repeat: Infinity, ease: "linear" },
+                          scale: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
+                        }}
+                        className="flex items-center justify-center"
+                      >
+                        <Sparkles size={18} style={{ color: 'var(--card)' }} />
+                      </motion.div>
+                      
+                      <div className="relative h-6 flex items-center overflow-hidden min-w-[200px]">
+                        <AnimatePresence mode="wait">
+                          <motion.span
+                            key={loadingMessageIndex}
+                            initial={{ y: 25, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: -25, opacity: 0 }}
+                            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                            className="absolute left-0 right-0 text-left font-medium tracking-wide text-white"
+                          >
+                            {isIndonesian ? loadingMessagesId[loadingMessageIndex] : loadingMessagesEn[loadingMessageIndex]}
+                          </motion.span>
+                        </AnimatePresence>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2.5">
+                      <span>{isIndonesian ? 'Kirim Analisis' : 'Submit Analysis'}</span>
+                      <Send size={18} />
+                    </div>
+                  )}
+                </div>
               </button>
             </form>
           </section>
@@ -562,7 +636,7 @@ export default function LatihanPage() {
                       </h3>
                     </div>
                     <div className="text-sm leading-relaxed break-words whitespace-normal pl-5" style={{ color: 'var(--muted)' }}>
-                      <ReactMarkdown components={markdownComponents}>{feedback.issueFeedback}</ReactMarkdown>
+                      <ReactMarkdown components={markdownComponents}>{stripThinkTags(feedback.issueFeedback)}</ReactMarkdown>
                     </div>
                   </div>
 
@@ -575,7 +649,7 @@ export default function LatihanPage() {
                       </h3>
                     </div>
                     <div className="text-sm leading-relaxed break-words whitespace-normal pl-5" style={{ color: 'var(--muted)' }}>
-                      <ReactMarkdown components={markdownComponents}>{feedback.citationFeedback}</ReactMarkdown>
+                      <ReactMarkdown components={markdownComponents}>{stripThinkTags(feedback.citationFeedback)}</ReactMarkdown>
                     </div>
                   </div>
 
@@ -588,7 +662,7 @@ export default function LatihanPage() {
                       </h3>
                     </div>
                     <div className="text-sm leading-relaxed break-words whitespace-normal pl-5" style={{ color: 'var(--muted)' }}>
-                      <ReactMarkdown components={markdownComponents}>{feedback.applicationFeedback}</ReactMarkdown>
+                      <ReactMarkdown components={markdownComponents}>{stripThinkTags(feedback.applicationFeedback)}</ReactMarkdown>
                     </div>
                   </div>
 
@@ -609,7 +683,7 @@ export default function LatihanPage() {
                           border: '1px solid rgba(251,146,60,0.12)',
                         }}
                       >
-                        <ReactMarkdown components={markdownComponents}>{feedback.missedElements}</ReactMarkdown>
+                        <ReactMarkdown components={markdownComponents}>{stripThinkTags(feedback.missedElements)}</ReactMarkdown>
                       </div>
                     </div>
                   )}

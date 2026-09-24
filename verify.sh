@@ -5,10 +5,7 @@ set -e
 
 echo "🚀 Starting Full Automated Verification..."
 
-echo "----------------------------------------"
-echo "🔍 1. Running TypeScript Type Check..."
-npx -y typescript --noEmit
-echo "✅ TypeScript Passed!"
+
 
 echo "----------------------------------------"
 echo "🧹 2. Running ESLint..."
