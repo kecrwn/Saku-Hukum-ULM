@@ -39,7 +39,7 @@ function checkRateLimit(ip: string) {
 }
 
 export const dynamic = 'force-dynamic';
-export const maxDuration = 30;
+export const maxDuration = 60;
 
 const API_KEYS: Record<string, string> = {
   'nvidia/nemotron-3.5-lightning-30b-a3b': process.env.NVIDIA_LIGHTNING_KEY || process.env.NVIDIA_API_KEY || '',

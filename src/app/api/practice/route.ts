@@ -3,6 +3,8 @@ import { generateObject } from 'ai';
 import { z } from 'zod';
 import { pasalData } from '@/lib/pasal-data';
 
+export const maxDuration = 60;
+
 // Maps frontend display names to actual model identifiers
 const PROVIDER_TO_MODEL: Record<string, string> = {
   'DeepSeek Flash': 'deepseek-ai/deepseek-v4-flash-0731',
