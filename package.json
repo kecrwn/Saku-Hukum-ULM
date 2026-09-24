@@ -78,17 +78,15 @@
     "@types/react": "^19.2.1",
     "@types/react-dom": "^19.2.1",
     "@types/react-syntax-highlighter": "^15.5.13",
-    "add": "^2.0.6",
     "autoprefixer": "^10.4.20",
     "esbuild": "^0.25.0",
     "pnpm": "^10.15.1",
-    "postcss": "^8.4.47",
+    "postcss": "latest",
     "prettier": "^3.6.2",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.19.1",
     "typescript": "5.6.3",
     "vitest": "^2.1.4",
-    "@tailwindcss/postcss": "latest",
-    "postcss": "latest"
+    "@tailwindcss/postcss": "latest"
   }
 }

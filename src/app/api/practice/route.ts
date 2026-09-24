@@ -92,6 +92,7 @@ ${JSON.stringify(pasalData.map(p => ({ article: p.articleNumber, text: p.officia
 
     try {
       // Wrap each attempt in a timeout so we don't hang forever
+      let timer: ReturnType<typeof setTimeout>;
       const result = await Promise.race([
         generateObject({
           model: getClient(currentModel),
@@ -103,31 +104,27 @@ ${JSON.stringify(pasalData.map(p => ({ article: p.articleNumber, text: p.officia
             applicationFeedback: z.string().describe("Feedback on how the student applied the law to the facts of the scenario"),
             missedElements: z.string().describe("Any elements of the offense or alternative arguments the student missed")
           })
+        }).then(res => { clearTimeout(timer); return res; }),
+        new Promise<never>((_, reject) => {
+          timer = setTimeout(() => reject(new Error(`Timeout: ${currentModel} did not respond within ${MODEL_TIMEOUT_MS / 1000}s`)), MODEL_TIMEOUT_MS);
         }),
-        new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error(`Timeout: ${currentModel} did not respond within ${MODEL_TIMEOUT_MS / 1000}s`)), MODEL_TIMEOUT_MS)
-        ),
       ]);
 
       return Response.json(result.object);
     } catch (err: any) {
       const message = err?.message || String(err);
-      console.error(`Practice API Error with model ${currentModel}:`, message);
+      console.error(`[practice] Error with model ${currentModel}:`, message);
       errors.push({ model: currentModel, error: message });
 
       // Groq's Llama may fail on structured output (generateObject with Zod).
-      // Catch it explicitly and fall through to the next model.
       if (currentModel.startsWith('groq/')) {
-        console.warn(`Groq structured output failed for ${currentModel}, falling through to next model.`);
+        console.warn(`[practice] Groq structured output failed for ${currentModel}, falling through to next model.`);
       }
     }
   }
 
-  return new Response(
-    JSON.stringify({
-      error: 'Failed to generate feedback after trying all fallback models.',
-      details: errors,
-    }),
+  return Response.json(
+    { error: 'Failed to generate feedback after trying all fallback models.', details: errors },
     { status: 500 }
   );
 }
