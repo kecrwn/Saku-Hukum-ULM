@@ -1,53 +1,58 @@
 <div align="center">
-  <h1>⚖️ Saku Hukum ULM</h1>
-  <p><strong>Platform Inovasi Pembelajaran & Literasi Hukum Digital</strong></p>
-  <p><em>Digital Legal Literacy & Learning Innovation Platform</em></p>
+
+# ⚖️ Saku Hukum ULM 🎓✨
+### *Level-up Literasi Hukum Kamu! / Level-up Your Legal Literacy!*
+
+[![Version](https://img.shields.io/badge/Version-3.0.0-FF6B6B?style=for-the-badge&logo=rocket)](#)
+[![License](https://img.shields.io/badge/License-MIT-4ECDC4?style=for-the-badge)](#)
+
+*Belajar hukum gak pernah seasik ini! 🚀*  
+*Studying law has never been this fun! 🚀*
+
 </div>
 
 ---
 
-## 🌟 Tentang Kami / About Us
+## 👋 Haloo! / What's Good! 
 
-**Saku Hukum ULM** adalah platform revolusioner yang dirancang untuk mempermudah akses literasi dan pembelajaran hukum bagi mahasiswa, akademisi, dan masyarakat umum. Dengan dukungan kecerdasan buatan, kami menghadirkan pengalaman belajar yang interaktif dan komprehensif.
+**Saku Hukum ULM** adalah *platform* super pintar buat ngebantu kamu belajar dan paham hukum dengan gampang, cepat, dan pastinya seru banget! Cocok buat mahasiswa hukum, dosen, atau siapa aja yang pengen melek hukum tanpa pusing. 🧠💡
 
-*Saku Hukum ULM is a revolutionary platform designed to facilitate access to legal literacy and learning for students, academics, and the general public. Powered by artificial intelligence, we deliver an interactive and comprehensive learning experience.*
-
----
-
-## 🚀 Fitur Utama / Core Features
-
-### 🤖 AI Chatbot (Jaksa)
-Asisten hukum virtual cerdas yang siap menjawab pertanyaan dan mendiskusikan berbagai topik hukum secara real-time.  
-*An intelligent virtual legal assistant ready to answer questions and discuss various legal topics in real-time.*
-
-### 📖 Kamus Pasal (Article Dictionary)
-Akses cepat dan mudah ke berbagai pasal hukum dalam perundang-undangan dengan penjelasan yang mudah dipahami.  
-*Quick and easy access to various legal articles in legislation with easy-to-understand explanations.*
-
-### 📚 Glosarium (Legal Glossary)
-Pusat definisi dan istilah hukum komprehensif untuk membantu Anda memahami bahasa hukum yang rumit.  
-*A comprehensive center for legal definitions and terminology to help you understand complex legal language.*
-
-### 🔀 Alur Perkara (Case Flowcharts)
-Visualisasi proses dan prosedur hukum yang interaktif dan jelas, dari tahap awal hingga putusan.  
-*Clear and interactive visualization of legal processes and procedures, from initial stages to the final verdict.*
-
-### 🎯 Pusat Latihan (AI Practice Center)
-Wadah simulasi kasus dan latihan berbasis AI untuk menguji dan mengasah kemampuan analisis hukum Anda.  
-*An AI-based simulation and practice center to test and sharpen your legal analysis skills.*
+*Saku Hukum ULM is a super smart platform built to help you learn and understand the law easily, quickly, and in a really fun way! Perfect for law students, lecturers, or anyone who wants to get legally literate without the headache. 🧠💡*
 
 ---
 
-## 📄 Lisensi / License
+## 🔥 Fitur Keren Kita / Our Awesome Features
 
-Proyek ini dilisensikan di bawah **Lisensi MIT** (MIT License).  
-Silakan merujuk ke file `LICENSE` untuk informasi lebih lanjut mengenai hak cipta dan ketentuan penggunaan.
+### 🤖 Chatbot Jaksa (*Your AI Bestie*)
+Punya pertanyaan hukum tapi bingung nanya siapa? Tanya **Jaksa** aja! Asisten AI pintar kita siap diajak diskusi soal hukum kapan aja, di mana aja. 💬✨  
+*Got a legal question but don't know who to ask? Just ask **Jaksa**! Our smart AI assistant is ready to discuss legal topics anytime, anywhere. 💬✨*
 
-*This project is licensed under the **MIT License**.*  
-*Please refer to the `LICENSE` file for further information regarding copyright and terms of use.*
+### 📖 Kamus Pasal (*Article Dictionary*)
+Lagi nyari pasal tapi males buka buku tebel? Kita punya database pasal yang gampang banget dicari plus penjelasannya yang *simple*. 📚🔍  
+*Looking for an article but too lazy to open a thick book? We’ve got a super searchable article database complete with simple explanations. 📚🔍*
+
+### 🎯 Pusat Latihan (*AI Practice Center*)
+Pengen tes *skill* analisis hukum kamu? Cobain berbagai simulasi kasus yang seru! AI kita bakal langsung kasih *feedback* dan nilai seberapa jago analisis kamu. 🏆⚖️  
+*Wanna test your legal analysis skills? Try out our fun case simulations! Our AI will instantly give you feedback and grade how good your analysis is. 🏆⚖️*
+
+### 🔀 Alur Perkara (*Interactive Flowcharts*)
+Pusing sama prosedur hukum? Tenang! Kita visualisasi-in semuanya pakai *flowchart* interaktif yang gampang dipahami, dari awal sampai putusan hakim! 🗺️🔨  
+*Confused by legal procedures? Chill! We visualize everything using interactive flowcharts that are super easy to follow, from the start to the judge's verdict! 🗺️🔨*
+
+### 📚 Glosarium (*Legal Glossary*)
+Bahasa hukum kadang suka bikin pusing, kan? Cari aja istilah yang bikin bingung di Glosarium kita. Penjelasannya pakai bahasa manusia biasa kok! 🗣️✨  
+*Legal jargon can be a headache, right? Just look up confusing terms in our Glossary. The explanations are in plain, human language! 🗣️✨*
+
+---
+
+## 📜 Lisensi / License
+
+Saku Hukum ULM itu **100% Open Source** di bawah naungan **Lisensi MIT** (MIT License). Bebas buat dipakai dan dikembangin lagi! 🎉  
+*Saku Hukum ULM is **100% Open Source** under the **MIT License**. Free to use and build upon! 🎉*
 
 ---
 
 <div align="center">
-  <p>© 2026 Saku Hukum ULM. All rights reserved.</p>
+  <p><b>Dibuat dengan ❤️ oleh Saku Hukum ULM @ 2026</b></p>
+  <p><i>Made with ❤️ by Saku Hukum ULM @ 2026</i></p>
 </div>
