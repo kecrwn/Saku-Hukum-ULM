@@ -12,160 +12,160 @@ export const latihanScenarios: LatihanScenario[] = [
     id: "SCN-01",
     title: "Pencurian Barang Berharga",
     titleEn: "Theft of Valuables",
-    scenario: "Budi mengambil sebuah laptop yang tergeletak di atas meja kafe ketika pemiliknya sedang pergi ke toilet, dengan niat untuk memilikinya dan menjualnya di kemudian hari.",
-    scenarioEn: "Budi takes a laptop left on a cafe table while its owner is away at the restroom, with the intention of keeping it and selling it later.",
-    targetArticle: "Pasal 362 KUHP"
+    scenario: "Budi mengambil sebuah laptop yang tergeletak di atas meja kafe ketika pemiliknya sedang pergi ke toilet, dengan maksud untuk memilikinya secara melawan hukum dan menjualnya di kemudian hari.",
+    scenarioEn: "Budi takes a laptop left unattended on a cafe table while its owner is away in the restroom, intending to unlawfully keep it and sell it later.",
+    targetArticle: "Pasal 476 UU 1/2023 (Pasal 362 KUHP)"
   },
   {
     id: "SCN-02",
     title: "Penggelapan Dana Perusahaan",
     titleEn: "Embezzlement of Company Funds",
-    scenario: "Siti, seorang kasir perusahaan, menerima uang pembayaran dari klien secara tunai namun uang tersebut tidak disetorkan ke kas perusahaan melainkan digunakan untuk membayar hutang pribadinya.",
-    scenarioEn: "Siti, a company cashier, receives cash payments from clients but does not deposit the money into the company's treasury, instead using it to pay off her personal debts.",
-    targetArticle: "Pasal 372 KUHP"
+    scenario: "Siti, seorang kasir perusahaan, menerima uang pembayaran dari klien secara tunai. Namun, uang tersebut tidak disetorkan ke kas perusahaan, melainkan digunakan untuk melunasi utang pribadinya.",
+    scenarioEn: "Siti, a company cashier, receives cash payments from clients. However, instead of depositing the money into the company treasury, she uses it to pay off her personal debts.",
+    targetArticle: "Pasal 486 UU 1/2023 (Pasal 372 KUHP)"
   },
   {
     id: "SCN-03",
-    title: "Penipuan Investasi Bodong",
+    title: "Penipuan Berkedok Investasi",
     titleEn: "Fraudulent Investment Scheme",
-    scenario: "Agus meyakinkan puluhan orang untuk menyerahkan uang mereka dengan janji keuntungan 50% setiap bulan melalui bisnis fiktif yang tidak pernah ada, lalu membawa kabur uang tersebut.",
-    scenarioEn: "Agus convinces dozens of people to hand over their money by promising a 50% monthly profit through a fictitious business that does not exist, and then runs away with the money.",
-    targetArticle: "Pasal 378 KUHP"
+    scenario: "Agus meyakinkan puluhan korban untuk menyerahkan dana mereka dengan janji keuntungan pasti 50% setiap bulan melalui bisnis fiktif yang tidak pernah ada, lalu membawa kabur seluruh dana tersebut.",
+    scenarioEn: "Agus convinces dozens of victims to hand over their funds by promising a guaranteed 50% monthly profit through a fictitious business that does not exist, and subsequently absconds with the money.",
+    targetArticle: "Pasal 492 UU 1/2023 (Pasal 378 KUHP)"
   },
   {
     id: "SCN-04",
-    title: "Pembunuhan Sengaja",
-    titleEn: "Intentional Murder",
-    scenario: "Dalam sebuah pertengkaran hebat yang spontan, Joko mengambil pisau dapur dan menusuk dada temannya hingga korban meninggal dunia di tempat kejadian.",
-    scenarioEn: "During a spontaneous and heated argument, Joko grabs a kitchen knife and stabs his friend in the chest, causing the victim to die at the scene.",
-    targetArticle: "Pasal 338 KUHP"
+    title: "Pembunuhan Biasa (Tanpa Rencana)",
+    titleEn: "Intentional Homicide",
+    scenario: "Dalam sebuah pertengkaran sengit yang terjadi secara spontan, Joko mengambil pisau dapur dan menusuk dada temannya dengan sengaja hingga korban meninggal dunia di tempat kejadian.",
+    scenarioEn: "During a spontaneous and heated argument, Joko grabs a kitchen knife and intentionally stabs his friend in the chest, causing the victim to die at the scene.",
+    targetArticle: "Pasal 458 UU 1/2023 (Pasal 338 KUHP)"
   },
   {
     id: "SCN-05",
     title: "Pembunuhan Berencana",
     titleEn: "Premeditated Murder",
-    scenario: "Karena dendam lama, Rini secara diam-diam mencampurkan racun mematikan ke dalam minuman kopi milik atasannya. Ia telah merencanakan hal ini selama seminggu terakhir.",
-    scenarioEn: "Due to a long-standing grudge, Rini secretly mixes a deadly poison into her boss's coffee. She had been planning this for the past week.",
-    targetArticle: "Pasal 340 KUHP"
+    scenario: "Karena dendam lama, Rini menyusun rencana matang selama sepekan untuk mencampurkan racun mematikan ke dalam kopi milik atasannya saat jam makan siang, yang berakibat pada kematian sang atasan.",
+    scenarioEn: "Driven by a long-held grudge, Rini meticulously plans for a week to slip a lethal poison into her employer's coffee during lunch hour, resulting in the employer's death.",
+    targetArticle: "Pasal 459 UU 1/2023 (Pasal 340 KUHP)"
   },
   {
     id: "SCN-06",
     title: "Penganiayaan Biasa",
-    titleEn: "Ordinary Maltreatment",
-    scenario: "Karena tersinggung dengan ucapan seseorang di jalan, Dodi memukul wajah orang tersebut dengan tangan kosong yang mengakibatkan luka memar di bagian mata korban.",
-    scenarioEn: "Offended by someone's words on the street, Dodi punches the person in the face with his bare hands, resulting in bruising around the victim's eye.",
-    targetArticle: "Pasal 351 KUHP"
+    titleEn: "Maltreatment (Assault)",
+    scenario: "Tersinggung oleh perkataan orang lain di pinggir jalan, Dodi memukul wajah korban dengan tangan kosong hingga mengakibatkan pelipis korban robek dan mata mengalami luka memar.",
+    scenarioEn: "Angered by a bystander's remarks on the street, Dodi strikes the victim's face with his bare fist, causing a lacerated brow and severe bruising around the victim's eye.",
+    targetArticle: "Pasal 466 UU 1/2023 (Pasal 351 KUHP)"
   },
   {
     id: "SCN-07",
-    title: "Pemerasan",
-    titleEn: "Extortion",
-    scenario: "Preman setempat mendatangi sebuah toko kelontong dan memaksa pemilik toko memberikan sejumlah uang keamanan. Jika tidak diberikan, mereka mengancam akan menghancurkan toko tersebut.",
-    scenarioEn: "Local thugs approach a grocery store and force the owner to pay protection money. If not provided, they threaten to destroy the store.",
-    targetArticle: "Pasal 368 KUHP"
+    title: "Pemerasan dengan Ancaman",
+    titleEn: "Extortion with Threat of Violence",
+    scenario: "Seorang preman mendatangi pemilik toko kelontong dan memaksanya menyerahkan uang sebesar satu juta rupiah setiap bulan. Pelaku mengancam akan membakar toko tersebut apabila uang keamanan tidak diberikan.",
+    scenarioEn: "A local hoodlum confronts a grocery shopkeeper and coerces him into handing over one million rupiah each month, threatening to burn down the store if the protection money is refused.",
+    targetArticle: "Pasal 482 UU 1/2023 (Pasal 368 KUHP)"
   },
   {
     id: "SCN-08",
-    title: "Pencemaran Nama Baik",
-    titleEn: "Defamation",
-    scenario: "Melalui sebuah tulisan yang disebarkan di papan pengumuman desa, Herman menuduh Kepala Desa melakukan korupsi tanpa adanya bukti, yang merusak reputasi Kepala Desa tersebut.",
-    scenarioEn: "Through a writing posted on the village announcement board, Herman accuses the Village Head of corruption without any evidence, damaging the Village Head's reputation.",
-    targetArticle: "Pasal 310 KUHP"
+    title: "Pencemaran Nama Baik Tertulis",
+    titleEn: "Written Defamation (Libel)",
+    scenario: "Melalui selebaran yang ditempelkan di papan pengumuman balai desa, Herman secara terbuka menuduh Kepala Desa menyalahgunakan dana bantuan sosial tanpa bukti yang sah, dengan maksud agar tuduhan tersebut diketahui umum.",
+    scenarioEn: "Through flyers posted on the village hall announcement board, Herman publicly accuses the Village Chief of embezzling social assistance funds without verifiable proof, clearly intending for the allegation to become widely known.",
+    targetArticle: "Pasal 433 UU 1/2023 (Pasal 310 KUHP)"
   },
   {
     id: "SCN-09",
-    title: "Perusakan Barang Mengerikan",
+    title: "Perusakan Barang",
     titleEn: "Destruction of Property",
-    scenario: "Dalam kondisi mabuk, Anto dengan sengaja memecahkan kaca jendela mobil tetangganya menggunakan batu hingga hancur berantakan tanpa alasan yang jelas.",
-    scenarioEn: "While intoxicated, Anto intentionally breaks his neighbor's car window using a rock until it shatters to pieces without any clear reason.",
-    targetArticle: "Pasal 406 KUHP"
+    scenario: "Dalam kondisi mabuk setelah berselisih paham, Anto dengan sengaja melempari kaca jendela mobil tetangganya menggunakan batu bata hingga pecah berantakan dan mobil tidak dapat digunakan.",
+    scenarioEn: "In an intoxicated state following a dispute, Anto deliberately hurls bricks at his neighbor's car windshield, smashing it to pieces and rendering the vehicle unusable.",
+    targetArticle: "Pasal 521 UU 1/2023 (Pasal 406 KUHP)"
   },
   {
     id: "SCN-10",
-    title: "Penadahan Barang Curian",
-    titleEn: "Receiving Stolen Goods",
-    scenario: "Rudi membeli sebuah sepeda motor dari seseorang yang tidak dikenalnya dengan harga sangat murah, tanpa dilengkapi surat-surat resmi (BPKB dan STNK), padahal ia patut menduga motor tersebut hasil curian.",
-    scenarioEn: "Rudi buys a motorcycle from a stranger at a very low price, without any official documents (BPKB and STNK), even though he should reasonably suspect that the motorcycle is stolen.",
-    targetArticle: "Pasal 480 KUHP"
+    title: "Tindak Pidana Perkosaan",
+    titleEn: "Crime of Rape",
+    scenario: "Seorang pria menyeret seorang wanita ke dalam sebuah gudang kosong yang sepi, lalu dengan ancaman senjata tajam dan kekerasan fisik memaksa korban untuk bersetubuh dengannya.",
+    scenarioEn: "A man drags a woman into an isolated abandoned warehouse and, using physical violence and the threat of a weapon, forces the victim to have sexual intercourse with him.",
+    targetArticle: "Pasal 414 UU 1/2023 (Pasal 285 KUHP)"
   },
   {
     id: "SCN-11",
-    title: "Pemalsuan Surat",
-    titleEn: "Forgery of Documents",
-    scenario: "Untuk melamar pekerjaan, Nina membuat ijazah sarjana palsu yang seolah-olah diterbitkan oleh universitas terkemuka, padahal ia hanya lulusan sekolah menengah atas.",
-    scenarioEn: "To apply for a job, Nina creates a fake bachelor's degree diploma appearing as if it was issued by a prominent university, even though she is only a high school graduate.",
-    targetArticle: "Pasal 263 KUHP"
+    title: "Pencabulan dengan Kekerasan",
+    titleEn: "Molestation (Violent Obscene Act)",
+    scenario: "Seorang pria di dalam lift gedung perkantoran memojokkan rekan kerjanya dan secara paksa meraba area sensitif tubuh korban sambil memegangi kedua tangannya sehingga korban tidak berdaya untuk melawan.",
+    scenarioEn: "A man inside an office building elevator corners his female colleague and forcibly fondles her sensitive body parts while pinning her hands, rendering her helpless to resist.",
+    targetArticle: "Pasal 415 UU 1/2023 (Pasal 289 KUHP)"
   },
   {
     id: "SCN-12",
-    title: "Pembakaran Disengaja",
-    titleEn: "Arson",
-    scenario: "Karena merasa tidak puas dengan keputusan musyawarah desa, Tono menyiramkan bensin dan membakar balai desa pada tengah malam sehingga bangunan tersebut hangus terbakar.",
-    scenarioEn: "Dissatisfied with the village deliberation decision, Tono pours gasoline and sets the village hall on fire at midnight, burning the building to the ground.",
-    targetArticle: "Pasal 187 KUHP"
+    title: "Pengeroyokan di Muka Umum",
+    titleEn: "Mob Violence (Joint Assault in Public)",
+    scenario: "Sekelompok pemuda beranggotakan lima orang secara bersama-sama di muka umum memukuli dan menendang seorang pengendara motor di tengah jalan raya hingga korban tersungkur berlumuran darah.",
+    scenarioEn: "A group of five young men openly and jointly beat and kick a motorcyclist in the middle of a public street until the victim collapses, covered in blood.",
+    targetArticle: "Pasal 262 UU 1/2023 (Pasal 170 KUHP)"
   },
   {
     id: "SCN-13",
-    title: "Memasuki Pekarangan Tanpa Izin",
-    titleEn: "Trespassing",
-    scenario: "Sekelompok remaja dengan sengaja memanjat pagar dan masuk ke pekarangan rumah orang lain yang sedang kosong untuk bermain-main, meskipun terdapat larangan tertulis di depan pagar.",
-    scenarioEn: "A group of teenagers deliberately climbs a fence and enters the yard of an empty house to play around, despite a written prohibition on the fence.",
-    targetArticle: "Pasal 167 KUHP"
+    title: "Penyertaan Tindak Pidana",
+    titleEn: "Participation (Complicity in Crime)",
+    scenario: "Dua orang pria, Doni dan Eko, bekerja sama membobol toko elektronik pada malam hari. Doni bertugas merusak gembok dan mengangkut barang, sedangkan Eko mengawasi situasi di depan toko dan mengendarai sepeda motor untuk melarikan diri bersama.",
+    scenarioEn: "Two men, Doni and Eko, collaborate to burglarize an electronics store at night. Doni breaks the padlock and carries out the merchandise, while Eko keeps watch outside and operates the getaway motorcycle.",
+    targetArticle: "Pasal 20 UU 1/2023 (Pasal 55 KUHP)"
   },
   {
     id: "SCN-14",
-    title: "Perjudian Terang-terangan",
-    titleEn: "Public Gambling",
-    scenario: "Beberapa orang berkumpul di warung kopi pada siang hari dan menggelar permainan judi kartu dengan menggunakan uang taruhan, tanpa mempedulikan orang-orang di sekitarnya.",
-    scenarioEn: "Several people gather at a coffee shop during the day and play a card gambling game using money for betting, without caring about the people around them.",
-    targetArticle: "Pasal 303 KUHP"
+    title: "Penyelenggaraan Perjudian",
+    titleEn: "Unlicensed Gambling Operation",
+    scenario: "Pak Hendra mengelola sebuah ruang tersembunyi di belakang warung kopinya untuk menyelenggarakan perjudian kartu remi dengan uang taruhan tunai, di mana ia mengambil komisi sepuluh persen dari setiap putaran sebagai mata pencariannya.",
+    scenarioEn: "Mr. Hendra operates a hidden backroom behind his coffee shop to run a card gambling venue with cash wagers, taking a ten percent commission from every round as his primary livelihood.",
+    targetArticle: "Pasal 426 UU 1/2023 (Pasal 303 KUHP)"
   },
   {
     id: "SCN-15",
-    title: "Penculikan Anak",
-    titleEn: "Kidnapping",
-    scenario: "Dengan tipu muslihat, seorang pria membawa pergi seorang anak kecil dari taman bermain tanpa sepengetahuan orang tuanya dan menempatkan anak tersebut di lokasi tersembunyi.",
-    scenarioEn: "Using deceit, a man takes a young child away from a playground without the parents' knowledge and places the child in a hidden location.",
-    targetArticle: "Pasal 328 KUHP"
+    title: "Pembantuan Tindak Pidana",
+    titleEn: "Aiding and Abetting (Accessory)",
+    scenario: "Fajar mengetahui temannya hendak mencuri sepeda motor di tempat parkir kampus. Fajar dengan sengaja meminjamkan kunci letter T miliknya kepada temannya tersebut untuk memperlancar aksi pencurian yang direncanakan.",
+    scenarioEn: "Fajar knows that his friend intends to steal a motorcycle from the campus parking lot. He intentionally lends his T-shaped lockpick tool to his friend to facilitate the planned theft.",
+    targetArticle: "Pasal 21 UU 1/2023 (Pasal 56 KUHP)"
   },
   {
     id: "SCN-16",
-    title: "Pengancaman",
-    titleEn: "Threatening",
-    scenario: "Yanto mendatangi rumah tetangganya sambil membawa celurit dan mengancam akan membacok tetangganya tersebut karena masalah sengketa batas tanah.",
-    scenarioEn: "Yanto approaches his neighbor's house carrying a sickle and threatens to slash the neighbor over a land boundary dispute.",
-    targetArticle: "Pasal 335 KUHP"
+    title: "Kealpaan Mengakibatkan Kematian",
+    titleEn: "Negligence Causing Death",
+    scenario: "Seorang mandor bangunan tidak memasang jaring pengaman dan mengabaikan prosedur keselamatan kerja pada proyek renovasi lantai tiga. Sebuah balok kayu terjatuh dan menimpa pejalan kaki di bawahnya hingga tewas di tempat.",
+    scenarioEn: "A construction foreman fails to install safety netting and neglects basic safety protocols during a third-floor renovation project. A heavy wooden beam falls and strikes a pedestrian below, killing him instantly.",
+    targetArticle: "Pasal 474 UU 1/2023 (Pasal 359 KUHP)"
   },
   {
     id: "SCN-17",
-    title: "Perzinaan",
-    titleEn: "Adultery",
-    scenario: "Seorang pria yang telah terikat perkawinan yang sah melakukan hubungan layaknya suami istri dengan seorang wanita yang bukan istrinya, yang kemudian dilaporkan oleh istri sah pria tersebut.",
-    scenarioEn: "A man who is legally married engages in sexual relations with a woman who is not his wife, and is subsequently reported by the man's legal wife.",
-    targetArticle: "Pasal 284 KUHP"
+    title: "Kealpaan Mengakibatkan Luka Berat",
+    titleEn: "Negligence Causing Severe Injury",
+    scenario: "Seorang pengelola wahana rekreasi lalai memeriksa kabel penopang ayunan putar secara berkala meskipun sudah tampak aus. Saat dinaiki pengunjung, tali tersebut putus sehingga seorang anak terjatuh dan mengalami gegar otak serta patah tulang belakang permanen.",
+    scenarioEn: "An amusement park operator fails to inspect the support cables of a carousel swing despite visible signs of wear. While riders are aboard, a cable snaps, causing a child to fall and suffer a severe brain concussion and permanent spinal fractures.",
+    targetArticle: "Pasal 475 UU 1/2023 (Pasal 360 KUHP)"
   },
   {
     id: "SCN-18",
-    title: "Penganiayaan Ringan",
-    titleEn: "Light Maltreatment",
-    scenario: "Dalam sebuah cekcok mulut, Dina mendorong temannya hingga terjatuh. Temannya tidak mengalami luka serius, tidak berdarah, dan masih bisa melakukan aktivitasnya seperti biasa.",
-    scenarioEn: "During a verbal argument, Dina pushes her friend until she falls. Her friend suffers no serious injuries, is not bleeding, and can still perform her usual activities.",
-    targetArticle: "Pasal 352 KUHP"
+    title: "Pencurian dengan Kekerasan (Begal)",
+    titleEn: "Theft with Violence (Armed Robbery)",
+    scenario: "Dua pelaku begal memepet seorang pengendara sepeda motor di jalan raya yang gelap dan sepi, menodongkan sebilah celurit ke leher korban, lalu menendang korban hingga tersungkur sebelum membawa kabur sepeda motor tersebut.",
+    scenarioEn: "Two robbers intercept a lone motorcyclist on a dark and deserted road, hold a sickle against the victim's neck, and kick him to the ground before speeding away with his motorcycle.",
+    targetArticle: "Pasal 479 UU 1/2023 (Pasal 365 KUHP)"
   },
   {
     id: "SCN-19",
-    title: "Penganiayaan Berat",
-    titleEn: "Severe Maltreatment",
-    scenario: "Dengan niat untuk melukai secara serius, Bayu menyiramkan air keras ke wajah seseorang yang mengakibatkan luka bakar parah dan kebutaan permanen pada korban.",
-    scenarioEn: "With the intent to cause serious injury, Bayu throws acid on a person's face, resulting in severe burns and permanent blindness in the victim.",
-    targetArticle: "Pasal 354 KUHP"
+    title: "Pelanggaran Kesusilaan di Muka Umum",
+    titleEn: "Public Indecency (Violation of Decency)",
+    scenario: "Di tengah keramaian pengunjung alun-alun kota pada sore hari, seorang pria sengaja menanggalkan seluruh pakaiannya dan mempertontonkan alat kelaminnya kepada orang-orang yang sedang melintas di sekitarnya.",
+    scenarioEn: "Amidst a crowded city square in the afternoon, a man deliberately strips off all his clothes and exposes his genitals to unsuspecting passersby against their will.",
+    targetArticle: "Pasal 406 UU 1/2023 (Pasal 281 KUHP)"
   },
   {
     id: "SCN-20",
-    title: "Pencurian dengan Pemberatan",
-    titleEn: "Theft with Aggravating Circumstances",
-    scenario: "Dua orang pelaku merusak kunci gembok pagar dan mencongkel pintu depan rumah warga pada waktu malam hari, lalu membawa kabur televisi dan perhiasan dari dalam rumah.",
-    scenarioEn: "Two perpetrators break the padlock of a fence and pry open the front door of a resident's house at night, then run away with a television and jewelry from inside the house.",
-    targetArticle: "Pasal 363 KUHP"
+    title: "Penghinaan Ringan",
+    titleEn: "Minor Insult (Direct Verbal Abuse)",
+    scenario: "Saat antre di loket pelayanan publik, seorang pria melontarkan makian kasar, umpatan hewan, dan kata-kata kotor secara langsung ke wajah petugas loket di depan banyak orang karena kesal proses administrasi memakan waktu lama.",
+    scenarioEn: "While waiting in line at a public service counter, an impatient man verbally abuses a counter clerk directly, shouting crude insults, animal slurs, and obscenities in front of the surrounding public.",
+    targetArticle: "Pasal 436 UU 1/2023 (Pasal 315 KUHP)"
   }
 ];

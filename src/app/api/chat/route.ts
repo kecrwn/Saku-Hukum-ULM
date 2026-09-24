@@ -38,38 +38,62 @@ function checkRateLimit(ip: string) {
   return true;
 }
 
-const API_KEYS = {
-  'nvidia/nemotron-3.5-lightning-30b-a3b': process.env.NVIDIA_LIGHTNING_KEY || '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',
+export const dynamic = 'force-dynamic';
+export const maxDuration = 30;
+
+const API_KEYS: Record<string, string> = {
+  'nvidia/nemotron-3.5-lightning-30b-a3b': process.env.NVIDIA_LIGHTNING_KEY || process.env.NVIDIA_API_KEY || '',
   'groq/llama-3.1-8b-instant': process.env.GROQ_API_KEY || '',
-  'nvidia/nemotron-3-super-120b-a12b': process.env.NVIDIA_SUPER_KEY || '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',
-  'moonshotai/kimi-k3': process.env.NVIDIA_KIMI_KEY || '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',
-  'deepseek-ai/deepseek-v4-flash-0731': process.env.NVIDIA_DEEPSEEK_KEY || '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'
+  'nvidia/nemotron-3-super-120b-a12b': process.env.NVIDIA_SUPER_KEY || process.env.NVIDIA_API_KEY || '',
+  'moonshotai/kimi-k3': process.env.NVIDIA_KIMI_KEY || process.env.NVIDIA_API_KEY || '',
+  'deepseek-ai/deepseek-v4-flash-0731': process.env.NVIDIA_DEEPSEEK_KEY || process.env.NVIDIA_API_KEY || '',
 };
 
 const groqProvider = createOpenAI({
   baseURL: 'https://api.groq.com/openai/v1',
-  apiKey: API_KEYS['groq/llama-3.1-8b-instant'],
+  apiKey: process.env.GROQ_API_KEY || '',
 });
 
 const deepseekProvider = createOpenAI({
   baseURL: 'https://api.deepseek.com',
-  apiKey: process.env.DEEPSEEK_API_KEY,
+  apiKey: process.env.DEEPSEEK_API_KEY || '',
 });
 
+function getApiKeyForModel(modelName: string): string {
+  if (modelName.startsWith('groq/') || modelName === 'llama-3.1-8b-instant') {
+    return process.env.GROQ_API_KEY || '';
+  }
+  if (modelName === 'deepseek-chat' || modelName.startsWith('deepseek/')) {
+    return process.env.DEEPSEEK_API_KEY || '';
+  }
+  return API_KEYS[modelName] || process.env.NVIDIA_API_KEY || '';
+}
+
 function getClient(modelName: string) {
-  if (modelName.startsWith('groq/')) return groqProvider(modelName.replace('groq/', ''));
+  if (modelName.startsWith('groq/')) {
+    return groqProvider(modelName.replace('groq/', ''));
+  }
+  if (modelName === 'llama-3.1-8b-instant') {
+    return groqProvider('llama-3.1-8b-instant');
+  }
+  if (modelName === 'deepseek-chat' || modelName.startsWith('deepseek/')) {
+    return deepseekProvider(modelName.replace('deepseek/', ''));
+  }
+  const apiKey = getApiKeyForModel(modelName);
   return createOpenAI({
     baseURL: 'https://integrate.api.nvidia.com/v1',
-    apiKey: API_KEYS[modelName as keyof typeof API_KEYS],
+    apiKey,
   })(modelName);
 }
 
 const TIER_TOKENS: Record<string, number> = {
-  'nvidia/nemotron-3.5-lightning-30b-a3b': 250,
-  'groq/llama-3.1-8b-instant': 250,
+  'nvidia/nemotron-3.5-lightning-30b-a3b': 512,
+  'groq/llama-3.1-8b-instant': 512,
+  'llama-3.1-8b-instant': 512,
   'nvidia/nemotron-3-super-120b-a12b': 1024,
   'moonshotai/kimi-k3': 2048,
-  'deepseek-ai/deepseek-v4-flash-0731': 2048
+  'deepseek-ai/deepseek-v4-flash-0731': 2048,
+  'deepseek-chat': 2048,
 };
 
 export async function POST(req: Request) {
@@ -211,11 +235,25 @@ KNOWLEDGE BASE:
   };
 
   // Determine fast tier load balancing
-  const fastTierModels = ['nvidia/nemotron-3.5-lightning-30b-a3b', 'groq/llama-3.1-8b-instant'];
-  const initialFastModel = fastTierModels[Math.floor(Math.random() * fastTierModels.length)];
-  const fallbackFastModel = fastTierModels.find(m => m !== initialFastModel) as string;
+  const fastTierModels = ['groq/llama-3.1-8b-instant', 'nvidia/nemotron-3.5-lightning-30b-a3b'];
+  const hasGroq = Boolean(process.env.GROQ_API_KEY);
+  const hasLightning = Boolean(process.env.NVIDIA_LIGHTNING_KEY || process.env.NVIDIA_API_KEY);
 
-  let FALLBACK_CHAIN = [
+  let initialFastModel: string;
+  let fallbackFastModel: string;
+
+  if (hasGroq && !hasLightning) {
+    initialFastModel = 'groq/llama-3.1-8b-instant';
+    fallbackFastModel = 'nvidia/nemotron-3.5-lightning-30b-a3b';
+  } else if (!hasGroq && hasLightning) {
+    initialFastModel = 'nvidia/nemotron-3.5-lightning-30b-a3b';
+    fallbackFastModel = 'groq/llama-3.1-8b-instant';
+  } else {
+    initialFastModel = fastTierModels[Math.floor(Math.random() * fastTierModels.length)];
+    fallbackFastModel = fastTierModels.find(m => m !== initialFastModel) as string;
+  }
+
+  const allAvailableModels = [
     initialFastModel,
     fallbackFastModel,
     'nvidia/nemotron-3-super-120b-a12b',
@@ -223,13 +261,14 @@ KNOWLEDGE BASE:
     'deepseek-ai/deepseek-v4-flash-0731'
   ];
 
-  // If a user explicitly requested a higher tier model, start the chain from there
-  if (requestedModel === 'nvidia/nemotron-3-super-120b-a12b') {
-    FALLBACK_CHAIN = ['nvidia/nemotron-3-super-120b-a12b', 'moonshotai/kimi-k3', 'deepseek-ai/deepseek-v4-flash-0731', initialFastModel];
-  } else if (requestedModel === 'moonshotai/kimi-k3') {
-    FALLBACK_CHAIN = ['moonshotai/kimi-k3', 'deepseek-ai/deepseek-v4-flash-0731', 'nvidia/nemotron-3-super-120b-a12b', initialFastModel];
-  } else if (requestedModel === 'deepseek-ai/deepseek-v4-flash-0731') {
-    FALLBACK_CHAIN = ['deepseek-ai/deepseek-v4-flash-0731', 'moonshotai/kimi-k3', 'nvidia/nemotron-3-super-120b-a12b', initialFastModel];
+  let FALLBACK_CHAIN: string[];
+  if (requestedModel && requestedModel !== 'fast-tier') {
+    FALLBACK_CHAIN = [
+      requestedModel,
+      ...allAvailableModels.filter(m => m !== requestedModel)
+    ];
+  } else {
+    FALLBACK_CHAIN = allAvailableModels;
   }
 
   // Keep the last 15 messages to prevent context drift and ensure system prompt is not dropped
@@ -245,6 +284,12 @@ KNOWLEDGE BASE:
   }
 
   for (const modelName of FALLBACK_CHAIN) {
+    const key = getApiKeyForModel(modelName);
+    if (!key) {
+      console.warn(`[chat] Skipping ${modelName}: No API key configured.`);
+      continue;
+    }
+
     try {
       const model = getClient(modelName);
       const result = await streamText({
@@ -258,27 +303,32 @@ KNOWLEDGE BASE:
 
       return result.toDataStreamResponse({ sendUsage: true, headers: { 'X-Model-Used': modelName } });
     } catch (error: any) {
-      console.error(`Error with model ${modelName}:`, error.message);
-      const rawError = (error?.message || '').toLowerCase();
-      // Retry if it's a rate limit or quota issue
-      if (rawError.includes('quota') || rawError.includes('429') || rawError.includes('402') || rawError.includes('too many requests')) {
-        continue;
-      }
+      console.error(`[chat] Error with model ${modelName}:`, error?.message || error);
+      // Gracefully continue to the next model in the fallback chain on any error
+      continue;
     }
   }
 
-  // Final fallback to DeepSeek Native API if everything else fails
-  try {
-    const result = await streamText({
-      model: deepseekProvider('deepseek-chat'),
-      system: systemPrompt,
-      messages,
-      tools,
-      maxSteps: 3,
-      maxTokens: 2048
-    });
-    return result.toDataStreamResponse({ sendUsage: true, headers: { 'X-Model-Used': 'deepseek-chat-native' } });
-  } catch (error: any) {
-    return new Response(JSON.stringify({ error: 'All models failed or quota exhausted.' }), { status: 500 });
+  // Final fallback to DeepSeek Native API if everything else fails and DEEPSEEK_API_KEY is configured
+  if (process.env.DEEPSEEK_API_KEY) {
+    try {
+      console.log('[chat] Attempting final fallback to deepseek-chat-native');
+      const result = await streamText({
+        model: deepseekProvider('deepseek-chat'),
+        system: systemPrompt,
+        messages: trimmedMessages,
+        tools,
+        maxSteps: 3,
+        maxTokens: 2048
+      });
+      return result.toDataStreamResponse({ sendUsage: true, headers: { 'X-Model-Used': 'deepseek-chat-native' } });
+    } catch (error: any) {
+      console.error('[chat] Error with deepseek-chat-native fallback:', error?.message || error);
+    }
   }
+
+  return new Response(JSON.stringify({ error: 'All models failed or quota exhausted.' }), { 
+    status: 500,
+    headers: { 'Content-Type': 'application/json' }
+  });
 }

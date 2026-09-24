@@ -3,15 +3,26 @@ import { generateObject } from 'ai';
 import { z } from 'zod';
 import { pasalData } from '@/lib/pasal-data';
 
-const API_KEYS = {
-  'deepseek-ai/deepseek-v4-flash-0731': process.env.NVIDIA_DEEPSEEK_KEY || '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',
+// Maps frontend display names to actual model identifiers
+const PROVIDER_TO_MODEL: Record<string, string> = {
+  'DeepSeek Flash': 'deepseek-ai/deepseek-v4-flash-0731',
+  'Llama 3.1 8B': 'groq/llama-3.1-8b-instant',
+  'Nemotron 30B': 'nvidia/nemotron-3-super-120b-a12b',
+};
+
+const MODEL_TIMEOUT_MS = 30_000; // 30 seconds per model attempt
+
+const API_KEYS: Record<string, string> = {
+  'nvidia/nemotron-3.5-lightning-30b-a3b': process.env.NVIDIA_LIGHTNING_KEY || process.env.NVIDIA_API_KEY || '',
   'groq/llama-3.1-8b-instant': process.env.GROQ_API_KEY || '',
-  'nvidia/nemotron-3-super-120b-a12b': process.env.NVIDIA_API_KEY || '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',
+  'nvidia/nemotron-3-super-120b-a12b': process.env.NVIDIA_SUPER_KEY || process.env.NVIDIA_API_KEY || '',
+  'moonshotai/kimi-k3': process.env.NVIDIA_KIMI_KEY || process.env.NVIDIA_API_KEY || '',
+  'deepseek-ai/deepseek-v4-flash-0731': process.env.NVIDIA_DEEPSEEK_KEY || process.env.NVIDIA_API_KEY || '',
 };
 
 const groqProvider = createOpenAI({
   baseURL: 'https://api.groq.com/openai/v1',
-  apiKey: API_KEYS['groq/llama-3.1-8b-instant'],
+  apiKey: process.env.GROQ_API_KEY || '',
 });
 
 const deepseekProvider = createOpenAI({
@@ -19,12 +30,24 @@ const deepseekProvider = createOpenAI({
   apiKey: process.env.DEEPSEEK_API_KEY || '',
 });
 
+function getApiKeyForModel(modelName: string): string {
+  if (modelName.startsWith('groq/') || modelName === 'llama-3.1-8b-instant') {
+    return process.env.GROQ_API_KEY || '';
+  }
+  if (modelName === 'deepseek-chat' || modelName.startsWith('deepseek/')) {
+    return process.env.DEEPSEEK_API_KEY || '';
+  }
+  return API_KEYS[modelName] || process.env.NVIDIA_API_KEY || '';
+}
+
 function getClient(modelName: string) {
   if (modelName.startsWith('groq/')) return groqProvider(modelName.replace('groq/', ''));
-  if (modelName === 'deepseek-chat') return deepseekProvider('deepseek-chat');
+  if (modelName === 'llama-3.1-8b-instant') return groqProvider('llama-3.1-8b-instant');
+  if (modelName === 'deepseek-chat' || modelName.startsWith('deepseek/')) return deepseekProvider(modelName.replace('deepseek/', ''));
+  const apiKey = getApiKeyForModel(modelName);
   return createOpenAI({
     baseURL: 'https://integrate.api.nvidia.com/v1',
-    apiKey: API_KEYS[modelName as keyof typeof API_KEYS],
+    apiKey,
   })(modelName);
 }
 
@@ -36,10 +59,13 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify({ error: 'Invalid JSON body' }), { status: 400 });
   }
 
-  const { analysis, scenario, model = 'deepseek-ai/deepseek-v4-flash-0731' } = body;
+  const { analysis, scenario, provider } = body;
   if (!analysis || !scenario) {
     return new Response(JSON.stringify({ error: 'Missing analysis or scenario' }), { status: 400 });
   }
+
+  // Resolve the display name to a model identifier, with a safe default
+  const model = (provider && PROVIDER_TO_MODEL[provider]) || 'deepseek-ai/deepseek-v4-flash-0731';
 
   const systemPrompt = `You are an expert Indonesian law professor evaluating a student's case analysis. 
 You will review the student's analysis of the following scenario based strictly on the Indonesian Criminal Code (KUHP Baru) data provided below.
@@ -55,25 +81,53 @@ ${JSON.stringify(pasalData.map(p => ({ article: p.articleNumber, text: p.officia
 
   const fallbackModels = ['deepseek-ai/deepseek-v4-flash-0731', 'groq/llama-3.1-8b-instant', 'nvidia/nemotron-3-super-120b-a12b'];
   const modelsToTry = [model, ...fallbackModels.filter(m => m !== model)];
-  
+  const errors: { model: string; error: string }[] = [];
+
   for (const currentModel of modelsToTry) {
+    const key = getApiKeyForModel(currentModel);
+    if (!key) {
+      console.warn(`[practice] Skipping ${currentModel}: No API key configured`);
+      continue;
+    }
+
     try {
-      const { object } = await generateObject({
-        model: getClient(currentModel),
-        system: systemPrompt,
-        prompt: `Student's Analysis: ${analysis}`,
-        schema: z.object({
-          issueFeedback: z.string().describe("Feedback on how well the student identified the legal issues"),
-          citationFeedback: z.string().describe("Feedback on the student's use of specific articles (Pasal) and citations"),
-          applicationFeedback: z.string().describe("Feedback on how the student applied the law to the facts of the scenario"),
-          missedElements: z.string().describe("Any elements of the offense or alternative arguments the student missed")
-        })
-      });
-      return Response.json(object);
+      // Wrap each attempt in a timeout so we don't hang forever
+      const result = await Promise.race([
+        generateObject({
+          model: getClient(currentModel),
+          system: systemPrompt,
+          prompt: `Student's Analysis: ${analysis}`,
+          schema: z.object({
+            issueFeedback: z.string().describe("Feedback on how well the student identified the legal issues"),
+            citationFeedback: z.string().describe("Feedback on the student's use of specific articles (Pasal) and citations"),
+            applicationFeedback: z.string().describe("Feedback on how the student applied the law to the facts of the scenario"),
+            missedElements: z.string().describe("Any elements of the offense or alternative arguments the student missed")
+          })
+        }),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error(`Timeout: ${currentModel} did not respond within ${MODEL_TIMEOUT_MS / 1000}s`)), MODEL_TIMEOUT_MS)
+        ),
+      ]);
+
+      return Response.json(result.object);
     } catch (err: any) {
-      console.error(`Practice API Error with model ${currentModel}:`, err);
+      const message = err?.message || String(err);
+      console.error(`Practice API Error with model ${currentModel}:`, message);
+      errors.push({ model: currentModel, error: message });
+
+      // Groq's Llama may fail on structured output (generateObject with Zod).
+      // Catch it explicitly and fall through to the next model.
+      if (currentModel.startsWith('groq/')) {
+        console.warn(`Groq structured output failed for ${currentModel}, falling through to next model.`);
+      }
     }
   }
 
-  return new Response(JSON.stringify({ error: 'Failed to generate feedback after trying all fallback models.' }), { status: 500 });
+  return new Response(
+    JSON.stringify({
+      error: 'Failed to generate feedback after trying all fallback models.',
+      details: errors,
+    }),
+    { status: 500 }
+  );
 }
