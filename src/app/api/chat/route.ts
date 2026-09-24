@@ -105,6 +105,7 @@ const TIER_TOKENS: Record<string, number> = {
   'moonshotai/kimi-k3': 2048,
   'deepseek-ai/deepseek-v4-flash-0731': 2048,
   'deepseek-chat': 2048,
+  'Qwen/Qwen3.8-Flash-Next': 2048,
 };
 
 export async function POST(req: Request) {
