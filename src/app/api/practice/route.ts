@@ -108,6 +108,7 @@ ${JSON.stringify(pasalData.map(p => ({ article: p.articleNumber, text: p.officia
           model: getClient(currentModel),
           system: systemPrompt,
           prompt: `Student's Analysis: ${analysis}`,
+          temperature: currentModel.startsWith('Qwen/') ? 0.1 : 0.2,
           schema: z.object({
             issueFeedback: z.string().describe("Feedback on how well the student identified the legal issues"),
             citationFeedback: z.string().describe("Feedback on the student's use of specific articles (Pasal) and citations"),

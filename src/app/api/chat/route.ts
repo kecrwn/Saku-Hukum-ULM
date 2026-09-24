@@ -312,6 +312,7 @@ KNOWLEDGE BASE:
         messages: trimmedMessages,
         tools,
         maxSteps: 3,
+        temperature: modelName.startsWith('Qwen/') ? 0.1 : 0.3,
         maxTokens: TIER_TOKENS[modelName] || 2048
       });
 
