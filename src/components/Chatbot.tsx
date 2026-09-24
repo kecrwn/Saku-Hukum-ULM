@@ -1,9 +1,10 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Loader2, Bot, Maximize, Copy, Check, Trash2, Square, Clock, Share2, RefreshCcw, CheckCheck, Expand } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, Bot, Maximize, Copy, Check, Trash2, Square, Clock, Share2, RefreshCcw, CheckCheck, Expand, Zap, Brain, Sparkles, Cpu, ZapOff } from "lucide-react";
 import { useChat } from "ai/react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -153,11 +154,11 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
   };
 
   const models = [
-    { id: "fast-tier", name: "Fast Tier (Lightning/Groq)", short: "Fast Tier" },
-    { id: "nvidia/nemotron-3-super-120b-a12b", name: "Super 120B", short: "Super 120B" },
-    { id: "moonshotai/kimi-k3", name: "Kimi K3 (Deep)", short: "Kimi K3" },
-    { id: "deepseek-ai/deepseek-v4-flash-0731", name: "DeepSeek V4", short: "DeepSeek" },
-    { id: "Qwen/Qwen3.8-Flash-Next", name: "Qwen 3.8 Flash Next", short: "Qwen 3.8" }
+    { id: "fast-tier", name: "Fast Tier (Lightning/Groq)", short: "Fast Tier", icon: <Zap size={14} /> },
+    { id: "nvidia/nemotron-3-super-120b-a12b", name: "Super 120B", short: "Super 120B", icon: <Cpu size={14} /> },
+    { id: "moonshotai/kimi-k3", name: "Kimi K3 (Deep)", short: "Kimi K3", icon: <Brain size={14} /> },
+    { id: "deepseek-ai/deepseek-v4-flash-0731", name: "DeepSeek V4", short: "DeepSeek", icon: <Sparkles size={14} /> },
+    { id: "Qwen/Qwen3.8-Flash-Next", name: "Qwen 3.8 Flash Next", short: "Qwen 3.8", icon: <ZapOff size={14} /> }
   ];
 
   const currentModel = models.find(m => m.id === selectedModel) || models[0];
@@ -325,12 +326,12 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
         .chat-fab{position:fixed;bottom:32px;right:32px;z-index:50;width:60px;height:60px;border:1px solid rgba(255,255,255,0.15);border-radius:50%;background:rgba(16,45,51,0.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:#f1cba5;display:grid;place-items:center;cursor:pointer;animation:chat-fab-pulse 3.5s ease-in-out infinite;transition:transform 250ms cubic-bezier(.23,1,.32,1),background 250ms ease-out,box-shadow 250ms ease-out;box-shadow:0 12px 32px rgba(16,45,51,0.25)}
         .chat-fab:hover{transform:scale(1.05) translateY(-2px);background:rgba(16,45,51,0.95);color:var(--paper);box-shadow:0 16px 40px rgba(16,45,51,0.35)}
         .chat-fab:active{transform:scale(.94)}
-        .chat-panel{position:fixed;bottom:32px;right:32px;z-index:50;width:385px;max-width:calc(100vw - 64px);height:580px;max-height:calc(100dvh - 64px);border-radius:24px;display:flex;flex-direction:column;overflow:hidden;background:rgba(247,242,233,0.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(23,62,68,.12);box-shadow:0 24px 64px rgba(16,45,51,.22);animation:chat-slide-up .4s cubic-bezier(.23,1,.32,1) both}
+        .chat-panel{position:fixed;bottom:32px;right:32px;z-index:50;width:385px;max-width:calc(100vw - 64px);height:580px;max-height:calc(100dvh - 64px);border-radius:24px;display:flex;flex-direction:column;overflow:hidden;background:rgba(247,242,233,0.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(23,62,68,.12);box-shadow:0 24px 64px rgba(16,45,51,.22)}
         @media (max-width: 640px) {
           .chat-fab{bottom:20px;right:20px;width:56px;height:56px}
           .chat-panel{bottom:20px;right:20px;width:calc(100vw - 40px);max-width:calc(100vw - 40px);height:calc(100dvh - 100px);max-height:calc(100dvh - 100px);border-radius:20px}
         }
-        .chat-panel-fullscreen{position:fixed;inset:0;z-index:100;width:100vw;height:100dvh;display:flex;flex-direction:column;overflow:hidden;background:var(--paper);animation:chat-slide-up .3s ease-out}
+        .chat-panel-fullscreen{position:fixed;inset:0;z-index:100;width:100vw;height:100dvh;display:flex;flex-direction:column;overflow:hidden;background:var(--paper)}
         .chat-panel.is-expanding { transition: all 0.18s cubic-bezier(0.23, 1, 0.32, 1) !important; width: 100vw !important; height: 100dvh !important; max-width: 100vw !important; max-height: 100dvh !important; bottom: 0 !important; right: 0 !important; border-radius: 0 !important; }
         .chat-head{display:flex;align-items:center;justify-content:space-between;padding:22px 26px;border-bottom:1px solid rgba(23,62,68,.1)}
         .chat-head-title{display:flex;align-items:center;gap:12px;font-family:var(--serif);font-size:22px;line-height:1;letter-spacing:-.03em;color:var(--ink-deep)}
@@ -383,7 +384,7 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
         .read-more-btn { align-self: flex-start; margin-top: 6px; font-size: 11px; font-weight: 800; color: var(--clay); background: transparent; border: none; cursor: pointer; padding: 0; text-transform: uppercase; letter-spacing: 0.05em; transition: opacity 150ms ease-out; }
         .read-more-btn:hover { opacity: 0.7; }
         .chat-msg-user .read-more-btn { color: var(--paper); opacity: 0.8; }
-        .glass-model-menu { position: absolute; top: calc(100% + 8px); left: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(23, 62, 68, 0.1); border-radius: 12px; padding: 6px; box-shadow: 0 16px 40px rgba(16, 45, 51, 0.15); display: flex; flex-direction: column; min-width: 160px; max-width: 220px; max-height: 250px; overflow-y: auto; z-index: 100; animation: chat-slide-down 0.2s cubic-bezier(0.23, 1, 0.32, 1); transform-origin: top left; }
+        .glass-model-menu { position: absolute; top: calc(100% + 8px); left: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(23, 62, 68, 0.1); border-radius: 12px; padding: 6px; box-shadow: 0 16px 40px rgba(16, 45, 51, 0.15); display: flex; flex-direction: column; min-width: 160px; max-width: 220px; max-height: 250px; overflow-y: auto; z-index: 100; transform-origin: top left; }
         @keyframes chat-slide-down { from { opacity: 0; transform: translateY(-8px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
         .glass-model-btn { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 700; color: #43534e; border-radius: 8px; transition: all 150ms ease; border: none; background: transparent; cursor: pointer; line-height: 1.3; }
         .glass-model-btn:hover { background: rgba(23, 62, 68, 0.05); }
@@ -395,15 +396,33 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
         @keyframes chat-spin { to { transform: rotate(360deg); } }
       `}</style>
 
-      {!isOpen && !fullScreen && (
-        <button type="button" className="chat-fab" onClick={() => setIsOpen(true)} aria-label={isIndonesian ? "Buka asisten" : "Open assistant"}>
-          <MessageCircle size={22} />
-        </button>
-      )}
+      <AnimatePresence>
+        {!isOpen && !fullScreen && (
+          <motion.button 
+            type="button" 
+            className="chat-fab" 
+            onClick={() => setIsOpen(true)} 
+            aria-label={isIndonesian ? "Buka asisten" : "Open assistant"}
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+          >
+            <MessageCircle size={22} />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
-      {isOpen && (
-        <div className={fullScreen ? "chat-panel-fullscreen" : "chat-panel"}>
-          <div className="chat-head items-start">
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            className={fullScreen ? "chat-panel-fullscreen" : "chat-panel"}
+            initial={{ y: 16, opacity: 0, scale: 0.97 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: 16, opacity: 0, scale: 0.97 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+          >
+            <div className="chat-head items-start">
             <div className="flex flex-col items-start gap-1.5">
               <div className="chat-head-title">
                 <Bot size={20} />
@@ -417,30 +436,42 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
                   className="glass-dropdown-toggle"
                 >
                   <span className="opacity-70 font-normal shrink-0">AI:</span>
+                  <span className="text-[var(--clay)]">{currentModel?.icon}</span>
                   <span className="inline-block truncate max-w-[140px] text-ellipsis">{currentModelName}</span>
                   <svg className="shrink-0" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isModelMenuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', marginLeft: '2px', opacity: 0.6 }}><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
-                {isModelMenuOpen && (
-                  <>
-                    <div className="fixed inset-0 z-40" onClick={() => setIsModelMenuOpen(false)}></div>
-                    <div className="glass-model-menu z-50">
-                      {models.map(m => (
-                        <button
-                          key={m.id}
-                          type="button"
+                <AnimatePresence>
+                  {isModelMenuOpen && (
+                    <>
+                      <div className="fixed inset-0 z-40" onClick={() => setIsModelMenuOpen(false)}></div>
+                      <motion.div 
+                        className="glass-model-menu z-50"
+                        initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                        transition={{ duration: 0.15, ease: "easeOut" }}
+                      >
+                        {models.map(m => (
+                          <button
+                            key={m.id}
+                            type="button"
                           className={`glass-model-btn ${selectedModel === m.id ? 'active' : ''}`}
                           onClick={() => {
                             setSelectedModel(m.id);
                             setIsModelMenuOpen(false);
                           }}
                         >
-                          {fullScreen ? m.name : m.short}
+                          <span className="flex items-center gap-2">
+                            <span className="opacity-80">{m.icon}</span>
+                            {fullScreen ? m.name : m.short}
+                          </span>
                           {selectedModel === m.id && <Check size={14} />}
                         </button>
                       ))}
-                    </div>
-                  </>
-                )}
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
             
@@ -542,8 +573,20 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
               return (
                 <div className="flex items-center gap-2 mt-2 mb-2">
                   <div className="chat-typing">
-                    <div className="chat-typing-dots">
-                      <span /><span /><span />
+                    <div className="chat-typing-dots flex items-center gap-1">
+                      {[0, 1, 2].map((i) => (
+                        <motion.span 
+                          key={i}
+                          className="w-1.5 h-1.5 bg-current rounded-full"
+                          animate={{ translateY: [0, -4, 0], opacity: [0.4, 1, 0.4] }}
+                          transition={{ 
+                            duration: 0.6, 
+                            repeat: Infinity, 
+                            ease: "easeOut",
+                            delay: i * 0.15 
+                          }}
+                        />
+                      ))}
                     </div>
                     <span className="chat-typing-text">
                       {thinkingText} <span className="opacity-60 ml-1">{(processingTime / 1000).toFixed(1)}s</span>
@@ -582,17 +625,29 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
               )}
             </div>
           </form>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {expandedMessage && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-md" onClick={() => setExpandedMessage(null)}>
-          <div 
-            className="w-[98vw] max-w-6xl h-[96vh] max-h-[96vh] bg-[var(--paper)] rounded-2xl shadow-2xl overflow-hidden border border-[rgba(23,62,68,0.2)] flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-            style={{ animation: 'chat-slide-up 0.4s cubic-bezier(0.23, 1, 0.32, 1)' }}
+      <AnimatePresence>
+        {expandedMessage && (
+          <motion.div 
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-md" 
+            onClick={() => setExpandedMessage(null)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
           >
-            <div className="flex items-center justify-between px-6 md:px-10 py-5 border-b border-[rgba(23,62,68,0.08)] bg-[rgba(247,242,233,0.9)]">
+            <motion.div 
+              className="w-[98vw] max-w-6xl h-[96vh] max-h-[96vh] bg-[var(--paper)] rounded-2xl shadow-2xl overflow-hidden border border-[rgba(23,62,68,0.2)] flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+              initial={{ opacity: 0, y: 20, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.97 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+            >
+              <div className="flex items-center justify-between px-6 md:px-10 py-5 border-b border-[rgba(23,62,68,0.08)] bg-[rgba(247,242,233,0.9)]">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full bg-[var(--ink-deep)] text-[var(--paper)] flex items-center justify-center shadow-lg">
                   <Bot size={24} />
@@ -611,9 +666,10 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
                 <ExpandableMessage content={expandedMessage} isIndonesian={isIndonesian} />
               </div>
             </div>
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
