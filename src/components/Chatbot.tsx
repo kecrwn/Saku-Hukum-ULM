@@ -82,6 +82,18 @@ const CustomLink = ({ href, children, ...props }: any) => {
   return <a href={href} className="text-[var(--clay)] hover:underline break-all" {...props}>{children}</a>;
 };
 
+const cleanOutput = (text: string) => {
+  if (!text) return text;
+  // Strip <think> tags completely
+  let cleaned = text.replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '');
+  // Strip raw text thinking processes (often ending with a double newline or bullet points before the real answer)
+  // A simple way is to match known patterns.
+  cleaned = cleaned.replace(/Here's a thinking process:[\s\S]*?(?=\n\n\*\*|\n\n[A-Z]|\n\n#|$)/i, '').trim();
+  // Strip "Thinking Process:"
+  cleaned = cleaned.replace(/(?:Here is a )?(?:thinking process|thought process)[s]?:[\s\S]*?(?=\n\n\*\*|\n\n[A-Z]|\n\n#|$)/i, '').trim();
+  return cleaned;
+};
+
 function ExpandableMessage({ content, isIndonesian }: { content: string, isIndonesian: boolean }) {
   return (
     <div className="markdown-body">
@@ -104,7 +116,7 @@ function ExpandableMessage({ content, isIndonesian }: { content: string, isIndon
           hr: () => <hr className="my-4 border-t border-[var(--line)]" />
         }}
       >
-        {content}
+        {cleanOutput(content)}
       </ReactMarkdown>
     </div>
   );
@@ -510,7 +522,7 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
               if (m.role === 'assistant' && !m.content && (!m.toolInvocations || m.toolInvocations.length === 0)) {
                 return null;
               }
-              const cleanContent = m.content.replace(/<think>[\s\S]*?(<\/think>|$)/g, '').trim();
+              const cleanContent = cleanOutput(m.content);
               if (m.role === 'assistant' && !cleanContent && m.content.includes('<think>') && !m.content.includes('</think>')) {
                 return null; // Hide the bubble entirely if it's currently only streaming a think block
               }
@@ -567,7 +579,7 @@ export function Chatbot({ fullScreen }: { fullScreen?: boolean }) {
                 else thinkingText = isIndonesian ? "Melakukan kroscek sumber..." : "Cross-checking sources...";
               }
               const isAssistantStream = latestMessage?.role === 'assistant';
-              const latestCleanContent = latestMessage?.content?.replace(/<think>[\s\S]*?(<\/think>|$)/g, '').trim() || '';
+              const latestCleanContent = cleanOutput(latestMessage?.content || '') || '';
               if (isAssistantStream && latestCleanContent.length > 0 && !activeTool) return null;
               
               return (
