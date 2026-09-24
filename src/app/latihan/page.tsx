@@ -31,28 +31,12 @@ const categoryAccents = {
   missed:      { color: '#fb923c', label: 'orange' },
 };
 
-/* Grid card stagger animation variants */
-const gridContainer = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.04,
-      delayChildren: 0.1,
-    },
-  },
-};
-
-const gridItem = {
-  hidden: { opacity: 0, y: 16, scale: 0.96 },
-  show: { 
-    opacity: 1, y: 0, scale: 1,
-    transition: { type: 'spring', stiffness: 400, damping: 28 },
-  },
-};
 
 export default function LatihanPage() {
   const { isIndonesian } = useLanguage();
   const [selectedScenario, setSelectedScenario] = useState(latihanScenarios[0]);
+  const [expandedCategory, setExpandedCategory] = useState<string | null>((latihanScenarios[0] as any)?.category || 'Umum');
+  const [isScenarioExpanded, setIsScenarioExpanded] = useState(false);
   const [completed, setCompleted] = useState<string[]>([]);
   const [analysis, setAnalysis] = useState('');
   const [loading, setLoading] = useState(false);
@@ -154,6 +138,16 @@ export default function LatihanPage() {
   const completedCount = completed.length;
   const totalCases = latihanScenarios.length;
 
+  const groupedScenarios = latihanScenarios.reduce((acc, scenario: any) => {
+    const catId = scenario.category || 'Umum';
+    const catEn = scenario.categoryEn || 'General';
+    if (!acc[catId]) {
+      acc[catId] = { name: catId, nameEn: catEn, scenarios: [] };
+    }
+    acc[catId].scenarios.push(scenario);
+    return acc;
+  }, {} as Record<string, { name: string, nameEn: string, scenarios: typeof latihanScenarios }>);
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--paper)', color: 'var(--ink)', fontFamily: 'Manrope, sans-serif' }}>
       {/* ── Header ── */}
@@ -178,7 +172,7 @@ export default function LatihanPage() {
         </div>
 
         {/* ═══════════════════════════════════════════
-            1. CASE SELECTION GRID
+            1. CASE SELECTION ACCORDION
         ═══════════════════════════════════════════ */}
         <div className="mb-12">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
@@ -199,7 +193,7 @@ export default function LatihanPage() {
                   <circle
                     cx="11" cy="11" r="9" fill="none"
                     stroke="var(--reed)" strokeWidth="2.5"
-                    strokeDasharray={`${(completedCount / totalCases) * 56.55} 56.55`}
+                    strokeDasharray={`${(completedCount / Math.max(1, totalCases)) * 56.55} 56.55`}
                     strokeLinecap="round"
                     style={{ transition: 'stroke-dasharray 0.5s ease' }}
                   />
@@ -211,60 +205,95 @@ export default function LatihanPage() {
             </div>
           </div>
 
-          {/* Staggered grid */}
-          <motion.div
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3"
-            variants={gridContainer}
-            initial="hidden"
-            animate="show"
-          >
-            {latihanScenarios.map((scenario, index) => {
-              const isCompleted = completed.includes(scenario.id);
-              const isSelected = selectedScenario.id === scenario.id;
+          <div className="flex flex-col gap-3">
+            {Object.values(groupedScenarios).map((group: any) => {
+              const isExpanded = expandedCategory === group.name;
+              const completedInGroup = group.scenarios.filter((s: any) => completed.includes(s.id)).length;
               return (
-                <motion.div key={scenario.id} variants={gridItem}>
+                <div key={group.name} className="rounded-2xl overflow-hidden" style={{ background: 'var(--card)', border: '1px solid var(--line)', boxShadow: '0 2px 8px rgba(30,48,43,0.03)' }}>
                   <button
-                    onClick={() => { setSelectedScenario(scenario); setAnalysis(''); setFeedback(null); }}
-                    className="w-full p-4 rounded-2xl text-left relative flex flex-col gap-2"
-                    style={{
-                      background: isSelected ? 'var(--ink-deep)' : 'var(--card)',
-                      border: `1px solid ${isSelected ? 'var(--ink-deep)' : 'var(--line)'}`,
-                      color: isSelected ? 'var(--card)' : 'var(--ink)',
-                      boxShadow: isSelected ? 'var(--shadow)' : '0 2px 8px rgba(30,48,43,0.03)',
-                      transition: 'transform 220ms cubic-bezier(.23,1,.32,1), box-shadow 220ms ease, border-color 220ms ease',
-                      cursor: 'pointer',
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isSelected) {
-                        (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px) scale(1.02)';
-                        (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 32px rgba(30,48,43,0.10)';
-                        (e.currentTarget as HTMLElement).style.borderColor = 'rgba(23,62,68,0.3)';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isSelected) {
-                        (e.currentTarget as HTMLElement).style.transform = 'translateY(0) scale(1)';
-                        (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 8px rgba(30,48,43,0.03)';
-                        (e.currentTarget as HTMLElement).style.borderColor = 'var(--line)';
-                      }
-                    }}
+                    onClick={() => setExpandedCategory(isExpanded ? null : group.name)}
+                    className="w-full flex items-center justify-between p-5 outline-none text-left"
+                    style={{ cursor: 'pointer' }}
                   >
-                    <div className="flex justify-between items-start w-full">
-                      <span className="text-xs font-bold tracking-wider" style={{ color: isSelected ? 'rgba(255,253,250,0.6)' : 'var(--clay)' }}>
-                        {isIndonesian ? "KASUS" : "CASE"} {index + 1}
+                    <div className="flex items-center gap-4">
+                      <h3 className="text-lg font-bold" style={{ color: 'var(--ink-deep)' }}>
+                        {isIndonesian ? group.name : group.nameEn}
+                      </h3>
+                      <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ background: 'rgba(113,130,110,0.1)', color: 'var(--reed)' }}>
+                        {completedInGroup} / {group.scenarios.length}
                       </span>
-                      {isCompleted && (
-                        <CheckCircle size={16} style={{ color: isSelected ? 'rgba(255,253,250,0.8)' : 'var(--reed)' }} />
-                      )}
                     </div>
-                    <span className="text-sm font-medium leading-snug line-clamp-2">
-                      {isIndonesian ? scenario.title : scenario.titleEn}
-                    </span>
+                    <ChevronDown
+                      size={20}
+                      style={{
+                        color: 'var(--muted)',
+                        transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.3s ease'
+                      }}
+                    />
                   </button>
-                </motion.div>
+                  <AnimatePresence>
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      >
+                        <div className="p-5 pt-0 border-t" style={{ borderColor: 'var(--line)' }}>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-4">
+                            {group.scenarios.map((scenario: any, index: number) => {
+                              const isCompleted = completed.includes(scenario.id);
+                              const isSelected = selectedScenario.id === scenario.id;
+                              return (
+                                <button
+                                  key={scenario.id}
+                                  onClick={() => { setSelectedScenario(scenario); setAnalysis(''); setFeedback(null); setIsScenarioExpanded(false); }}
+                                  className="w-full p-4 rounded-xl text-left relative flex flex-col gap-2"
+                                  style={{
+                                    background: isSelected ? 'var(--ink-deep)' : 'var(--card)',
+                                    border: `1px solid ${isSelected ? 'var(--ink-deep)' : 'var(--line)'}`,
+                                    color: isSelected ? 'var(--card)' : 'var(--ink)',
+                                    transition: 'transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease',
+                                    cursor: 'pointer',
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    if (!isSelected) {
+                                      (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
+                                      (e.currentTarget as HTMLElement).style.borderColor = 'rgba(23,62,68,0.3)';
+                                    }
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    if (!isSelected) {
+                                      (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+                                      (e.currentTarget as HTMLElement).style.borderColor = 'var(--line)';
+                                    }
+                                  }}
+                                >
+                                  <div className="flex justify-between items-start w-full">
+                                    <span className="text-[10px] font-bold tracking-wider" style={{ color: isSelected ? 'rgba(255,253,250,0.6)' : 'var(--clay)' }}>
+                                      {isIndonesian ? "KASUS" : "CASE"} {index + 1}
+                                    </span>
+                                    {isCompleted && (
+                                      <CheckCircle size={14} style={{ color: isSelected ? 'rgba(255,253,250,0.8)' : 'var(--reed)' }} />
+                                    )}
+                                  </div>
+                                  <span className="text-xs font-medium leading-snug line-clamp-2">
+                                    {isIndonesian ? scenario.title : scenario.titleEn}
+                                  </span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               );
             })}
-          </motion.div>
+          </div>
         </div>
 
         {/* ═══════════════════════════════════════════
@@ -276,7 +305,7 @@ export default function LatihanPage() {
           <section className="w-full overflow-hidden">
 
             {/* ═══════════════════════════════════════
-                2. SCENARIO CARD — Premium with gradient + accent bar
+                2. SCENARIO CARD — Collapsible Premium Card
             ═══════════════════════════════════════ */}
             <motion.div
               key={selectedScenario.id}
@@ -301,36 +330,68 @@ export default function LatihanPage() {
                     borderRadius: '4px 0 0 4px',
                   }}
                 />
-                <div className="p-6 md:p-8 flex-1 min-w-0">
-                  {/* Eyebrow */}
-                  <div className="flex items-center gap-2 mb-1">
-                    <span
-                      className="text-[10px] font-extrabold tracking-[0.14em] uppercase"
-                      style={{ color: 'var(--clay)' }}
-                    >
-                      {isIndonesian ? 'SKENARIO AKTIF' : 'ACTIVE SCENARIO'}
-                    </span>
-                  </div>
-                  {/* Title */}
-                  <div className="flex items-start gap-3 mb-4">
-                    <div
-                      className="shrink-0 mt-1 flex items-center justify-center rounded-lg"
-                      style={{
-                        width: 36, height: 36,
-                        background: 'linear-gradient(135deg, rgba(178,77,57,0.1), rgba(113,130,110,0.1))',
-                        border: '1px solid var(--line)',
-                      }}
-                    >
-                      <FileText size={18} style={{ color: 'var(--reed)' }} />
+                <div className="flex-1 min-w-0">
+                  <button
+                    type="button"
+                    onClick={() => setIsScenarioExpanded(!isScenarioExpanded)}
+                    className="w-full text-left p-5 md:p-6 flex items-start justify-between outline-none"
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div>
+                      {/* Eyebrow */}
+                      <div className="flex items-center gap-2 mb-2">
+                        <span
+                          className="text-[10px] font-extrabold tracking-[0.14em] uppercase"
+                          style={{ color: 'var(--clay)' }}
+                        >
+                          {isIndonesian ? 'SKENARIO AKTIF' : 'ACTIVE SCENARIO'}
+                        </span>
+                      </div>
+                      {/* Title */}
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="shrink-0 flex items-center justify-center rounded-lg"
+                          style={{
+                            width: 32, height: 32,
+                            background: 'linear-gradient(135deg, rgba(178,77,57,0.1), rgba(113,130,110,0.1))',
+                            border: '1px solid var(--line)',
+                          }}
+                        >
+                          <FileText size={16} style={{ color: 'var(--reed)' }} />
+                        </div>
+                        <h2 className="text-lg font-bold break-words whitespace-normal leading-tight" style={{ color: 'var(--ink-deep)', fontFamily: 'DM Serif Display, serif' }}>
+                          {isIndonesian ? selectedScenario.title : selectedScenario.titleEn}
+                        </h2>
+                      </div>
                     </div>
-                    <h2 className="text-xl font-bold break-words whitespace-normal leading-tight" style={{ color: 'var(--ink-deep)', fontFamily: 'DM Serif Display, serif' }}>
-                      {isIndonesian ? selectedScenario.title : selectedScenario.titleEn}
-                    </h2>
-                  </div>
-                  {/* Scenario body */}
-                  <p className="leading-relaxed mb-0 break-words whitespace-normal text-[14.5px]" style={{ color: 'var(--muted)' }}>
-                    {isIndonesian ? selectedScenario.scenario : selectedScenario.scenarioEn}
-                  </p>
+                    <ChevronDown
+                      size={20}
+                      className="mt-1 shrink-0"
+                      style={{
+                        color: 'var(--muted)',
+                        transform: isScenarioExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.3s ease'
+                      }}
+                    />
+                  </button>
+                  
+                  <AnimatePresence>
+                    {isScenarioExpanded && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      >
+                        <div className="px-5 pb-5 md:px-6 md:pb-6 pt-0 border-t" style={{ borderColor: 'rgba(0,0,0,0.05)' }}>
+                          {/* Scenario body */}
+                          <p className="leading-relaxed mb-0 mt-4 break-words whitespace-normal text-[14.5px]" style={{ color: 'var(--muted)' }}>
+                            {isIndonesian ? selectedScenario.scenario : selectedScenario.scenarioEn}
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
             </motion.div>
@@ -490,29 +551,22 @@ export default function LatihanPage() {
               )}
 
               {/* Submit button */}
-              <button
+              <motion.button
                 type="submit"
                 disabled={loading || !analysis.trim()}
+                whileHover={(!loading && analysis.trim()) ? { scale: 1.02, boxShadow: '0 0 24px rgba(178,77,57,0.4)' } : {}}
+                whileTap={(!loading && analysis.trim()) ? { scale: 0.98 } : {}}
                 className="relative px-6 py-4 rounded-xl font-bold flex items-center justify-center gap-2.5 break-words whitespace-normal overflow-hidden"
                 style={{
                   background: loading 
-                    ? 'var(--ink-deep)'
-                    : (!analysis.trim() ? 'var(--muted)' : 'linear-gradient(135deg, var(--ink-deep) 0%, #1a4a52 100%)'),
-                  color: 'var(--card)',
+                    ? 'transparent'
+                    : (!analysis.trim() ? 'rgba(30,48,43,0.04)' : 'linear-gradient(135deg, var(--ink-deep) 0%, #1a4a52 100%)'),
+                  color: !analysis.trim() && !loading ? 'var(--muted)' : 'var(--card)',
                   boxShadow: loading || !analysis.trim() ? 'none' : '0 8px 24px rgba(16,45,51,0.18)',
-                  transition: 'transform 180ms cubic-bezier(.23,1,.32,1), box-shadow 180ms ease, opacity 180ms ease',
-                  opacity: loading ? 1 : (!analysis.trim() ? 0.6 : 1),
+                  transition: 'background 300ms ease, color 300ms ease, border-color 300ms ease',
+                  opacity: !analysis.trim() && !loading ? 0.8 : 1,
                   cursor: loading ? 'wait' : (!analysis.trim() ? 'not-allowed' : 'pointer'),
-                }}
-                onMouseEnter={(e) => {
-                  if (!loading && analysis.trim()) {
-                    (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
-                    (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 32px rgba(16,45,51,0.24)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-                  (e.currentTarget as HTMLElement).style.boxShadow = loading || !analysis.trim() ? 'none' : '0 8px 24px rgba(16,45,51,0.18)';
+                  border: !analysis.trim() && !loading ? '2px dashed var(--line)' : '2px solid transparent',
                 }}
               >
                 <AnimatePresence>
@@ -521,20 +575,21 @@ export default function LatihanPage() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="absolute inset-0 z-0 overflow-hidden rounded-xl"
+                      transition={{ duration: 0.3 }}
+                      className="absolute inset-0 z-0 overflow-hidden"
                     >
                       <motion.div 
                         className="absolute inset-0"
-                        animate={{ 
-                          background: [
-                            'linear-gradient(135deg, var(--ink-deep) 0%, #1a4a52 100%)',
-                            'linear-gradient(135deg, #1a4a52 0%, var(--clay) 100%)',
-                            'linear-gradient(135deg, var(--ink-deep) 0%, #1a4a52 100%)'
-                          ]
+                        style={{
+                          background: 'linear-gradient(270deg, var(--ink-deep), #1a4a52, var(--clay), var(--ink-deep))',
+                          backgroundSize: '300% 300%',
                         }}
-                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                        animate={{ 
+                          backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                        }}
+                        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
                       />
-                      {[...Array(3)].map((_, i) => (
+                      {[...Array(5)].map((_, i) => (
                         <motion.div
                           key={i}
                           className="absolute rounded-full"
@@ -548,7 +603,7 @@ export default function LatihanPage() {
                           animate={{
                             y: [0, -20, 0],
                             x: [0, Math.random() * 20 - 10, 0],
-                            opacity: [0, 0.8, 0],
+                            opacity: [0, 0.6, 0],
                             scale: [0.8, 1.2, 0.8],
                           }}
                           transition={{
@@ -598,7 +653,7 @@ export default function LatihanPage() {
                     </div>
                   )}
                 </div>
-              </button>
+              </motion.button>
             </form>
           </section>
 
